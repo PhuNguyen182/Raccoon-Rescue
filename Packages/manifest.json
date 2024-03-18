@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.cysharp.unitask": "2.5.3",
+    "com.github-glitchenzo.nugetforunity": "4.0.2",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.device-simulator.devices": "1.0.0",
     "com.unity.feature.2d": "2.0.0",
@@ -51,7 +52,8 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.cysharp.unitask",
-        "games.corundum.stateless-for-unity"
+        "games.corundum.stateless-for-unity",
+        "com.github-glitchenzo.nugetforunity"
       ]
     }
   ]
