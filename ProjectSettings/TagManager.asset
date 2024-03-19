@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - SideWall
+  - TopCeil
+  - GridCollider
   - 
   - 
   - 
@@ -38,6 +38,30 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Bottom
+    uniqueID: 484422509
+    locked: 0
+  - name: Background
+    uniqueID: 2873241115
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Objects
+    uniqueID: 1592121711
+    locked: 0
+  - name: Effects
+    uniqueID: 231000935
+    locked: 0
+  - name: UI
+    uniqueID: 3488840367
+    locked: 0
+  - name: UIObjects
+    uniqueID: 3782190335
+    locked: 0
+  - name: UIEffects
+    uniqueID: 2869865667
+    locked: 0
+  - name: TopMost
+    uniqueID: 3024695541
     locked: 0
