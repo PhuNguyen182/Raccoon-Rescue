@@ -58,7 +58,7 @@ public static class SimplePool
                 var obj = GameObject.Instantiate(_prefab, parent);
                 obj.name = string.Format("{0} ({1})", _prefab.name, _nextId++);
 
-                // Add the unique GameObject ID to our MemberHashset so we know this GO belongs to us.
+                // AddUpdateBehaviour the unique GameObject ID to our MemberHashset so we know this GO belongs to us.
                 MemberIDs.Add(obj.GetInstanceID());
 
                 obj.SetActive(false);
@@ -80,7 +80,7 @@ public static class SimplePool
                     obj = GameObject.Instantiate(_prefab, pos, rot);
                     obj.name = string.Format("{0} ({1})", _prefab.name, _nextId++);
 
-                    // Add the unique GameObject ID to our MemberHashset so we know this GO belongs to us.
+                    // AddUpdateBehaviour the unique GameObject ID to our MemberHashset so we know this GO belongs to us.
                     MemberIDs.Add(obj.GetInstanceID());
                 }
                 else

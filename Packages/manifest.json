@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.cysharp.messagepipe": "1.7.4",
     "com.cysharp.unitask": "2.5.3",
     "com.github-glitchenzo.nugetforunity": "4.0.2",
     "com.unity.collab-proxy": "2.3.1",
@@ -54,7 +55,8 @@
       "scopes": [
         "com.cysharp.unitask",
         "games.corundum.stateless-for-unity",
-        "com.github-glitchenzo.nugetforunity"
+        "com.github-glitchenzo.nugetforunity",
+        "com.cysharp.messagepipe"
       ]
     }
   ]

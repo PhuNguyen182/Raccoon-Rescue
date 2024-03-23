@@ -12,7 +12,7 @@ public class AutoDespawn : MonoBehaviour, IUpdateHandler
     private void OnEnable()
     {
         _timer = 0;
-        UpdateHandlerManager.Instance.Add(this);
+        UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
     }
 
     public void OnUpdate(float deltaTime)
@@ -27,6 +27,6 @@ public class AutoDespawn : MonoBehaviour, IUpdateHandler
 
     private void OnDisable()
     {
-        UpdateHandlerManager.Instance.Remove(this);
+        UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
     }
 }

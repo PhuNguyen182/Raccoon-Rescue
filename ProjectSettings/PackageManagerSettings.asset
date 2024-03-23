@@ -33,6 +33,7 @@ MonoBehaviour:
     - com.cysharp.unitask
     - games.corundum.stateless-for-unity
     - com.github-glitchenzo.nugetforunity
+    - com.cysharp.messagepipe
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4

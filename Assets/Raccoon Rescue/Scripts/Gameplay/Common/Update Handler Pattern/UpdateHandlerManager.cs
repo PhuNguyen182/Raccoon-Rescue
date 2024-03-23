@@ -7,7 +7,14 @@ namespace RaccoonRescue.Scripts.Gameplay.Common.UpdateHandlerPattern
 {
     public class UpdateHandlerManager : Singleton<UpdateHandlerManager>, IDisposable
     {
-        private HashSet<IUpdateHandler> _updateHandlers = new();
+        private HashSet<IUpdateHandler> _updateHandlers;
+        private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers;
+
+        protected override void OnAwake()
+        {
+            _updateHandlers = new();
+            _fixedUpdateHandlers = new();
+        }
 
         private void Update()
         {
@@ -17,25 +24,50 @@ namespace RaccoonRescue.Scripts.Gameplay.Common.UpdateHandlerPattern
             }
         }
 
-        public void Add(IUpdateHandler updateHandler)
+        private void FixedUpdate()
         {
-            if (!_updateHandlers.Contains(updateHandler))
+            foreach (IFixedUpdateHandler fixedUpdateHandler in _fixedUpdateHandlers)
             {
-                _updateHandlers.Add(updateHandler);
+                fixedUpdateHandler.OnFixedUpdate();
             }
         }
 
-        public void Remove(IUpdateHandler updateHandler)
+        public void AddUpdateBehaviour(IUpdateHandler handler)
         {
-            if (_updateHandlers.Contains(updateHandler))
+            if (!_updateHandlers.Contains(handler))
             {
-                _updateHandlers.Remove(updateHandler);
+                _updateHandlers.Add(handler);
+            }
+        }
+
+        public void AddFixedUpdateBehaviour(IFixedUpdateHandler handler)
+        {
+            if (!_fixedUpdateHandlers.Contains(handler))
+            {
+                _fixedUpdateHandlers.Add(handler);
+            }
+        }
+
+        public void RemoveUpdateBehaviour(IUpdateHandler handler)
+        {
+            if (_updateHandlers.Contains(handler))
+            {
+                _updateHandlers.Remove(handler);
+            }
+        }
+
+        public void RemoveFixedUpdateBehaviour(IFixedUpdateHandler handler)
+        {
+            if (_fixedUpdateHandlers.Contains(handler))
+            {
+                _fixedUpdateHandlers.Remove(handler);
             }
         }
 
         public void Dispose()
         {
             _updateHandlers.Clear();
+            _fixedUpdateHandlers.Clear();
         }
     }
 }
