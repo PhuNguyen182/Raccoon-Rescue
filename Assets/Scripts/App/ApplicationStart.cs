@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RaccoonRescue.Scripts.Gameplay.Common.UpdateHandlerPattern;
+using Scripts.Common.UpdateHandlerPattern;
+using Scripts.Configs;
 
 namespace Scripts.App
 {
@@ -16,6 +17,7 @@ namespace Scripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
+            GameSetup();
             RegisterServices();
         }
 
@@ -27,6 +29,7 @@ namespace Scripts.App
 
         private static void RegisterServices()
         {
+            Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
         }
 
@@ -36,6 +39,11 @@ namespace Scripts.App
             T instance = Object.Instantiate(service);
             Object.DontDestroyOnLoad(instance);
             return service;
+        }
+
+        private static void GameSetup()
+        {
+            Application.targetFrameRate = GameConfigSetup.TARGET_FRAMERATE;
         }
     }
 }

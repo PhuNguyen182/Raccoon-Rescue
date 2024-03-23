@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RaccoonRescue.Scripts.Gameplay.Common.UpdateHandlerPattern;
+using Scripts.Common.UpdateHandlerPattern;
 
 public class AutoDespawn : MonoBehaviour, IUpdateHandler
 {
