@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2615335097345165689}
   - component: {fileID: 714363327000740254}
   - component: {fileID: 4794890370154255178}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,6 +177,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4d45b8eae44494ea3c162755ee68fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballSpeed: 6
   ballBody: {fileID: 2143780931499081039}
   ballCollider: {fileID: 2615335097345165689}
+  ceilMask:
+    serializedVersion: 2
+    m_Bits: 128
+  ballMask:
+    serializedVersion: 2
+    m_Bits: 8
+  reflectMask:
+    serializedVersion: 2
+    m_Bits: 64

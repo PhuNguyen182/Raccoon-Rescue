@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
@@ -13,6 +14,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] private Rigidbody2D ballBody;
         [SerializeField] private Collider2D ballCollider;
 
+        [Header("Check Reflection")]
+        [Tooltip("This value is used to delay reflection checking when the ball hit the wall and bounce again")]
+        [SerializeField] private int delayFrame = 3;
+        [SerializeField] private float ballRadius = 0.3f;
+        [SerializeField] private float ballDistance = 1f;
+
         [Header("Check Layer Maskes")]
         [SerializeField] private LayerMask ceilMask;
         [SerializeField] private LayerMask ballMask;
@@ -20,6 +27,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private float _ballSpeed = 0;
         private bool _canMove = false;
+        private bool _isReflect = false;
+
+        private CancellationToken _token;
         private Vector2 _moveDirection = Vector2.zero;
 
         public bool CanMove
@@ -32,6 +42,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
+        private void Awake()
+        {
+            _token = this.GetCancellationTokenOnDestroy();
+        }
+
         private void OnEnable()
         {
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
@@ -42,6 +57,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             if (_canMove)
             {
                 MoveBall();
+                CheckReflection().Forget();
+            }
+        }
+
+        private async UniTaskVoid CheckReflection()
+        {
+            RaycastHit2D hitInfor = Physics2D.CircleCast(transform.position, ballRadius, transform.up, ballDistance, reflectMask);
+
+            if (hitInfor && !_isReflect)
+            {
+                _isReflect = true;
+                Vector2 hitNormal = hitInfor.normal;
+                Vector2 newDirection = Vector2.Reflect(_moveDirection, hitNormal);
+                _moveDirection = newDirection.normalized;
+
+                await UniTask.DelayFrame(4, delayTiming: PlayerLoopTiming.FixedUpdate, cancellationToken: _token);
+                _isReflect = false;
             }
         }
 

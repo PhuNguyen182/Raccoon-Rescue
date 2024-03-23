@@ -91,3 +91,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallSide: 1
+  wallCollider: {fileID: 8181136878512007863}
+  mainCamera: {fileID: 0}

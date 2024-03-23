@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ball
   - Water
   - UI
-  - SideWall
-  - TopCeil
+  - Wall
+  - Ceil
   - GridCell
   - 
   - 
