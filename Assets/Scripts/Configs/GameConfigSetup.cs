@@ -6,6 +6,6 @@ namespace Scripts.Configs
 {
     public static class GameConfigSetup
     {
-        public const int TARGET_FRAMERATE = 60;
+        public const int TargetFramerate = 60;
     }
 }

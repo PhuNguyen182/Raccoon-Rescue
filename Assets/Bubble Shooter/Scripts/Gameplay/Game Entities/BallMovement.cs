@@ -6,6 +6,8 @@ using BubbleShooter.Scripts.Common.Configs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
@@ -13,6 +15,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         [SerializeField] private Rigidbody2D ballBody;
         [SerializeField] private Collider2D ballCollider;
+
+        [Header("Snapping")]
+        [SerializeField] private float snapDuration = 0.2f;
+        [SerializeField] private Ease snapEase = Ease.OutQuad;
 
         [Header("Check Reflection")]
         [Tooltip("This value is used to delay reflection checking when the ball hit the wall and bounce again")]
@@ -31,6 +37,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private CancellationToken _token;
         private Vector2 _moveDirection = Vector2.zero;
+        private Tweener _snappingTween;
 
         public bool CanMove
         {
@@ -38,7 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             set
             {
                 _canMove = value;
-                _ballSpeed = _canMove ? BubbleConfig.BALL_MOVE_SPEED : 0;
+                _ballSpeed = _canMove ? BubbleConfig.BallMoveSpeed : 0;
             }
         }
 
@@ -79,8 +86,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public UniTask SnapTo(Vector3 position)
         {
-            transform.position = position;
-            return UniTask.CompletedTask;
+            _snappingTween ??= CreateSnapTween(position);
+            _snappingTween.ChangeStartValue(transform.position);
+            _snappingTween.ChangeEndValue(position);
+            
+            _snappingTween.Rewind();
+            _snappingTween.Play();
+
+            return UniTask.Delay(TimeSpan.FromSeconds(_snappingTween.Duration()), cancellationToken: _token);
         }
 
         public void SetBodyActive(bool active)
@@ -98,9 +111,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             ballBody.position = ballBody.position + Time.fixedDeltaTime * _ballSpeed * _moveDirection;
         }
 
-        private void OnDestroy()
+        private Tweener CreateSnapTween(Vector3 position)
+        {
+            return transform.DOMove(position, snapDuration).SetEase(snapEase).SetAutoKill(false);
+        }
+
+        private void OnDisable()
         {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+        }
+
+        private void OnDestroy()
+        {
+            _snappingTween?.Kill();
         }
     }
 }
