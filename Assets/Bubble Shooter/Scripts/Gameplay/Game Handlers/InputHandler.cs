@@ -12,6 +12,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public Vector3 MousePosition { get; private set; }
         public bool IsMousePress { get; private set; }
         public bool IsMouseHold { get; private set; }
+        public bool IsMouseUp { get; private set; }
 
         public Action OnHold;
         public Action OnClicked;
@@ -21,6 +22,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             IsMousePress = Input.GetMouseButtonDown(0);
             IsMouseHold = Input.GetMouseButton(0);
+            IsMouseUp = Input.GetMouseButtonUp(0);
             MousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
     }

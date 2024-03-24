@@ -43,7 +43,7 @@ namespace Scripts.App
 
         private static void GameSetup()
         {
-            Application.targetFrameRate = GameConfigSetup.TargetFramerate;
+            Application.targetFrameRate = GameSetupConstants.TargetFramerate;
         }
     }
 }

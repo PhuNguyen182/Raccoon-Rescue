@@ -8,5 +8,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomEntities
     public class CommonBall : BaseBall
     {
         public BallMovement BallMovement;
+
+        public override void Blast()
+        {
+            
+        }
+
+        public override void Clear()
+        {
+            SimplePool.Despawn(this.gameObject);
+        }
     }
 }

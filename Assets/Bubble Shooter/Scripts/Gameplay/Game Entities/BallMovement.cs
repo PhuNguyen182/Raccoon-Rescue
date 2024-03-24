@@ -45,7 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             set
             {
                 _canMove = value;
-                _ballSpeed = _canMove ? BubbleConfig.BallMoveSpeed : 0;
+                _ballSpeed = _canMove ? BubbleConstants.BallMoveSpeed : 0;
             }
         }
 

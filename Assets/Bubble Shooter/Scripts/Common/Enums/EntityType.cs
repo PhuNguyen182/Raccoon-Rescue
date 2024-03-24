@@ -24,7 +24,7 @@ namespace BubbleShooter.Scripts.Common.Enums
         WaterBubble = 11,
         #endregion
 
-        #region Speacial bubbles
+        #region Special bubbles
         UnbreakableBubble = 12,
         WoodenBubble = 13,
         #endregion

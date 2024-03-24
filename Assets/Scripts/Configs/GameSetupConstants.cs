@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Scripts.Configs
 {
-    public static class GameConfigSetup
+    public static class GameSetupConstants
     {
         public const int TargetFramerate = 60;
     }
