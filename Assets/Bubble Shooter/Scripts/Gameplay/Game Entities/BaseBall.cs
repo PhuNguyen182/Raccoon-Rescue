@@ -6,7 +6,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseBall : BaseEntities, IBubbleEntity
+    public abstract class BaseBall : BaseEntities, IBallEntity
     {
         public EntityType EntityType { get; set; }
 

@@ -5,7 +5,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Common.Interfaces
 {
-    public interface IBubbleEntity
+    public interface IBallEntity
     {
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }
