@@ -14,27 +14,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private Transform spawnPoint;
 
         [Space(10)]
+        [SerializeField] private LineDrawer lineDrawer;
         [SerializeField] private InputHandler inputHandler;
-        [SerializeField] private TrajactoryLine trajactoryLine;
         
         [Space(10)]
+        [Header("Start Position Setting")]
         [SerializeField] private Camera mainCamera;
         [SerializeField] private Vector2 normalizePosition;
-        [SerializeField] private LayerMask leftReflect;
-        [SerializeField] private LayerMask rightReflect;
-
-        private bool _isReflect = false;
-        private RaycastHit2D _hitWall1;
-        private RaycastHit2D _hitWall2;
 
         private Vector2 _direction;
-        private Vector3[] _linePoints = new Vector3[3];
+        private Vector3 _startPosition;
 
         private void Awake()
         {
-            Vector3 startPosition = mainCamera.ViewportToWorldPoint(normalizePosition);
-            startPosition.z = 0;
-            transform.position = startPosition;
+            SetStartPosition();
         }
 
         private void Update()
@@ -46,8 +39,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 SpawnABall();
             }
 
-            DrawLine(inputHandler.IsMouseHold);
+            lineDrawer.DrawLine(inputHandler.IsMouseHold);
             RotatePointer();
+        }
+
+        private void SetStartPosition()
+        {
+            _startPosition = mainCamera.ViewportToWorldPoint(normalizePosition);
+            _startPosition.z = 0;
+            transform.position = _startPosition;
         }
 
         private void GetMouseDirection()
@@ -70,42 +70,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
             pointer.rotation = Quaternion.Euler(0, 0, angle);
-        }
-
-        private void DrawLine(bool isDraw)
-        {
-            if (isDraw)
-            {
-                _linePoints[0] = spawnPoint.position;
-                Ray2D ray1 = new(spawnPoint.position, _direction);
-                _hitWall1 = Physics2D.Raycast(spawnPoint.position, _direction, 25);
-
-                if (_hitWall1)
-                {
-                    _linePoints[1] = _hitWall1.point;
-                    Vector2 reflectDir = Vector2.Reflect(_linePoints[1] - _linePoints[0], _hitWall1.normal);
-                    Ray2D ray2 = new(_linePoints[1], reflectDir);
-                    
-                    LayerMask secondMask = (leftReflect.value & (1 << _hitWall1.collider.gameObject.layer)) > 0 ? rightReflect : leftReflect;
-                    _hitWall2 = Physics2D.Raycast(_linePoints[1], reflectDir, 25, secondMask);
-                    
-                    if (_hitWall2)
-                        _linePoints[2] = _hitWall2.point;
-                    else
-                        _linePoints[2] = ray2.GetPoint(5);
-                }
-
-                else
-                {
-                    _linePoints[1] = ray1.GetPoint(25);
-                    _linePoints[2] = _linePoints[1];
-                }
-
-                trajactoryLine.ShowPath(_linePoints);
-            }
-
-            else
-                trajactoryLine.HidePath();
         }
     }
 }

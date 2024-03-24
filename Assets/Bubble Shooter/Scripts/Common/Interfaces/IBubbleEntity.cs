@@ -8,6 +8,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     public interface IBubbleEntity
     {
         public Vector3 WorldPosition { get; }
+        public Vector3Int GridPosition { get; set; }
         public EntityType EntityType { get; set; }
 
         public void Blast();

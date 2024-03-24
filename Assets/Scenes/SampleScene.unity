@@ -533,7 +533,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 447
+    m_Bits: 191
 --- !u!114 &742261312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -814,6 +814,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1077623886}
   - component: {fileID: 1077623885}
+  - component: {fileID: 1077623887}
   m_Layer: 0
   m_Name: Ball Shooter
   m_TagString: Untagged
@@ -836,16 +837,10 @@ MonoBehaviour:
   prefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
   pointer: {fileID: 492503175}
   spawnPoint: {fileID: 1878387454}
+  lineDrawer: {fileID: 1077623887}
   inputHandler: {fileID: 1597871552}
-  trajactoryLine: {fileID: 1904541290}
   mainCamera: {fileID: 519420031}
   normalizePosition: {x: 0.5, y: 0.1}
-  leftReflect:
-    serializedVersion: 2
-    m_Bits: 512
-  rightReflect:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!4 &1077623886
 Transform:
   m_ObjectHideFlags: 0
@@ -864,6 +859,27 @@ Transform:
   - {fileID: 1904541292}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1077623887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077623884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c4c9168386ef34f83cf7fe522d2a1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoint: {fileID: 1878387454}
+  inputHandler: {fileID: 1597871552}
+  trajactoryLine: {fileID: 1904541290}
+  leftReflect:
+    serializedVersion: 2
+    m_Bits: 512
+  rightReflect:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &1597871551
 GameObject:
   m_ObjectHideFlags: 0

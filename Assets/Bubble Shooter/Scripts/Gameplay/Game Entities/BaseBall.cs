@@ -10,6 +10,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         public EntityType EntityType { get; set; }
 
+        public Vector3Int GridPosition { get; set; }
+
         public Vector3 WorldPosition => transform.position;
 
         public abstract void Blast();
