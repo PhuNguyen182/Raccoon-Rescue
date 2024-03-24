@@ -6,7 +6,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseBall : BaseEntities, IBallEntity
+    public abstract class BaseBall : BaseEntities, IBallEntity, IBreakable
     {
         public EntityType EntityType { get; set; }
 
@@ -14,8 +14,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public Vector3 WorldPosition => transform.position;
 
+        public bool IsFixedOnStart { get; set; }
+
         public abstract void Blast();
 
-        public abstract void Clear();
+        public abstract bool Break();
+
+        public abstract void Destroy();
     }
 }

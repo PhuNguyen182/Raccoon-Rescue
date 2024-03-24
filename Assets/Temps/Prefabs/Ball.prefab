@@ -164,7 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityRenderer: {fileID: 3167630682468065514}
   entityAnimator: {fileID: 0}
-  BallMovement: {fileID: 4794890370154255178}
+  ballMovement: {fileID: 4794890370154255178}
 --- !u!114 &4794890370154255178
 MonoBehaviour:
   m_ObjectHideFlags: 0

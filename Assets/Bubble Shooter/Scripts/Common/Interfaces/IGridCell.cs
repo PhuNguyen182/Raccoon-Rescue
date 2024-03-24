@@ -5,14 +5,13 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Common.Interfaces
 {
-    public interface IBallEntity
+    public interface IGridCell
     {
-        public bool IsFixedOnStart { get; set; }
-        public Vector3 WorldPosition { get; }
+        public EntityType EntityType { get; }
+        public IBallEntity BallEntity { get; }
         public Vector3Int GridPosition { get; set; }
-        public EntityType EntityType { get; set; }
 
-        public void Blast();
+        public void SetBall(IBallEntity ball);
         public void Destroy();
     }
 }

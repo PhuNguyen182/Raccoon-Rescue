@@ -60,10 +60,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             CommonBall ball = SimplePool.Spawn(prefab, EntityContainer.Transform
                                         , spawnPoint.position, Quaternion.identity);
 
-            ball.BallMovement.CanMove = false;
-            ball.BallMovement.SetBodyActive(false);
-            ball.BallMovement.SetMoveDirection(_direction);
-            ball.BallMovement.CanMove = true;
+            ball.CanMove = false;
+            ball.SetBodyActive(false);
+            ball.SetMoveDirection(_direction);
+            ball.CanMove = true;
         }
 
         private void RotatePointer()

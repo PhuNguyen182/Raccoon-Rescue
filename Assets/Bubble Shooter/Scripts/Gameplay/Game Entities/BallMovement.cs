@@ -11,7 +11,7 @@ using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public class BallMovement : MonoBehaviour, IFixedUpdateHandler, IBallMovement
+    public class BallMovement : MonoBehaviour, IBallMovement
     {
         [SerializeField] private Rigidbody2D ballBody;
         [SerializeField] private Collider2D ballCollider;
@@ -32,21 +32,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] private LayerMask reflectMask;
 
         private float _ballSpeed = 0;
-        private bool _canMove = false;
         private bool _isReflect = false;
 
+        private Tweener _snappingTween;
         private CancellationToken _token;
         private Vector2 _moveDirection = Vector2.zero;
-        private Tweener _snappingTween;
 
         public bool CanMove
         {
-            get => _canMove; 
-            set
-            {
-                _canMove = value;
-                _ballSpeed = _canMove ? BubbleConstants.BallMoveSpeed : 0;
-            }
+            get => _ballSpeed > 0; 
+            set => _ballSpeed = value ? BallConstants.BallMoveSpeed : 0;
         }
 
         private void Awake()
@@ -54,18 +49,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             _token = this.GetCancellationTokenOnDestroy();
         }
 
-        private void OnEnable()
+        public void Move()
         {
-            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
-        }
-
-        public void OnFixedUpdate()
-        {
-            if (_canMove)
-            {
-                MoveBall();
-                CheckReflection().Forget();
-            }
+            MoveBall();
+            CheckReflection().Forget();
         }
 
         private async UniTaskVoid CheckReflection()
@@ -114,11 +101,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private Tweener CreateSnapTween(Vector3 position)
         {
             return transform.DOMove(position, snapDuration).SetEase(snapEase).SetAutoKill(false);
-        }
-
-        private void OnDisable()
-        {
-            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
 
         private void OnDestroy()

@@ -1,6 +1,6 @@
 namespace BubbleShooter.Scripts.Common.Configs
 {
-    public static class BubbleConstants
+    public static class BallConstants
     {
         public const float BallMoveSpeed = 6f;
     }

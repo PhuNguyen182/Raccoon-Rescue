@@ -1,6 +1,6 @@
 namespace BubbleShooter.Scripts.Common.Interfaces
 {
-    public interface IBubbleHealth
+    public interface IBallHealth
     {
         public int MaxHP { get; }
 
