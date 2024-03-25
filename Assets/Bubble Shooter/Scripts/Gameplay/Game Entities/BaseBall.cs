@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
     public abstract class BaseBall : BaseEntities, IBallEntity, IBreakable
     {
-        public EntityType EntityType { get; set; }
+        public abstract EntityType EntityType { get; }
 
         public Vector3Int GridPosition { get; set; }
 
@@ -16,10 +17,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public bool IsFixedOnStart { get; set; }
 
-        public abstract void Blast();
+        public abstract UniTask Blast();
 
         public abstract bool Break();
 
         public abstract void Destroy();
+
+        public virtual void ResetBall() 
+        {
+            
+        }
     }
 }

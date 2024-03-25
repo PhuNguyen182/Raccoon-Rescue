@@ -36,6 +36,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
+        public bool DestroyAt(Vector3Int position)
+        {
+            IGridCell gridCell = Get(position);
+
+            if (gridCell != null)
+                return gridCell.Destroy();
+
+            return false;
+        }
+
         public List<IGridCell> GetCrossNeighbors(Vector3Int position)
         {
             List<IGridCell> neighbors = new();

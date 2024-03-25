@@ -22,13 +22,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
             GridPosition = position;
         }
 
-        public void Destroy()
+        public bool Destroy()
         {
             if(_ballEntity != null)
             {
                 _ballEntity.Destroy();
                 _ballEntity = null;
+                return true;
             }
+
+            return false;
         }
 
         public void SetBall(IBallEntity ball)

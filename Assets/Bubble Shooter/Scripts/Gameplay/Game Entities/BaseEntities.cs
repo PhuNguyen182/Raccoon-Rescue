@@ -6,7 +6,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
     public abstract class BaseEntities : MonoBehaviour
     {
-        [SerializeField] protected SpriteRenderer entityRenderer;
-        [SerializeField] protected Animator entityAnimator;
+        [SerializeField] protected BallMovement ballMovement;
+        [SerializeField] protected EntityGraphics entityGraphics;
     }
 }

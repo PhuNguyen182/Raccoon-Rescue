@@ -7,19 +7,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class EntityManager
     {
-        // To do: write a methof creating a collection of a ball cluster
+        private readonly BreakGridTask _breakGridTask;
+
+        public EntityManager(BreakGridTask breakGridTask)
+        {
+            _breakGridTask = breakGridTask;
+        }
 
         public bool CheckCluster(IBallEntity ball, List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
                 return false;
 
-            List<IBallEntity> balls = new();
+            List<Vector3Int> balls = new();
 
             for (int i = 0; i < cluster.Count; i++)
             {
                 if (cluster[i].BallEntity.EntityType == ball.EntityType)
-                    balls.Add(cluster[i].BallEntity);
+                    balls.Add(cluster[i].GridPosition);
             }
 
             if (balls.Count < 3)
@@ -29,9 +34,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             return true;
         }
 
-        private void ExecuteCluster(List<IBallEntity> cluster)
+        private void ExecuteCluster(List<Vector3Int> clusterPositions)
         {
-
+            for (int i = 0; i < clusterPositions.Count; i++)
+            {
+                _breakGridTask.Break(clusterPositions[i]);
+            }
         }
     }
 }

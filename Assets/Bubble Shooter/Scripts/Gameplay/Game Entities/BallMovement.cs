@@ -22,7 +22,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         [Header("Check Reflection")]
         [Tooltip("This value is used to delay reflection checking when the ball hit the wall and bounce again")]
-        [SerializeField] private int delayFrame = 3;
+        [SerializeField] private int delayFrame = 4;
         [SerializeField] private float ballRadius = 0.3f;
         [SerializeField] private float ballDistance = 1f;
 
@@ -66,7 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 Vector2 newDirection = Vector2.Reflect(_moveDirection, hitNormal);
                 _moveDirection = newDirection.normalized;
 
-                await UniTask.DelayFrame(4, delayTiming: PlayerLoopTiming.FixedUpdate, cancellationToken: _token);
+                await UniTask.DelayFrame(delayFrame, delayTiming: PlayerLoopTiming.FixedUpdate, cancellationToken: _token);
                 _isReflect = false;
             }
         }

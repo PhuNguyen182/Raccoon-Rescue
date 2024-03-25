@@ -12,6 +12,6 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public Vector3Int GridPosition { get; set; }
 
         public void SetBall(IBallEntity ball);
-        public void Destroy();
+        public bool Destroy();
     }
 }

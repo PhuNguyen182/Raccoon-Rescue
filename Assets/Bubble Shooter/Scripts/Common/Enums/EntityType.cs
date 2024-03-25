@@ -18,15 +18,17 @@ namespace BubbleShooter.Scripts.Common.Enums
         #endregion
 
         #region Boosters
-        FireBubble = 8,
-        LeafBubble = 9,
-        IceBubble = 10,
-        WaterBubble = 11,
+        FireBall = 8,
+        LeafBall = 9,
+        IceBall = 10,
+        WaterBall = 11,
+        SunBall = 12,
         #endregion
 
         #region Special bubbles
-        UnbreakableBubble = 12,
-        WoodenBubble = 13,
+        UnbreakableBall = 13,
+        WoodenBall = 14,
+        ColorfulBall = 15,
         #endregion
     }
 }

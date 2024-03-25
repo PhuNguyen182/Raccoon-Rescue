@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Gameplay.GameEntities.CustomEntities;
+using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
