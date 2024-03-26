@@ -51,7 +51,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public void SetBodyActive(bool active)
         {
-            
+            ballMovement.SetBodyActive(active);
         }
 
         public void SetMaxHP(int maxHP)
@@ -63,6 +63,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void ResetBall()
         {
             base.ResetBall();
+            SetRenderer();
         }
 
         public void SetMoveDirection(Vector2 direction)

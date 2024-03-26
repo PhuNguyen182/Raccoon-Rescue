@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class EntityManager
+    public class MatchBallHandler
     {
         private readonly BreakGridTask _breakGridTask;
 
-        public EntityManager(BreakGridTask breakGridTask)
+        public MatchBallHandler(BreakGridTask breakGridTask)
         {
             _breakGridTask = breakGridTask;
         }

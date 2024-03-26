@@ -21,6 +21,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         // To do: Destroy a horizontal line of balls
         public async UniTask Execute(Vector3Int position)
         {
+            _gridCellManager.GetColumn(position, out List<IGridCell> row);
+
+            for (int i = 0; i < row.Count; i++)
+            {
+                _breakGridTask.Break(row[i]);
+            }
+
             await UniTask.CompletedTask;
         }
 

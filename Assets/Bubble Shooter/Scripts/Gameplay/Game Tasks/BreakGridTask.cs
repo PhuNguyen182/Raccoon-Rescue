@@ -31,5 +31,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             return false;
         }
+
+        public bool Break(IGridCell gridCell)
+        {
+            if (gridCell == null)
+                return false;
+
+            IBallEntity ballEntity = gridCell.BallEntity;
+
+            if (ballEntity == null)
+                return false;
+
+            if (ballEntity is IBreakable breakable)
+                return breakable.Break();
+
+            return false;
+        }
     }
 }

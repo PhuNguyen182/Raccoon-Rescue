@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using BubbleShooter.Scripts.Utils.BoundsUtils;
+using System.Linq;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -24,17 +26,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private Vector2 _direction;
         private Vector3 _startPosition;
+        private float _limitAngleSine = 0;
 
         private void Awake()
         {
             SetStartPosition();
+
+            Vector3Int position = Vector3Int.zero;
+            BoundsInt bounds = position.GetBounds2D(5);
+            var positions = bounds.Iterator();
+            BoundsInt newBounds = BoundsExtension.Encapsulate(positions.ToList());
+            foreach (var item in newBounds.Iterator())
+            {
+                Debug.Log(item);
+            }
         }
 
         private void Update()
         {
             GetMouseDirection();
 
-            if (inputHandler.IsMouseUp)
+            if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
                 SpawnABall();
             }
@@ -70,6 +82,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
             pointer.rotation = Quaternion.Euler(0, 0, angle);
+            _limitAngleSine = Mathf.Sin((angle + 90f) / Mathf.Rad2Deg);
         }
     }
 }

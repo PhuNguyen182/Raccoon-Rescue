@@ -1,13 +1,16 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Utils.BoundsUtils;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class GridCellManager : IDisposable
     {
+        private BoundsInt _gridBounds;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
 
         public GridCellManager()
@@ -18,6 +21,34 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public IGridCell Get(Vector3Int position)
         {
             return _gridCells.TryGetValue(position, out IGridCell gridCell) ? gridCell : null;
+        }
+
+        public void GetRow(Vector3Int position, out List<IGridCell> row)
+        {
+            List<IGridCell> gridCells = new();
+            var rowPositions = _gridBounds.GetRow(position);
+            
+            foreach (Vector3Int rowPosition in rowPositions)
+            {
+                IGridCell cell = Get(rowPosition);
+                gridCells.Add(cell);
+            }
+
+            row = gridCells;
+        }
+
+        public void GetColumn(Vector3Int position, out List<IGridCell> column)
+        {
+            List<IGridCell> gridCells = new();
+            var rowPositions = _gridBounds.GetColumn(position);
+
+            foreach (Vector3Int rowPosition in rowPositions)
+            {
+                IGridCell cell = Get(rowPosition);
+                gridCells.Add(cell);
+            }
+
+            column = gridCells;
         }
 
         public void Add(IGridCell gridCell)
@@ -61,6 +92,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if (right != null && right.BallEntity != null) neighbors.Add(right);
 
             return neighbors;
+        }
+
+        public void Encapsulate()
+        {
+            List<Vector3Int> positions = _gridCells.Keys.ToList();
+            _gridBounds = BoundsExtension.Encapsulate(positions);
         }
 
         public void ClearAll()
