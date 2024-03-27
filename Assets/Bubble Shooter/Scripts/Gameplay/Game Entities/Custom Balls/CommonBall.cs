@@ -25,6 +25,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
+        public override void InitMessages()
+        {
+            
+        }
+
         public void OnFixedUpdate()
         {
             if(CanMove && !IsFixedOnStart)

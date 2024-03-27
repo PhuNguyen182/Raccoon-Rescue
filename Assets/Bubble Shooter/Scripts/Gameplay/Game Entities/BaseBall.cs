@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseBall : BaseEntities, IBallEntity, IBreakable
+    public abstract class BaseBall : BubbleEntity, IBallEntity, IBreakable
     {
         public abstract EntityType EntityType { get; }
 
@@ -22,10 +22,5 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public abstract bool Break();
 
         public abstract void Destroy();
-
-        public virtual void ResetBall() 
-        {
-            
-        }
     }
 }

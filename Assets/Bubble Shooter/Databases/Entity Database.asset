@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42fd2a9a56a3bcd4f9f01199f3528581, type: 3}
+  m_Name: Entity Database
+  m_EditorClassIdentifier: 
+  BallPrefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
+  BallModels:
+  - {fileID: 5049724798039108232, guid: 8c5abca3f892f6041ba3e096a1157ea5, type: 3}
+  - {fileID: 6926540849406918311, guid: fd9650f8095714840bfbf26593ab2b0f, type: 3}
+  - {fileID: 3352895698556281532, guid: e673f3b894a9866408703980bbecc9a8, type: 3}
+  - {fileID: 7476788314222541861, guid: 5ebf6ddc47bf4ed4bbb171def73e10f5, type: 3}
+  - {fileID: 1468757209919789003, guid: 784bb790513a55f4cb63c4ee45692c1d, type: 3}
+  - {fileID: 4279528719797044311, guid: 209cb16a2b9e5a44ebbfe77675f0bdc7, type: 3}
+  Boosters:
+  - {fileID: 36949985931366577, guid: d1885ae89ae87ed498f39e64405a8a52, type: 3}
+  - {fileID: 7860007256291369531, guid: 4b0cd875e232ead48bf1285192f01568, type: 3}
+  - {fileID: 2227682900742907331, guid: a53a1097343415842bc6d9ecfee87167, type: 3}
+  - {fileID: 4599807012861488809, guid: 2e83887b8e1a9a24b9049722442275b5, type: 3}
+  BallEntities:
+  - {fileID: 1255241299858568572, guid: a2297fefe9a5c174db1216f3bc4db48a, type: 3}
+  - {fileID: 2804688515226706361, guid: c364a5533be1b2c48ac698c4b1ad6afd, type: 3}

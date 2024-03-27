@@ -22,6 +22,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public int MaxHP => _maxHp;
 
+        public override void InitMessages()
+        {
+            
+        }
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -41,7 +46,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void Destroy()
         {
-            
+            SimplePool.Despawn(this.gameObject);
         }
 
         public void OnFixedUpdate()

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace BubbleShooter.Scripts.Utils.BoundsUtils
 {
@@ -25,8 +26,10 @@ namespace BubbleShooter.Scripts.Utils.BoundsUtils
         {
             BoundsInt bounds = new BoundsInt
             {
-                position = boundsInt.position,
-                size = new Vector3Int(range, range)
+                xMin = boundsInt.xMin - range / 2,
+                xMax = boundsInt.xMax + range / 2,
+                yMin = boundsInt.yMin - range / 2,
+                yMax = boundsInt.yMax + range / 2,
             };
 
             return bounds;

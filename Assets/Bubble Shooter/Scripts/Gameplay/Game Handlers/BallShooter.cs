@@ -31,15 +31,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private void Awake()
         {
             SetStartPosition();
-
-            Vector3Int position = Vector3Int.zero;
-            BoundsInt bounds = position.GetBounds2D(5);
-            var positions = bounds.Iterator();
-            BoundsInt newBounds = BoundsExtension.Encapsulate(positions.ToList());
-            foreach (var item in newBounds.Iterator())
-            {
-                Debug.Log(item);
-            }
         }
 
         private void Update()

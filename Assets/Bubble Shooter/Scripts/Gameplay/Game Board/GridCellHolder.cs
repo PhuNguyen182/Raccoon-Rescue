@@ -8,6 +8,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
     {
         [SerializeField] private Collider2D cellCollider;
 
+        public bool IsCeilGrid { get; set; }
         public Vector3Int GridPosition { get; set; }
 
         public void SetColliderEnable(bool enable)

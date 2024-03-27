@@ -7,18 +7,23 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class LeafBallBooster : BaseEntities, IBallBooster
+    public class LeafBallBooster : BaseBooster, IBallBooster
     {
-        public EntityType BoosterType => EntityType.LeafBall;
+        public override EntityType BoosterType => EntityType.LeafBall;
 
-        public UniTask Activate()
+        public override UniTask Activate()
         {
             return UniTask.CompletedTask;
         }
 
-        public UniTask Explode()
+        public override UniTask Explode()
         {
             return UniTask.CompletedTask;
+        }
+
+        public override void InitMessages()
+        {
+            
         }
     }
 }

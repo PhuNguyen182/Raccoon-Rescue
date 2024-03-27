@@ -28,6 +28,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override EntityType EntityType => _entityType;
 
+        public override void InitMessages()
+        {
+            
+        }
+
         public void TransformTo(EntityType color)
         {
             _entityType = color;
