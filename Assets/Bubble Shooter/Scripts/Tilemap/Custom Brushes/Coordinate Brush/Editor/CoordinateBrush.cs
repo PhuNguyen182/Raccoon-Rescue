@@ -80,7 +80,7 @@ namespace UnityEditor
             }
 
             GUIStyle myStyle = new GUIStyle();
-            myStyle.normal.textColor = Color.white;
+            myStyle.normal.textColor = new Color(0.8f, 0.8f, 0.8f, 1);
 
             Handles.Label(grid.CellToWorld(new Vector3Int(position.x, position.y, coordinateBrush.z)), labelText, myStyle);
         }
