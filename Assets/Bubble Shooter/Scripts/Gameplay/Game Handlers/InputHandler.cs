@@ -14,9 +14,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public bool IsMouseHold { get; private set; }
         public bool IsMouseUp { get; private set; }
 
-        public Action OnHold;
-        public Action OnClicked;
-        public Action OnRelease;
+        public event Action OnHold;
+        public event Action OnClicked;
+        public event Action OnRelease;
 
         private void Update()
         {
