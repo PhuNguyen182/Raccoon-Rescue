@@ -7,6 +7,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameDatas
 {
     public struct EntityMapData
     {
+        public int ID;
         public int HP;
         public EntityType EntityType;
     }

@@ -13,9 +13,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private BoundsInt _gridBounds;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
 
-        public GridCellManager()
+        public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
+
+        public GridCellManager(Func<Vector3Int, Vector3> convertFunction)
         {
             _gridCells = new();
+            ConvertPositionFunction = convertFunction;
         }
 
         public IGridCell Get(Vector3Int position)

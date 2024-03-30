@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseBall, IFixedUpdateHandler, IBallMovement
+    public class CommonBall : BaseBall, IFixedUpdateHandler, IBallMovement, IBallAnimation, IBallEffect
     {
         [SerializeField] private EntityType ballColor;
 
@@ -61,6 +61,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override bool Break()
         {
             return true;
+        }
+
+        public void PlayBounceAnimation()
+        {
+            
+        }
+
+        public void PlayBounceEffect()
+        {
+            
         }
 
         public override void Destroy()

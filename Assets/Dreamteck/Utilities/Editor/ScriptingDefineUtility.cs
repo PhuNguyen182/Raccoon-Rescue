@@ -13,7 +13,7 @@ namespace Dreamteck.Editor
             ArrayUtility.Add(ref allDefines, define);
             definesString = string.Join(";", allDefines);
             PlayerSettings.SetScriptingDefineSymbolsForGroup(target, definesString);
-            Debug.Log("Added \"" + define + "\" from " + EditorUserBuildSettings.selectedBuildTargetGroup + " Scripting define in Player Settings");
+            //Debug.Log("Added \"" + define + "\" from " + EditorUserBuildSettings.selectedBuildTargetGroup + " Scripting define in Player Settings");
         }
 
         public static void Remove(string define, BuildTargetGroup target, bool log = false)
@@ -24,7 +24,7 @@ namespace Dreamteck.Editor
             ArrayUtility.Remove(ref allDefines, define);
             definesString = string.Join(";", allDefines);
             PlayerSettings.SetScriptingDefineSymbolsForGroup(target, definesString);
-            Debug.Log("Removed \""+ define + "\" from " + EditorUserBuildSettings.selectedBuildTargetGroup + " Scripting define in Player Settings");
+            //Debug.Log("Removed \""+ define + "\" from " + EditorUserBuildSettings.selectedBuildTargetGroup + " Scripting define in Player Settings");
         }
     }
 }
