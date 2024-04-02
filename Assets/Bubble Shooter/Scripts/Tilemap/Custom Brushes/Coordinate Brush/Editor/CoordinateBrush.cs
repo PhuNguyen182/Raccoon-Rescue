@@ -10,6 +10,8 @@ namespace UnityEditor
     public class CoordinateBrush : GridBrush
     {
         public int z = 0;
+        public int textSize = 20;
+        public Color textColor;
 
         public override void Paint(GridLayout grid, GameObject brushTarget, Vector3Int position)
         {
@@ -80,7 +82,8 @@ namespace UnityEditor
             }
 
             GUIStyle myStyle = new GUIStyle();
-            myStyle.normal.textColor = new Color(0.8f, 0.8f, 0.8f, 1);
+            myStyle.fontSize = coordinateBrush.textSize;
+            myStyle.normal.textColor = coordinateBrush.textColor;
 
             Handles.Label(grid.CellToWorld(new Vector3Int(position.x, position.y, coordinateBrush.z)), labelText, myStyle);
         }

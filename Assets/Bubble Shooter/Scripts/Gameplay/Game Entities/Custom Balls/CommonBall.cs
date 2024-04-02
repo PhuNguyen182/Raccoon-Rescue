@@ -20,6 +20,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override EntityType EntityType => ballColor;
 
+        public override bool IsMatchable => true;
+
         private void OnEnable()
         {
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);

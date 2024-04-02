@@ -14,6 +14,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
 
         public EntityType EntityType => _ballEntity.EntityType;
 
+        public Vector3 WorldPosition { get; set; }
         public Vector3Int GridPosition { get; set; }
 
         public GridCell(Vector3Int position, IBallEntity ballEntity)
@@ -37,6 +38,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
         public void SetBall(IBallEntity ball)
         {
             _ballEntity = ball;
+            
+            if(_ballEntity != null)
+            {
+                ball.GridPosition = GridPosition;
+                ball.SetWorldPosition(WorldPosition);
+            }
         }
     }
 }

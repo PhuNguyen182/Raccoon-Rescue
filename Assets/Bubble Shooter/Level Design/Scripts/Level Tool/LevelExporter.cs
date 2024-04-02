@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.Scripts.Gameplay.Models;
+using BubbleShooter.LevelDesign.Scripts.BoardTiles;
 using BubbleShooter.LevelDesign.Scripts.CustomTiles;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameDatas;
@@ -20,6 +21,44 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         public LevelExporter Clear()
         {
             _levelModel.ClearData();
+            return this;
+        }
+
+        public LevelExporter BuildBoardMap(Tilemap tilemap)
+        {
+            var positions = tilemap.cellBounds.Iterator();
+            foreach (Vector3Int position in positions)
+            {
+                var tile = tilemap.GetTile<BoardTile>(position);
+
+                if (tile == null)
+                    continue;
+
+                _levelModel.BoardMapPositions.Add(new BoardMapPosition
+                {
+                    Position = position
+                });
+            }
+
+            return this;
+        }
+
+        public LevelExporter BuildBoardThresholdMap(Tilemap tilemap)
+        {
+            var positions = tilemap.cellBounds.Iterator();
+            foreach (Vector3Int position in positions)
+            {
+                var tile = tilemap.GetTile<BoardThresholdTile>(position);
+
+                if (tile == null)
+                    continue;
+
+                _levelModel.BoardThresholdMapPositions.Add(new BoardThresholdMapPosition
+                {
+                    Position = position
+                });
+            }
+
             return this;
         }
 
@@ -73,19 +112,24 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public void Export(string level)
+        public string Export(string level, bool useResource = true)
         {
             string levelPath = $"Assets/Bubble Shooter/Resources/Level Datas/{level}.txt";
             string json = JsonConvert.SerializeObject(_levelModel, Formatting.None);
 
-            using StreamWriter writer = new StreamWriter(levelPath);
-            writer.Write(json);
-            writer.Close();
+            if (useResource)
+            {
+                using StreamWriter writer = new StreamWriter(levelPath);
+                writer.Write(json);
+                writer.Close();
 
 #if UNITY_EDITOR
-            AssetDatabase.ImportAsset(levelPath);
-            Debug.Log(json);
+                AssetDatabase.ImportAsset(levelPath);
 #endif
+            }
+
+            Debug.Log(useResource ? json : "Get level data at output placehold!");
+            return json;
         }
     }
 }

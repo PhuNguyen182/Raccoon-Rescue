@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.LevelDesign.Scripts.Databases;
-using BubbleShooter.LevelDesign.Scripts.CustomTiles;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -15,6 +14,34 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         public LevelImporter(TileDatabase tileDatabase)
         {
             _tileDatabase = tileDatabase;
+        }
+
+        public LevelImporter BuildBoardMapPosition(Tilemap tilemap, List<BoardMapPosition> mapPositions)
+        {
+            tilemap.ClearAllTiles();
+
+            for (int i = 0; i < mapPositions.Count; i++)
+            {
+                var mapPosition = mapPositions[i];
+                var tile = _tileDatabase.GetBoardTile();
+                tilemap.SetTile(mapPosition.Position, tile);
+            }
+
+            return this;
+        }
+
+        public LevelImporter BuildBoardThresholdMapPosition(Tilemap tilemap, List<BoardThresholdMapPosition> mapPositions)
+        {
+            tilemap.ClearAllTiles();
+
+            for (int i = 0; i < mapPositions.Count; i++)
+            {
+                var mapPosition = mapPositions[i];
+                var tile = _tileDatabase.GetBoardThresholdTile();
+                tilemap.SetTile(mapPosition.Position, tile);
+            }
+
+            return this;
         }
 
         public LevelImporter BuildBallMapPosition(Tilemap tilemap, List<EntityMapPosition> mapPositions)
@@ -33,7 +60,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         public void Import()
         {
-
+            Debug.Log("Import Successfully!!!");
         }
     }
 }

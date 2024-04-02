@@ -28,6 +28,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override EntityType EntityType => _entityType;
 
+        public override bool IsMatchable => true;
+
         public override void InitMessages()
         {
             

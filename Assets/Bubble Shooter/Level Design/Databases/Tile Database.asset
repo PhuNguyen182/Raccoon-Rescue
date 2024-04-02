@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8638f8497566c714994012e6329a0c68, type: 3}
   m_Name: Tile Database
   m_EditorClassIdentifier: 
+  boardTile: {fileID: 11400000, guid: fa09957dfb6cde14d9541d936eae6159, type: 2}
+  thresholdTile: {fileID: 11400000, guid: 283bb9dcc8a61014689a68101409cb1e, type: 2}
   ballTiles:
   - {fileID: 11400000, guid: d4da3c63a156a974da527d1eebc2c35b, type: 2}
   - {fileID: 11400000, guid: e6d0c1bf90f0ba5489be6bb4d9238f14, type: 2}
   - {fileID: 11400000, guid: c5ac698da0f39d2439245198ac0dc035, type: 2}
+  - {fileID: 11400000, guid: 3b3926039ccea0c41af252e1c7aac75b, type: 2}
   - {fileID: 11400000, guid: 65112fa074581ab4bb703e797384ad40, type: 2}
   - {fileID: 11400000, guid: f9e220ce0b9e39b40b7d1d5e7e46e698, type: 2}
   - {fileID: 11400000, guid: ce48490ac456efd4d93ba7999cf30e55, type: 2}

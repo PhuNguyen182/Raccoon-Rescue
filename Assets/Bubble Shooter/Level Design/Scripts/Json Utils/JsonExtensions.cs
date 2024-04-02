@@ -22,6 +22,23 @@ namespace BubbleShooter.LevelDesign.Scripts.JsonUtils
             }
         }
 
+        public static bool ReadInts(this JsonReader reader, out int? x, out int? y)
+        {
+            x = y = 0;
+
+            try
+            {
+                reader.ReadInt(out x);
+                reader.ReadInt(out y);
+                return true;
+            }
+            catch
+            {
+                Debug.LogError("Cannot read interger numbers!");
+                return false;
+            }
+        }
+
         public static bool ReadInts(this JsonReader reader, out int? x, out int? y, out int? value1, out int? value2, out int? value3)
         {
             x = y = value1 = value2 = value3 = 0;

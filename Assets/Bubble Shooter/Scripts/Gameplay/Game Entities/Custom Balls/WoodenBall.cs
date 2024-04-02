@@ -22,6 +22,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public int MaxHP => _maxHp;
 
+        public override bool IsMatchable => false;
+
         public override void InitMessages()
         {
             

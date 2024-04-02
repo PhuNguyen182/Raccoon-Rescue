@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
+using UnityEngine.Pool;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -13,12 +14,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private BoundsInt _gridBounds;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
 
+        private readonly int[] _xNeighbours;
+        private readonly int[] _yNeighbours;
+
         public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
 
         public GridCellManager(Func<Vector3Int, Vector3> convertFunction)
         {
             _gridCells = new();
             ConvertPositionFunction = convertFunction;
+
+            _xNeighbours = new int[] { 0, 1, 0, -1, -1, -1 };
+            _yNeighbours = new int[] { 1, 0, -1, -1, 0, 1 };
         }
 
         public IGridCell Get(Vector3Int position)
@@ -56,17 +63,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Add(IGridCell gridCell)
         {
-            if (!_gridCells.ContainsKey(gridCell.GridPosition))
+            if(gridCell != null)
             {
-                _gridCells.Add(gridCell.GridPosition, gridCell);
+                gridCell.WorldPosition = ConvertPositionFunction.Invoke(gridCell.GridPosition);
             }
+
+            if(!_gridCells.TryAdd(gridCell.GridPosition, gridCell))
+            {
+                _gridCells[gridCell.GridPosition] = gridCell;
+                return;
+            }
+
+            _gridCells.Add(gridCell.GridPosition, gridCell);
         }
 
         public void Remove(Vector3Int position)
         {
             if (_gridCells.ContainsKey(position))
             {
-                _gridCells.Remove(position);
+                _gridCells[position] = null;
             }
         }
 
@@ -80,21 +95,46 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             return false;
         }
 
-        public List<IGridCell> GetCrossNeighbors(Vector3Int position)
+        public bool CheckNeighbours(Vector3Int checkPosition, out List<Vector3Int> neighbourPositions)
         {
-            List<IGridCell> neighbors = new();
+            // Check 6 neighbour cells
+            List<Vector3Int> positions;
 
-            IGridCell up = Get(position + Vector3Int.up);
-            IGridCell down = Get(position + Vector3Int.down);
-            IGridCell left = Get(position + Vector3Int.left);
-            IGridCell right = Get(position + Vector3Int.right);
+            IGridCell checkCell = Get(checkPosition);
+            if(checkCell.BallEntity == null)
+            {
+                neighbourPositions = null;
+                return false;
+            }
 
-            if (up != null && up.BallEntity != null) neighbors.Add(up);
-            if (down != null && down.BallEntity != null) neighbors.Add(down);
-            if (left != null && left.BallEntity != null) neighbors.Add(left);
-            if (right != null && right.BallEntity != null) neighbors.Add(right);
+            using (var listPool = ListPool<Vector3Int>.Get(out positions))
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    Vector3Int checkPos = new(_xNeighbours[i], _yNeighbours[i]);
+                    IGridCell gridCell = Get(checkPos);
 
-            return neighbors;
+                    if (gridCell.BallEntity == null)
+                        continue;
+
+                    if (gridCell.BallEntity.EntityType != checkCell.BallEntity.EntityType)
+                        continue;
+
+                    if (!gridCell.BallEntity.IsMatchable)
+                        continue;
+
+                    positions.Add(checkPos);
+                }
+
+                if (positions.Count > 0)
+                {
+                    neighbourPositions = positions;
+                    return true;
+                }
+            }
+
+            neighbourPositions = null;
+            return false;
         }
 
         public void Encapsulate()
