@@ -1,6 +1,8 @@
+using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -18,7 +20,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Fill()
         {
+            var positions = _metaBallManager.Iterator().ToList();
+            
+            for (int i = 0; i < positions.Count; i++)
+            {
+                IGridCell gridCell = _gridCellManager.Get(positions[i]);
+                IBallEntity ballEntity = _metaBallManager.Get(positions[i]);
 
+                gridCell.SetBall(ballEntity);
+            }
         }
     }
 }

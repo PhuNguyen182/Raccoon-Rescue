@@ -15,15 +15,15 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             _metaBalls = new();
         }
 
-        public void Add(IBallEntity ballEntity)
+        public void Add(Vector3Int position, IBallEntity ballEntity)
         {
-            if(!_metaBalls.TryAdd(ballEntity.GridPosition, ballEntity))
+            if(_metaBalls.ContainsKey(position))
             {
-                IBallEntity ball = _metaBalls[ballEntity.GridPosition];
                 _metaBalls[ballEntity.GridPosition] = ballEntity;
+                return;
             }
 
-            _metaBalls.Add(ballEntity.GridPosition, ballEntity);
+            _metaBalls.Add(position, ballEntity);
         }
 
         public IBallEntity Get(Vector3Int position)
@@ -36,6 +36,14 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             if (_metaBalls.ContainsKey(ballEntity.GridPosition))
             {
                 _metaBalls.Remove(ballEntity.GridPosition);
+            }
+        }
+
+        public IEnumerable<Vector3Int> Iterator()
+        {
+            foreach (Vector3Int position in _metaBalls.Keys)
+            {
+                yield return position;
             }
         }
 

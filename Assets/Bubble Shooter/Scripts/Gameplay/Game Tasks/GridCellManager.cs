@@ -68,7 +68,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 gridCell.WorldPosition = ConvertPositionFunction.Invoke(gridCell.GridPosition);
             }
 
-            if(!_gridCells.TryAdd(gridCell.GridPosition, gridCell))
+            if(_gridCells.ContainsKey(gridCell.GridPosition))
             {
                 _gridCells[gridCell.GridPosition] = gridCell;
                 return;

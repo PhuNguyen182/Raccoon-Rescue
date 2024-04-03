@@ -14,6 +14,7 @@ using Scripts.Configs;
 using Scripts.Service;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Common.Interfaces;
+using Newtonsoft.Json;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {
@@ -47,7 +48,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void Start()
         {
-            
+            GetLevel();
         }
 
         private void Setup()
@@ -74,6 +75,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _disposable = builder.Build();
         }
 
+        private void GetLevel()
+        {
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
+            LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
+            GenerateLevel(levelModel);
+        }
+
         private void GenerateLevel(LevelModel levelModel)
         {
             for (int i = 0; i < levelModel.BoardMapPositions.Count; i++)
@@ -93,8 +101,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             {
                 var data = levelModel.StartingEntityMap[i].MapData;
                 var ballEntity = _entityFactory.Create(data);
-                _metaBallManager.Add(ballEntity);
+                _metaBallManager.Add(levelModel.StartingEntityMap[i].Position, ballEntity);
             }
+
+            _fillBoardTask.Fill();
         }
 
         private Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)

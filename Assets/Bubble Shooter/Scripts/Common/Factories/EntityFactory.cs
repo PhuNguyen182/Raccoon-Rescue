@@ -30,9 +30,10 @@ namespace BubbleShooter.Scripts.Common.Factories
                 if(data.EntityType == _entityDatabase.BallModels[i].EntityType)
                 {
                     CommonBall ball = SimplePool.Spawn(_entityDatabase.BallPrefab);
-                    
-                    ball.ResetBall();
+
+                    ball.SetColor(data.EntityType);
                     ball.transform.SetParent(_entityContainer);
+                    ball.ResetBall();
 
                     return ball;
                 }

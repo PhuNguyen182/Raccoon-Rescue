@@ -5,12 +5,27 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallAnimation, IBallEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
+
+        [Header("Ball Colors")]
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite blue;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite green;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite orange;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite red;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite violet;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite yellow;
 
         public bool CanMove 
         { 
@@ -43,6 +58,33 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             if(CanMove && !IsFixedOnStart)
             {
                 ballMovement.Move();
+            }
+        }
+
+        public void SetColor(EntityType color)
+        {
+            ballColor = color;
+
+            switch (color)
+            {
+                case EntityType.Red:
+                    entityGraphics.SetEntitySprite(red);
+                    break;
+                case EntityType.Yellow:
+                    entityGraphics.SetEntitySprite(yellow);
+                    break;
+                case EntityType.Green:
+                    entityGraphics.SetEntitySprite(green);
+                    break;
+                case EntityType.Blue:
+                    entityGraphics.SetEntitySprite(blue);
+                    break;
+                case EntityType.Violet:
+                    entityGraphics.SetEntitySprite(violet);
+                    break;
+                case EntityType.Orange:
+                    entityGraphics.SetEntitySprite(orange);
+                    break;
             }
         }
 
@@ -86,14 +128,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             SimplePool.Despawn(this.gameObject);
         }
 
-        private void OnDisable()
+        public override void ResetBall()
         {
-            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+            base.ResetBall();
+            CanMove = false;
+            IsFixedOnStart = true;
+            SetBodyActive(false);
         }
 
         public override void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        private void OnDisable()
+        {
+            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

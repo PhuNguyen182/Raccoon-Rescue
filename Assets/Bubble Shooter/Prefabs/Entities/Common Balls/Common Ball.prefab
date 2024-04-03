@@ -198,6 +198,12 @@ MonoBehaviour:
   ballMovement: {fileID: 4794890370154255178}
   entityGraphics: {fileID: -5590487632725766420}
   ballColor: 4
+  blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
+  green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
+  orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
+  red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
+  violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
+  yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
 --- !u!114 &-5590487632725766420
 MonoBehaviour:
   m_ObjectHideFlags: 0

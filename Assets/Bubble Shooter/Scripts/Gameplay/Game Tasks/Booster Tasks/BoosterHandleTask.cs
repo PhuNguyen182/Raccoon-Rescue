@@ -32,24 +32,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         public async UniTask ActiveBooster(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
-            
-            if(gridCell.BallEntity is IBallEntity booster)
+
+            switch (gridCell.BallEntity.EntityType)
             {
-                switch (booster.EntityType)
-                {
-                    case EntityType.FireBall:
-                        await _fireBallBoosterTask.Execute(position);
-                        break;
-                    case EntityType.LeafBall:
-                        await _leafBallBoosterTask.Execute(position);
-                        break;
-                    case EntityType.WaterBall:
-                        await _waterBallBoosterTask.Execute(position);
-                        break;
-                    case EntityType.SunBall:
-                        await _sunBallBoosterTask.Execute(position);
-                        break;
-                }
+                case EntityType.FireBall:
+                    await _fireBallBoosterTask.Execute(position);
+                    break;
+                case EntityType.LeafBall:
+                    await _leafBallBoosterTask.Execute(position);
+                    break;
+                case EntityType.WaterBall:
+                    await _waterBallBoosterTask.Execute(position);
+                    break;
+                case EntityType.SunBall:
+                    await _sunBallBoosterTask.Execute(position);
+                    break;
             }
         }
 
