@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
-using BubbleShooter.Scripts.Gameplay.GameEntities.Boosters;
 using BubbleShooter.Scripts.Gameplay.Models;
 
 namespace BubbleShooter.Scripts.Common.Databases
@@ -13,7 +12,7 @@ namespace BubbleShooter.Scripts.Common.Databases
     {
         public CommonBall BallPrefab;
         public CommonBallModel[] BallModels;
-        public BaseBooster[] Boosters;
-        public BaseBall[] BallEntities;
+        public BaseEntity[] Boosters;
+        public BaseEntity[] BallEntities;
     }
 }

@@ -8,7 +8,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class ColorfulBall : BaseBall, IFixedUpdateHandler, IBallMovement, IBallTransformation
+    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallTransformation, IBreakable
     {
         [Header("Colorful Balls")]
         [SerializeField] private Sprite red;
@@ -29,6 +29,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override EntityType EntityType => _entityType;
 
         public override bool IsMatchable => true;
+
+        public override bool IsFixedOnStart { get; set; }
+
+        public override Vector3 WorldPosition => transform.position;
+
+        public override Vector3Int GridPosition { get; set; }
 
         public override void InitMessages()
         {
@@ -58,7 +64,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             await UniTask.CompletedTask;
         }
 
-        public override bool Break()
+        public bool Break()
         {
             return false;
         }
@@ -89,6 +95,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask SnapTo(Vector3 position)
         {
             return ballMovement.SnapTo(position);
+        }
+
+        public override void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
         }
     }
 }

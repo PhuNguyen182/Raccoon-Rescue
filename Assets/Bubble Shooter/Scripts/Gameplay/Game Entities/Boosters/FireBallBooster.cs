@@ -7,16 +7,34 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class FireBallBooster : BaseBooster, IBallBooster
+    public class FireBallBooster : BaseEntity, IBallBooster
     {
-        public override EntityType BoosterType => EntityType.FireBall;
+        public override EntityType EntityType => EntityType.FireBall;
 
-        public override UniTask Activate()
+        public override bool IsMatchable => false;
+
+        public override bool IsFixedOnStart { get; set; }
+
+        public override Vector3 WorldPosition => transform.position;
+
+        public override Vector3Int GridPosition { get; set; }
+
+        public UniTask Activate()
         {
             return UniTask.CompletedTask;
         }
 
-        public override UniTask Explode()
+        public override UniTask Blast()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public override void Destroy()
+        {
+            
+        }
+
+        public UniTask Explode()
         {
             return UniTask.CompletedTask;
         }
@@ -24,6 +42,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void InitMessages()
         {
             
+        }
+
+        public override void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
         }
     }
 }

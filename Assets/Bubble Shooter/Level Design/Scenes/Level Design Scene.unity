@@ -173,6 +173,13 @@ MonoBehaviour:
   tileDatabase: {fileID: 11400000, guid: 430c3825efc17c44490a5aaf7708de7f, type: 2}
   inputLevel: 
   outputLevel: 
+  colorProportions:
+  - Coefficient: 1000
+    Color: 1
+  - Coefficient: 1000
+    Color: 4
+  - Coefficient: 1000
+    Color: 5
 --- !u!1 &375386102
 GameObject:
   m_ObjectHideFlags: 0
@@ -1248,8 +1255,8 @@ Tilemap:
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -5, y: 2, z: 0}
-  m_Size: {x: 11, y: 9, z: 1}
+  m_Origin: {x: -5, y: 0, z: 0}
+  m_Size: {x: 11, y: 11, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:

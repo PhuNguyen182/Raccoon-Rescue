@@ -7,23 +7,46 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class LeafBallBooster : BaseBooster, IBallBooster
+    public class LeafBallBooster : BaseEntity, IBallBooster
     {
-        public override EntityType BoosterType => EntityType.LeafBall;
+        public override EntityType EntityType => EntityType.LeafBall;
 
-        public override UniTask Activate()
+        public override bool IsMatchable => false;
+
+        public override bool IsFixedOnStart { get; set; }
+
+        public override Vector3 WorldPosition => transform.position;
+
+        public override Vector3Int GridPosition { get; set; }
+
+        public UniTask Activate()
         {
             return UniTask.CompletedTask;
         }
 
-        public override UniTask Explode()
+        public override UniTask Blast()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public override void Destroy()
+        {
+
+        }
+
+        public UniTask Explode()
         {
             return UniTask.CompletedTask;
         }
 
         public override void InitMessages()
         {
-            
+
+        }
+
+        public override void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
         }
     }
 }

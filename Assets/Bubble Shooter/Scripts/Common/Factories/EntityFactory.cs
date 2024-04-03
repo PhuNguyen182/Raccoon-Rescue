@@ -6,12 +6,11 @@ using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
-using BubbleShooter.Scripts.Gameplay.GameEntities.Boosters;
 using BubbleShooter.Scripts.Common.Interfaces;
 
 namespace BubbleShooter.Scripts.Common.Factories
 {
-    public class EntityFactory : IFactory<EntityMapData, BubbleEntity>
+    public class EntityFactory : IFactory<EntityMapData, BaseEntity>
     {
         private readonly EntityDatabase _entityDatabase;
         private readonly Transform _entityContainer;
@@ -24,7 +23,7 @@ namespace BubbleShooter.Scripts.Common.Factories
             PreloadEntities();
         }
 
-        public BubbleEntity Create(EntityMapData data)
+        public BaseEntity Create(EntityMapData data)
         {
             for (int i = 0; i < _entityDatabase.BallModels.Length; i++)
             {
@@ -41,9 +40,9 @@ namespace BubbleShooter.Scripts.Common.Factories
 
             for (int i = 0; i < _entityDatabase.Boosters.Length; i++)
             {
-                if (data.EntityType == _entityDatabase.Boosters[i].BoosterType)
+                if (data.EntityType == _entityDatabase.Boosters[i].EntityType)
                 {
-                    BaseBooster booster = SimplePool.Spawn(_entityDatabase.Boosters[i]);
+                    BaseEntity booster = SimplePool.Spawn(_entityDatabase.Boosters[i]);
 
                     booster.ResetBall();
                     booster.transform.SetParent(_entityContainer);
@@ -56,7 +55,7 @@ namespace BubbleShooter.Scripts.Common.Factories
             {
                 if (data.EntityType == _entityDatabase.BallEntities[i].EntityType)
                 {
-                    BubbleEntity entity = SimplePool.Spawn(_entityDatabase.BallEntities[i]);
+                    BaseEntity entity = SimplePool.Spawn(_entityDatabase.BallEntities[i]);
 
                     if(entity is IBallHealth health)
                     {

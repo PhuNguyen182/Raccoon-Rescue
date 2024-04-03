@@ -33,9 +33,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             IGridCell gridCell = _gridCellManager.Get(position);
             
-            if(gridCell.BallEntity is IBallBooster booster)
+            if(gridCell.BallEntity is IBallEntity booster)
             {
-                switch (booster.BoosterType)
+                switch (booster.EntityType)
                 {
                     case EntityType.FireBall:
                         await _fireBallBoosterTask.Execute(position);

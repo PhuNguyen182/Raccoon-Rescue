@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseBall, IFixedUpdateHandler, IBallMovement, IBallAnimation, IBallEffect
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallAnimation, IBallEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -21,6 +21,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override EntityType EntityType => ballColor;
 
         public override bool IsMatchable => true;
+
+        public override bool IsFixedOnStart { get; set; }
+
+        public override Vector3 WorldPosition => transform.position;
+
+        public override Vector3Int GridPosition { get; set; }
 
         private void OnEnable()
         {
@@ -60,7 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return UniTask.CompletedTask;
         }
 
-        public override bool Break()
+        public bool Break()
         {
             return true;
         }
@@ -83,6 +89,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         private void OnDisable()
         {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+        }
+
+        public override void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
         }
     }
 }

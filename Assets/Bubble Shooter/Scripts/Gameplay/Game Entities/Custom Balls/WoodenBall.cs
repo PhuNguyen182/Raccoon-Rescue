@@ -8,11 +8,10 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseBall, IFixedUpdateHandler, IBallMovement, IBallHealth
+    public class WoodenBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallHealth, IBreakable
     {
         [Header("Health Sprites")]
-        [SerializeField] private Sprite hp2;
-        [SerializeField] private Sprite hp1;
+        [SerializeField] private Sprite[] hpStates;
 
         private int _hp = 0;
         private int _maxHp = 0;
@@ -24,6 +23,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override bool IsMatchable => false;
 
+        public override bool IsFixedOnStart { get; set; }
+
+        public override Vector3 WorldPosition => transform.position;
+
+        public override Vector3Int GridPosition { get; set; }
+
         public override void InitMessages()
         {
             
@@ -34,7 +39,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return UniTask.CompletedTask;
         }
 
-        public override bool Break()
+        public bool Break()
         {
             if (_hp > 0)
             {
@@ -85,10 +90,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private void SetRenderer()
         {
-            if (_hp == 2)
-                entityGraphics.SetEntitySprite(hp2);
-            else if(_hp == 1)
-                entityGraphics.SetEntitySprite(hp1);
+            entityGraphics.SetEntitySprite(hpStates[_hp - 1]);
+        }
+
+        public override void SetWorldPosition(Vector3 position)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

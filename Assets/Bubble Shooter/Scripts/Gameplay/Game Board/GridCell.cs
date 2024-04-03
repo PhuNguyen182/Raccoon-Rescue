@@ -17,12 +17,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
         public Vector3 WorldPosition { get; set; }
         public Vector3Int GridPosition { get; set; }
 
-        public GridCell(Vector3Int position, IBallEntity ballEntity)
-        {
-            _ballEntity = ballEntity;
-            GridPosition = position;
-        }
-
         public bool Destroy()
         {
             if(_ballEntity != null)

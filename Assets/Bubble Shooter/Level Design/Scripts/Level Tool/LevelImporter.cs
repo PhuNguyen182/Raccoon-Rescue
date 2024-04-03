@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.LevelDesign.Scripts.Databases;
+using BubbleShooter.Scripts.Gameplay.Models;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -41,6 +42,18 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                 tilemap.SetTile(mapPosition.Position, tile);
             }
 
+            return this;
+        }
+
+        public LevelImporter BuildColorProportion(List<ColorMapData> colorMapDatas, out List<ColorProportion> colorProportions)
+        {
+            List<ColorProportion> colors = new();
+            for (int i = 0; i < colorMapDatas.Count; i++)
+            {
+                colors.Add(colorMapDatas[i].ColorProportion);
+            }
+
+            colorProportions = colors;
             return this;
         }
 

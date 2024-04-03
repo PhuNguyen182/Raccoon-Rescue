@@ -62,6 +62,19 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelExporter BuildColorProportion(List<ColorProportion> colorProportions)
+        {
+            for (int i = 0; i < colorProportions.Count; i++)
+            {
+                _levelModel.ColorMapDatas.Add(new ColorMapData
+                {
+                    ColorProportion = colorProportions[i]
+                });
+            }
+
+            return this;
+        }
+
         public LevelExporter BuildBallMap(Tilemap tilemap)
         {
             var positions = tilemap.cellBounds.Iterator();

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.Databases;
-using Sirenix.OdinInspector;
+using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.Models;
+using Sirenix.OdinInspector;
 using Newtonsoft.Json;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
     public class LevelBuilder : MonoBehaviour
     {
+        [Header("Builder Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
         [SerializeField] private Tilemap boardThresholdTilemap;
         [SerializeField] private Tilemap entityTilemap;
@@ -20,12 +22,16 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [SerializeField] private string inputLevel;
         [SerializeField] private string outputLevel;
 
+        [Header("Color Proportion")]
+        [SerializeField] private List<ColorProportion> colorProportions;
+
         private LevelImporter _levelImporter;
         private LevelExporter _levelExporter = new();
 
         [Button]
         public void Clear()
         {
+            colorProportions.Clear();
             boardTilemap.ClearAllTiles();
             boardThresholdTilemap.ClearAllTiles();
             entityTilemap.ClearAllTiles();
@@ -49,11 +55,15 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                                           .BuildBoardMap(boardTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
                                           .BuildBallMap(entityTilemap)
+                                          .BuildColorProportion(colorProportions)
                                           .BuildEntityMap(entityTilemap)
                                           .Export($"level_{level}", useResource);
             
             if (!useResource)
+            {
                 outputLevel = output;
+                Debug.Log(outputLevel);
+            }
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]
@@ -74,6 +84,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             _levelImporter = new(tileDatabase);
             _levelImporter.BuildBoardMapPosition(boardTilemap, levelModel.BoardMapPositions)
                           .BuildBoardThresholdMapPosition(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
+                          .BuildColorProportion(levelModel.ColorMapDatas, out colorProportions)
                           .BuildBallMapPosition(entityTilemap, levelModel.StartingEntityMap)
                           .Import();
         }
