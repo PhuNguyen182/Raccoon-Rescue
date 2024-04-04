@@ -15,6 +15,7 @@ using Scripts.Service;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Newtonsoft.Json;
+using BubbleShooter.Scripts.Gameplay.GameEntities;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {
@@ -33,6 +34,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [SerializeField] private Tilemap boardTilemap;
 
         private EntityFactory _entityFactory;
+        private TargetFactory _targetFactory;
         private GridCellManager _gridCellManager;
         private MetaBallManager _metaBallManager;
         private FillBoardTask _fillBoardTask;
@@ -62,7 +64,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             
             _gridCellManager = new(ConvertGridPositionToWolrdPosition);
             _gridCellManager.AddTo(ref builder);
+
             _entityFactory = new(entityDatabase, entityContainer);
+            _targetFactory = new(entityDatabase, entityContainer);
 
             _metaBallManager = new();
             _metaBallManager.AddTo(ref builder);
@@ -102,6 +106,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 var data = levelModel.StartingEntityMap[i].MapData;
                 var ballEntity = _entityFactory.Create(data);
                 _metaBallManager.Add(levelModel.StartingEntityMap[i].Position, ballEntity);
+            }
+
+            for (int i = 0; i < levelModel.TargetMapPositions.Count; i++)
+            {
+                var data = levelModel.TargetMapPositions[i].MapData;
+                var targetEntity = _targetFactory.Create(data);
+                _metaBallManager.Add(levelModel.TargetMapPositions[i].Position, targetEntity);
             }
 
             _fillBoardTask.Fill();

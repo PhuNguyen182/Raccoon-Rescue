@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
     [Serializable]
     public class LevelModel
     {
+        public List<int> MoveSequence = new();
         public List<BoardMapPosition> BoardMapPositions = new();
         public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new(); // To be tested
         public List<ColorMapData> ColorMapDatas = new(); // To be tested
@@ -17,6 +18,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
 
         public void ClearData()
         {
+            MoveSequence.Clear();
             BoardMapPositions.Clear();
             BoardThresholdMapPositions.Clear();
             ColorMapDatas.Clear();

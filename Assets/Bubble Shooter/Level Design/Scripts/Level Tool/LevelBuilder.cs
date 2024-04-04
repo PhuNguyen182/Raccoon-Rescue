@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.Databases;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.Models;
+using BubbleShooter.Scripts.Common.Enums;
 using Sirenix.OdinInspector;
 using Newtonsoft.Json;
 
@@ -22,6 +23,9 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [SerializeField] private string inputLevel;
         [SerializeField] private string outputLevel;
 
+        [Header("Move Sequence")]
+        [SerializeField] private List<EntityType> moveSequence;
+
         [Header("Color Proportion")]
         [SerializeField] private List<ColorProportion> colorProportions;
 
@@ -31,6 +35,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [Button]
         public void Clear()
         {
+            moveSequence.Clear();
             colorProportions.Clear();
             boardTilemap.ClearAllTiles();
             boardThresholdTilemap.ClearAllTiles();
@@ -55,6 +60,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                                           .BuildBoardMap(boardTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
                                           .BuildBallMap(entityTilemap)
+                                          .BuildMoveSequence(moveSequence)
                                           .BuildColorProportion(colorProportions)
                                           .BuildEntityMap(entityTilemap)
                                           .BuildTargetMap(entityTilemap)
@@ -87,6 +93,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                           .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
                           .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildColorProportion(levelModel.ColorMapDatas, out colorProportions)
+                          .BuildMoveSequence(levelModel.MoveSequence, out moveSequence)
                           .BuildEntityMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildTargetMap(entityTilemap, levelModel.TargetMapPositions)
                           .Import();

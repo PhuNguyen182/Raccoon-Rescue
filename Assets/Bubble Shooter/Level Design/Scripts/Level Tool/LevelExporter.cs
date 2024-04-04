@@ -11,6 +11,7 @@ using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
 using Newtonsoft.Json;
 using UnityEditor;
+using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -70,6 +71,16 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                 {
                     ColorProportion = colorProportions[i]
                 });
+            }
+
+            return this;
+        }
+
+        public LevelExporter BuildMoveSequence(List<EntityType> sequence)
+        {
+            for (int i = 0; i < sequence.Count; i++)
+            {
+                _levelModel.MoveSequence.Add((int)sequence[i]);
             }
 
             return this;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.LevelDesign.Scripts.Databases;
+using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -44,6 +45,19 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelImporter BuildMoveSequence(List<int> sequence, out List<EntityType> moveSequence)
+        {
+            List<EntityType> seq = new();
+            
+            for (int i = 0; i < sequence.Count; i++)
+            {
+                seq.Add((EntityType)sequence[i]);
+            }
+
+            moveSequence = seq;
+            return this;
+        }
+
         public LevelImporter BuildColorProportion(List<ColorMapData> colorMapDatas, out List<ColorProportion> colorProportions)
         {
             List<ColorProportion> colors = new();
@@ -79,7 +93,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                 var tile = _tileDatabase.FindEntityTile(mapPosition.MapData.ID
                                                         , mapPosition.MapData.HP
                                                         , mapPosition.MapData.EntityType);
-                tilemap.SetTile(mapPosition.Position, tile);
+                if(tile != null)
+                    tilemap.SetTile(mapPosition.Position, tile);
             }
 
             return this;
@@ -94,7 +109,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                 var tile = _tileDatabase.FindTargetTile(mapPosition.MapData.ID
                                                         , mapPosition.MapData.Color
                                                         , mapPosition.MapData.TargetColor);
-                tilemap.SetTile(mapPosition.Position, tile);
+                if(tile != null)
+                    tilemap.SetTile(mapPosition.Position, tile);
             }
 
             return this;

@@ -20,6 +20,13 @@ MonoBehaviour:
   - {fileID: 7476788314222541861, guid: 5ebf6ddc47bf4ed4bbb171def73e10f5, type: 3}
   - {fileID: 1468757209919789003, guid: 784bb790513a55f4cb63c4ee45692c1d, type: 3}
   - {fileID: 4279528719797044311, guid: 209cb16a2b9e5a44ebbfe77675f0bdc7, type: 3}
+  TargetModels:
+  - {fileID: 537109772850917066, guid: feb1675d3e0f75944ae4f6409ee3357c, type: 3}
+  - {fileID: 537109772850917066, guid: 86818abd6e176544c989e5ff77c81311, type: 3}
+  - {fileID: 537109772850917066, guid: db45ac0ae08986d4199b816462dffe14, type: 3}
+  - {fileID: 537109772850917066, guid: 263b17528f11c2d48973471f3d1df181, type: 3}
+  - {fileID: 537109772850917066, guid: 996effdc1c907254ba47920fc1a72204, type: 3}
+  - {fileID: 537109772850917066, guid: 57eb4bc99a61cb644bbd2e63033c4a33, type: 3}
   Boosters:
   - {fileID: 36949985931366577, guid: d1885ae89ae87ed498f39e64405a8a52, type: 3}
   - {fileID: 7860007256291369531, guid: 4b0cd875e232ead48bf1285192f01568, type: 3}
@@ -30,3 +37,4 @@ MonoBehaviour:
   - {fileID: 2804688515226706361, guid: c364a5533be1b2c48ac698c4b1ad6afd, type: 3}
   - {fileID: 569444899710811667, guid: 882bc5f67e95f0341b4a0c445aa895b7, type: 3}
   - {fileID: 7617344881591139897, guid: 60cbbacd6cf74754399f19c4a4e8d689, type: 3}
+  TargetPrefab: {fileID: 0}

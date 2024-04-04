@@ -12,7 +12,9 @@ namespace BubbleShooter.Scripts.Common.Databases
     {
         public CommonBall BallPrefab;
         public CommonBallModel[] BallModels;
+        public TargetModel[] TargetModels;
         public BaseEntity[] Boosters;
         public BaseEntity[] BallEntities;
+        public TargetBall TargetPrefab;
     }
 }
