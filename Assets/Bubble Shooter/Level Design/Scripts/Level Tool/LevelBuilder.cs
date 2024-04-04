@@ -57,6 +57,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                                           .BuildBallMap(entityTilemap)
                                           .BuildColorProportion(colorProportions)
                                           .BuildEntityMap(entityTilemap)
+                                          .BuildTargetMap(entityTilemap)
                                           .Export($"level_{level}", useResource);
             
             if (!useResource)
@@ -82,10 +83,12 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
 
             _levelImporter = new(tileDatabase);
-            _levelImporter.BuildBoardMapPosition(boardTilemap, levelModel.BoardMapPositions)
-                          .BuildBoardThresholdMapPosition(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
+            _levelImporter.BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
+                          .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
+                          .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildColorProportion(levelModel.ColorMapDatas, out colorProportions)
-                          .BuildBallMapPosition(entityTilemap, levelModel.StartingEntityMap)
+                          .BuildEntityMap(entityTilemap, levelModel.StartingEntityMap)
+                          .BuildTargetMap(entityTilemap, levelModel.TargetMapPositions)
                           .Import();
         }
     }

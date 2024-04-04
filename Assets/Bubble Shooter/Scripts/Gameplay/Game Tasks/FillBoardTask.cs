@@ -29,6 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 gridCell.SetBall(ballEntity);
             }
+
+            _gridCellManager.Encapsulate();
         }
     }
 }

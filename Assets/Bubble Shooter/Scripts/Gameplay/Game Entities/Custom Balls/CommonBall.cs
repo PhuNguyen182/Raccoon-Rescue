@@ -9,7 +9,7 @@ using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallAnimation, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallAnimation, IBallEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -101,6 +101,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask SnapTo(Vector3 position)
         {
             return ballMovement.SnapTo(position);
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return ballMovement.MoveTo(position);
+        }
+
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            ballMovement.AddForce(force, forceMode);
         }
 
         public override UniTask Blast()

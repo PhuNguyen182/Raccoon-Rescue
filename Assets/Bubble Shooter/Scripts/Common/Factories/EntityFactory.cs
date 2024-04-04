@@ -33,6 +33,7 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     ball.SetColor(data.EntityType);
                     ball.transform.SetParent(_entityContainer);
+                    ball.InitMessages();
                     ball.ResetBall();
 
                     return ball;
@@ -47,6 +48,7 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     booster.ResetBall();
                     booster.transform.SetParent(_entityContainer);
+                    booster.InitMessages();
 
                     return booster;
                 }
@@ -65,6 +67,7 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     entity.ResetBall();
                     entity.transform.SetParent(_entityContainer);
+                    entity.InitMessages();
 
                     return entity;
                 }

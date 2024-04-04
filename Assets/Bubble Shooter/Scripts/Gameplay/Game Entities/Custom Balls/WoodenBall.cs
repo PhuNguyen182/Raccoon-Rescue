@@ -8,7 +8,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallHealth, IBreakable
+    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable
     {
         [Header("Health Sprites")]
         [SerializeField] private Sprite[] hpStates;
@@ -56,11 +56,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             SimplePool.Despawn(this.gameObject);
         }
 
-        public void OnFixedUpdate()
-        {
-            
-        }
-
         public void SetBodyActive(bool active)
         {
             ballMovement.SetBodyActive(active);
@@ -78,6 +73,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             SetRenderer();
         }
 
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            ballMovement.AddForce(force, forceMode);
+        }
+
         public void SetMoveDirection(Vector2 direction)
         {
             
@@ -86,6 +86,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask SnapTo(Vector3 position)
         {
             return UniTask.CompletedTask;
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return ballMovement.MoveTo(position);
         }
 
         private void SetRenderer()

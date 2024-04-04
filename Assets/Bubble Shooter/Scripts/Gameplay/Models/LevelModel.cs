@@ -13,6 +13,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
         public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new(); // To be tested
         public List<ColorMapData> ColorMapDatas = new(); // To be tested
         public List<EntityMapPosition> StartingEntityMap = new();
+        public List<TargetMapPosition> TargetMapPositions = new();
 
         public void ClearData()
         {
@@ -20,6 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
             BoardThresholdMapPositions.Clear();
             ColorMapDatas.Clear();
             StartingEntityMap.Clear();
+            TargetMapPositions.Clear();
         }
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.LevelDesign.Scripts.Databases;
-using BubbleShooter.Scripts.Gameplay.Models;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -17,7 +16,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             _tileDatabase = tileDatabase;
         }
 
-        public LevelImporter BuildBoardMapPosition(Tilemap tilemap, List<BoardMapPosition> mapPositions)
+        public LevelImporter BuildBoardMap(Tilemap tilemap, List<BoardMapPosition> mapPositions)
         {
             tilemap.ClearAllTiles();
 
@@ -31,7 +30,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelImporter BuildBoardThresholdMapPosition(Tilemap tilemap, List<BoardThresholdMapPosition> mapPositions)
+        public LevelImporter BuildBoardThresholdMap(Tilemap tilemap, List<BoardThresholdMapPosition> mapPositions)
         {
             tilemap.ClearAllTiles();
 
@@ -57,7 +56,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelImporter BuildBallMapPosition(Tilemap tilemap, List<EntityMapPosition> mapPositions)
+        public LevelImporter BuildBallMap(Tilemap tilemap, List<EntityMapPosition> mapPositions)
         {
             tilemap.ClearAllTiles();
 
@@ -65,6 +64,36 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             {
                 var mapPosition = mapPositions[i];
                 var tile = _tileDatabase.FindBallTile(mapPosition.MapData.ID, mapPosition.MapData.EntityType);
+                tilemap.SetTile(mapPosition.Position, tile);
+            }
+
+            return this;
+        }
+
+        public LevelImporter BuildEntityMap(Tilemap tilemap, List<EntityMapPosition> mapPositions)
+        {
+            // Use same tilemap with ball tilemap so son't clear this tilemap
+            for (int i = 0; i < mapPositions.Count; i++)
+            {
+                var mapPosition = mapPositions[i];
+                var tile = _tileDatabase.FindEntityTile(mapPosition.MapData.ID
+                                                        , mapPosition.MapData.HP
+                                                        , mapPosition.MapData.EntityType);
+                tilemap.SetTile(mapPosition.Position, tile);
+            }
+
+            return this;
+        }
+
+        public LevelImporter BuildTargetMap(Tilemap tilemap, List<TargetMapPosition> mapPositions)
+        {
+            // Use same tilemap with ball tilemap so son't clear this tilemap
+            for (int i = 0; i < mapPositions.Count; i++)
+            {
+                var mapPosition = mapPositions[i];
+                var tile = _tileDatabase.FindTargetTile(mapPosition.MapData.ID
+                                                        , mapPosition.MapData.Color
+                                                        , mapPosition.MapData.TargetColor);
                 tilemap.SetTile(mapPosition.Position, tile);
             }
 

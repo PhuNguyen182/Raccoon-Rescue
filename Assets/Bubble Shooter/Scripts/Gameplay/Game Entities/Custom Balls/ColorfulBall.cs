@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallTransformation, IBreakable
+    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallTransformation, IBreakable
     {
         [Header("Colorful Balls")]
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite red;
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite yellow;
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite green;
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite blue;
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite violet;
+        [FoldoutGroup("Colors")]
         [SerializeField] private Sprite orange;
 
         private EntityType _entityType = EntityType.ColorfulBall;
@@ -95,6 +102,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask SnapTo(Vector3 position)
         {
             return ballMovement.SnapTo(position);
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return ballMovement.MoveTo(position);
+        }
+
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            ballMovement.AddForce(force, forceMode);
         }
 
         public override void SetWorldPosition(Vector3 position)

@@ -125,6 +125,31 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelExporter BuildTargetMap(Tilemap tilemap)
+        {
+            var positions = tilemap.cellBounds.Iterator();
+            foreach (Vector3Int position in positions)
+            {
+                var tile = tilemap.GetTile<TargetTile>(position);
+
+                if (tile == null)
+                    continue;
+
+                _levelModel.TargetMapPositions.Add(new TargetMapPosition
+                {
+                    Position = position,
+                    MapData = new TargetMapData
+                    {
+                        ID = tile.ID,
+                        Color = tile.EntityType,
+                        TargetColor = tile.TargetType
+                    }
+                });
+            }
+
+            return this;
+        }
+
         public string Export(string level, bool useResource = true)
         {
             string levelPath = $"Assets/Bubble Shooter/Resources/Level Datas/{level}.txt";

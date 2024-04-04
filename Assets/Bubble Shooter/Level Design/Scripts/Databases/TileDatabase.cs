@@ -15,6 +15,7 @@ namespace BubbleShooter.LevelDesign.Scripts.Databases
         [SerializeField] private BoardThresholdTile thresholdTile;
         [SerializeField] private List<BallTile> ballTiles;
         [SerializeField] private List<EntityTile> entityTiles;
+        [SerializeField] private List<TargetTile> targetTiles;
 
         public BoardTile GetBoardTile() => boardTile;
 
@@ -28,6 +29,11 @@ namespace BubbleShooter.LevelDesign.Scripts.Databases
         public EntityTile FindEntityTile(int id, int hp, EntityType entityType)
         {
             return entityTiles.FirstOrDefault(tile => tile.ID == id && tile.HP == hp && tile.EntityType == entityType);
+        }
+
+        public TargetTile FindTargetTile(int id, EntityType color, TargetType targetColor)
+        {
+            return targetTiles.FirstOrDefault(tile => tile.ID == id && tile.EntityType == color && tile.TargetType == targetColor);
         }
     }
 }

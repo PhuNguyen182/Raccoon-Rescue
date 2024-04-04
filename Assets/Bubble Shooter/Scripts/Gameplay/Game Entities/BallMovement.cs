@@ -1,23 +1,31 @@
+using System;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
-using BubbleShooter.Scripts.Common.Configs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Configs;
+using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using DG.Tweening;
-using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public class BallMovement : MonoBehaviour, IBallMovement
+    public class BallMovement : MonoBehaviour, IBallMovement, IBallPhysics
     {
         [SerializeField] private Rigidbody2D ballBody;
         [SerializeField] private Collider2D ballCollider;
 
+        [Header("Moving")]
+        [BoxGroup(GroupID = "Move")]
+        [SerializeField] private float moveDuration = 0.2f;
+        [BoxGroup(GroupID = "Move")]
+        [SerializeField] private Ease moveEase = Ease.OutQuad;
+        
         [Header("Snapping")]
+        [BoxGroup(GroupID = "Snap")]
         [SerializeField] private float snapDuration = 0.2f;
+        [BoxGroup(GroupID = "Snap")]
         [SerializeField] private Ease snapEase = Ease.OutQuad;
 
         [Header("Check Reflection")]
@@ -26,14 +34,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] private float ballRadius = 0.3f;
         [SerializeField] private float ballDistance = 1f;
 
-        [Header("Check Layer Maskes")]
+        [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask ceilMask;
+        [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask ballMask;
+        [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask reflectMask;
 
         private float _ballSpeed = 0;
         private bool _isReflect = false;
 
+        private Tweener _movingTween;
         private Tweener _snappingTween;
         private CancellationToken _token;
         private Vector2 _moveDirection = Vector2.zero;
@@ -71,6 +82,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
+        public UniTask MoveTo(Vector3 position)
+        {
+            _movingTween ??= CreateMoveTween(position);
+            _movingTween.ChangeStartValue(transform.position);
+            _movingTween.ChangeEndValue(position);
+
+            _movingTween.Rewind();
+            _movingTween.Play();
+
+            return UniTask.Delay(TimeSpan.FromSeconds(_movingTween.Duration()), cancellationToken: _token);
+        }
+
         public UniTask SnapTo(Vector3 position)
         {
             _snappingTween ??= CreateSnapTween(position);
@@ -93,6 +116,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             _moveDirection = direction.sqrMagnitude == 1 ? direction : direction.normalized;
         }
 
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            ballBody.AddForce(force, forceMode);
+        }
+
         private void MoveBall()
         {
             ballBody.position = ballBody.position + Time.fixedDeltaTime * _ballSpeed * _moveDirection;
@@ -101,6 +129,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private Tweener CreateSnapTween(Vector3 position)
         {
             return transform.DOMove(position, snapDuration).SetEase(snapEase).SetAutoKill(false);
+        }
+
+        private Tweener CreateMoveTween(Vector3 position)
+        {
+            return transform.DOMove(position, moveDuration).SetEase(moveEase).SetAutoKill(false);
         }
 
         private void OnDestroy()

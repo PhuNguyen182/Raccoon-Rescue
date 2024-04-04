@@ -7,8 +7,8 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     {
         public bool CanMove { get; set; }
 
-        public void SetBodyActive(bool active);
         public void SetMoveDirection(Vector2 direction);
         public UniTask SnapTo(Vector3 position);
+        public UniTask MoveTo(Vector3 position);
     }
 }
