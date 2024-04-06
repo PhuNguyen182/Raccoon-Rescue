@@ -12,6 +12,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         [SerializeField] protected BallMovement ballMovement;
         [SerializeField] protected EntityGraphics entityGraphics;
+        [SerializeField] protected EntityAudio entityAudio;
 
         protected CancellationToken onDestroyToken;
 
