@@ -20,6 +20,7 @@ namespace Scripts.Common.InAppPurchase
         private void Start()
         {
             HandleProduct();
+            BuyBack();
         }
 
         private void HandleProduct()
@@ -69,14 +70,13 @@ namespace Scripts.Common.InAppPurchase
 
         public void RestorePurchase()
         {
-            if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.OSXPlayer)
+#if UNITY_IOS
+            IAppleExtensions apple = _extensionProvider.GetExtension<IAppleExtensions>();
+            apple.RestoreTransactions((result, message) =>
             {
-                IAppleExtensions apple = _extensionProvider.GetExtension<IAppleExtensions>();
-                apple.RestoreTransactions((result, message) =>
-                {
-                    Debug.LogError($"RestorePurchases continuing: {result}. Detailed: {message}.");
-                });
-            }
+                Debug.LogError($"RestorePurchases continuing: {result}. Detailed: {message}.");
+            });
+#endif
         }
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
@@ -117,8 +117,7 @@ namespace Scripts.Common.InAppPurchase
 
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
         {
-            string log = $"Successfully purchased {purchaseEvent.purchasedProduct.definition.id}";
-            Debug.LogError(log);
+            Debug.LogError($"Successfully purchased {purchaseEvent.purchasedProduct.definition.id}");
 
             _onPurchaseSucceed?.Invoke();
             _onPurchaseSucceed = null;
@@ -130,6 +129,28 @@ namespace Scripts.Common.InAppPurchase
         public bool IsInitialized()
         {
             return _storeController != null && _extensionProvider != null;
+        }
+
+        public void BuyBack()
+        {
+            if (!IsInitialized())
+            {
+                Debug.LogError("Cannot buy back now because store controller is not initialized!");
+                return;
+            }
+
+            Product[] allProduct = _storeController.products.all;
+
+            for (int i = 0; i < allProduct.Length; i++)
+            {
+                if (allProduct[i].hasReceipt)
+                {
+                    if(allProduct[i].definition.type == ProductType.NonConsumable)
+                    {
+                        // Execute buy back here
+                    }
+                }
+            }
         }
     }
 }
