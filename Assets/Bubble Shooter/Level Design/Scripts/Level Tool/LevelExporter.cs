@@ -9,9 +9,9 @@ using BubbleShooter.LevelDesign.Scripts.CustomTiles;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
+using BubbleShooter.Scripts.Common.Enums;
 using Newtonsoft.Json;
 using UnityEditor;
-using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
@@ -128,7 +128,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                     {
                         ID = tile.ID,
                         EntityType = tile.EntityType,
-                        HP = 1
+                        HP = tile.HP
                     }
                 });
             }

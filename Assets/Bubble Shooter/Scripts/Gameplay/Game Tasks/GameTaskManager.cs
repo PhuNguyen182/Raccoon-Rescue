@@ -27,11 +27,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _inputProcessor = new(inputHandler, _gridCellManager);
             _inputProcessor.AddTo(ref d);
 
-            _breakGridTask = new(_gridCellManager);
-            _matchBallHandler = new(_breakGridTask);
             
             _boosterHandleTask = new(_breakGridTask, _gridCellManager);
             _boosterHandleTask.AddTo(ref d);
+
+            _matchBallHandler = new(_breakGridTask);
+            _breakGridTask = new(_gridCellManager, _boosterHandleTask);
 
             _disposable = d.Build();
         }

@@ -100,7 +100,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void SetWorldPosition(Vector3 position)
         {
-            throw new System.NotImplementedException();
+            transform.position = position;
         }
     }
 }

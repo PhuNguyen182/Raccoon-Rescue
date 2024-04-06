@@ -90,7 +90,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             IGridCell gridCell = Get(position);
 
             if (gridCell != null)
+            {
+                gridCell.SetBall(null);
                 return gridCell.Destroy();
+            }
 
             return false;
         }

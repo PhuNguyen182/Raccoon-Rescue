@@ -37,4 +37,4 @@ MonoBehaviour:
   - {fileID: 2804688515226706361, guid: c364a5533be1b2c48ac698c4b1ad6afd, type: 3}
   - {fileID: 569444899710811667, guid: 882bc5f67e95f0341b4a0c445aa895b7, type: 3}
   - {fileID: 7617344881591139897, guid: 60cbbacd6cf74754399f19c4a4e8d689, type: 3}
-  TargetPrefab: {fileID: 0}
+  TargetPrefab: {fileID: 2638623806373902347, guid: 78a8eb059057fe04aaec1f7c72330635, type: 3}
