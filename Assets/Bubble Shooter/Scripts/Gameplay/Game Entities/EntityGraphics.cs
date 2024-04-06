@@ -8,6 +8,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         [SerializeField] private Animator entityAnimator;
         [SerializeField] private SpriteRenderer entityRenderer;
+        [SerializeField] private Renderer[] additionalRenderers;
 
         private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
@@ -22,6 +23,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 int rand = Random.Range(1, 7);
                 entityAnimator.SetInteger(_sadEmotionHash, rand);
+            }
+        }
+
+        public void ChangeLayer(string layerName)
+        {
+            int layerID = SortingLayer.NameToID(layerName);
+            entityRenderer.sortingLayerID = layerID;
+
+            for (int i = 0; i < additionalRenderers.Length; i++)
+            {
+                if (additionalRenderers[i] != null)
+                    additionalRenderers[i].sortingLayerID = layerID;
             }
         }
     }

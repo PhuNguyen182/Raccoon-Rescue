@@ -35,6 +35,8 @@ namespace BubbleShooter.Scripts.Common.Factories
                     target.SetTargetColor(data.TargetColor);
                     target.InitMessages();
                     target.ResetBall();
+
+                    return target;
                 }
             }
 

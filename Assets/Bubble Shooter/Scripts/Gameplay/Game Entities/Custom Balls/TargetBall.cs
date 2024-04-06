@@ -1,9 +1,10 @@
-using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.Interfaces;
+using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -12,6 +13,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [SerializeField] private int id;
         [SerializeField] private EntityType entityColor;
         [SerializeField] private TargetType targetColor;
+
+        [Header("Ball Colors")]
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite blue;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite green;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite orange;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite red;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite violet;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private Sprite yellow;
 
         public override bool IsMatchable => true;
 
@@ -57,6 +72,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void SetColor(EntityType color)
         {
             entityColor = color;
+
+            switch (color)
+            {
+                case EntityType.Red:
+                    entityGraphics.SetEntitySprite(red);
+                    break;
+                case EntityType.Yellow:
+                    entityGraphics.SetEntitySprite(yellow);
+                    break;
+                case EntityType.Green:
+                    entityGraphics.SetEntitySprite(green);
+                    break;
+                case EntityType.Blue:
+                    entityGraphics.SetEntitySprite(blue);
+                    break;
+                case EntityType.Violet:
+                    entityGraphics.SetEntitySprite(violet);
+                    break;
+                case EntityType.Orange:
+                    entityGraphics.SetEntitySprite(orange);
+                    break;
+            }
         }
 
         public void SetID(int id)

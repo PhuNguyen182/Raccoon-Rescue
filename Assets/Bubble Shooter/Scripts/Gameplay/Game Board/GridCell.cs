@@ -35,8 +35,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
             
             if(_ballEntity != null)
             {
-                ball.GridPosition = GridPosition;
-                ball.SetWorldPosition(WorldPosition);
+                _ballEntity.GridPosition = GridPosition;
+                _ballEntity.SetWorldPosition(WorldPosition);
             }
         }
     }

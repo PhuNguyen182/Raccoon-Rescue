@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballBody: {fileID: 6020408375655933279}
   ballCollider: {fileID: 7361773460094197770}
+  moveDuration: 0.2
+  moveEase: 6
   snapDuration: 0.2
   snapEase: 6
   delayFrame: 3
@@ -225,8 +227,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1592121711
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7ebb3d57607c143359383cacdcd5a99c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -19,7 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
         {
             if(_metaBalls.ContainsKey(position))
             {
-                _metaBalls[ballEntity.GridPosition] = ballEntity;
+                _metaBalls[position] = ballEntity;
                 return;
             }
 
