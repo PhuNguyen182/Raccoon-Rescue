@@ -99,9 +99,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 EntityType = _ballColor 
             });
 
+            newBall.IsFixedOnStart = false;
             newBall.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
-
-            if (newBall is IBallMovement ballMovement && newBall is IBallPhysics ballPhysics)
+            
+            if (newBall.TryGetComponent(out IBallMovement ballMovement) && newBall.TryGetComponent(out IBallPhysics ballPhysics))
             {
                 ballMovement.CanMove = false;
                 ballMovement.MovementState = BallMovementState.Ready;
