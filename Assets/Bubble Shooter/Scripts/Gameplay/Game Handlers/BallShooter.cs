@@ -37,31 +37,33 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void Awake()
         {
-            SetStartPosition();
             _token = this.GetCancellationTokenOnDestroy();
         }
 
         private void Update()
         {
-            GetMouseDirection();
+            GetInputDirection();
+            RotatePointer();
 
             if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
                 SpawnABall().Forget();
             }
 
-            lineDrawer.DrawLine(inputHandler.IsMouseHold);
-            RotatePointer();
+            if (lineDrawer.isActiveAndEnabled)
+            {
+                lineDrawer.DrawLine(inputHandler.IsMouseHold);
+            }
         }
 
-        private void SetStartPosition()
+        public void SetStartPosition()
         {
             _startPosition = mainCamera.ViewportToWorldPoint(normalizePosition);
             _startPosition.z = 0;
             transform.position = _startPosition;
         }
 
-        private void GetMouseDirection()
+        private void GetInputDirection()
         {
             _direction = inputHandler.MousePosition - spawnPoint.position;
         }
