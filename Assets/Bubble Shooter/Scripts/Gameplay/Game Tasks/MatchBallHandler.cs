@@ -9,44 +9,67 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class MatchBallHandler
     {
+        private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
-        public MatchBallHandler(BreakGridTask breakGridTask)
+        private List<IGridCell> _matchCluster = new();
+
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
+            _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
         }
 
-        public async UniTask<bool> CheckCluster(IBallEntity ball, List<IGridCell> cluster)
+        public void Match(Vector3Int position)
         {
-            if (cluster.Count < 3)
-                return false;
+            MatchAsync(position).Forget();
+        }
 
-            using (var ballCluster = ListPool<Vector3Int>.Get(out var balls))
+        private async UniTask MatchAsync(Vector3Int position)
+        {
+            _matchCluster.Clear();
+            CheckMatch(position);
+            await ExecuteCluster(_matchCluster);
+            _gridCellManager.ClearVisitedPositions();
+        }
+
+        private void CheckMatch(Vector3Int position)
+        {
+            IGridCell gridCell = _gridCellManager.Get(position);
+            IBallEntity ballEntity = gridCell.BallEntity;
+
+            var neighbours = _gridCellManager.GetNeighbourGrids(position);
+            
+            for (int i = 0; i < neighbours.Count; i++)
             {
-                for (int i = 0; i < cluster.Count; i++)
+                if (neighbours[i] == null)
+                    continue;
+
+                if (!neighbours[i].ContainsBall)
+                    continue;
+
+                if (neighbours[i].BallEntity.EntityType != ballEntity.EntityType)
+                    continue;
+
+                if (!_gridCellManager.IsVisited(neighbours[i].GridPosition))
                 {
-                    if (cluster[i].BallEntity.EntityType == ball.EntityType)
-                        balls.Add(cluster[i].GridPosition);
+                    _matchCluster.Add(neighbours[i]);
+                    _gridCellManager.MarkAsVisited(neighbours[i].GridPosition);
+                    CheckMatch(neighbours[i].GridPosition);
                 }
-
-                if (balls.Count < 3)
-                    return false;
-
-                await ExecuteCluster(balls);
-                return true;
             }
         }
 
-        private async UniTask ExecuteCluster(List<Vector3Int> clusterPositions)
+        private async UniTask ExecuteCluster(List<IGridCell> cluster)
         {
-            using (var cluster = ListPool<UniTask>.Get(out var listPool))
+            using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
-                for (int i = 0; i < clusterPositions.Count; i++)
+                for (int i = 0; i < cluster.Count; i++)
                 {
-                    listPool.Add(_breakGridTask.Break(clusterPositions[i]));
+                    breakTask.Add(_breakGridTask.Break(cluster[i]));
                 }
 
-                await UniTask.WhenAll(listPool);
+                await UniTask.WhenAll(breakTask);
             }
         }
     }

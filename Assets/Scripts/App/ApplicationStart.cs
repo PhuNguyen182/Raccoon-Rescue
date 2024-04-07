@@ -11,26 +11,36 @@ namespace Scripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoad()
         {
-
+            GameSetup();
+            RegisterServicesBeforeSceneLoad();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
-            GameSetup();
-            RegisterServices();
+            RegisterServicesAfterSceneLoad();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
         private static void OnBeforeSplashScene()
         {
+            RegisterServicesBeforeSplashScene();
+        }
+
+        private static void RegisterServicesBeforeSplashScene()
+        {
 
         }
 
-        private static void RegisterServices()
+        private static void RegisterServicesBeforeSceneLoad()
         {
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
+        }
+
+        private static void RegisterServicesAfterSceneLoad()
+        {
+
         }
 
         private static T Register<T>(string serviceName) where T : Component

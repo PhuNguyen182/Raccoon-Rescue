@@ -19,7 +19,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private bool[,] _visitedMatrix;
 
-        public bool[,] VisitedMatrix => _visitedMatrix;
         public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
 
         public GridCellManager(Func<Vector3Int, Vector3> convertFunction)
@@ -125,7 +124,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _visitedMatrix = new bool[_gridBounds.size.x, _gridBounds.size.y];
         }
 
-        public void ClearVisitedMatrix()
+        public bool IsVisited(Vector3Int position)
+        {
+            return _visitedMatrix[position.x, position.y];
+        }
+
+        public void MarkAsVisited(Vector3Int position)
+        {
+            _visitedMatrix[position.x, position.y] = true;
+        }
+
+        public void ClearVisitedPositions()
         {
             for (int i = 0; i < _visitedMatrix.GetLength(0); i++)
             {

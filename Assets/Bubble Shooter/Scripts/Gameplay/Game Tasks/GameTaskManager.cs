@@ -1,10 +1,10 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
-using R3;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
 {
@@ -31,7 +31,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _boosterHandleTask = new(_breakGridTask, _gridCellManager);
             _boosterHandleTask.AddTo(ref d);
 
-            _matchBallHandler = new(_breakGridTask);
+            _matchBallHandler = new(_gridCellManager, _breakGridTask);
             _breakGridTask = new(_gridCellManager, _boosterHandleTask);
 
             _disposable = d.Build();
