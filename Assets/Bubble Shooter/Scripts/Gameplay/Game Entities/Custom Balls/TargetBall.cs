@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class TargetBall : BaseEntity, IBallMovement, ITargetBall
+    public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
         [SerializeField] private int id;
         [SerializeField] private EntityType entityColor;
@@ -63,6 +63,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void Destroy()
         {
             SimplePool.Despawn(this.gameObject);
+        }
+
+        public bool Break()
+        {
+            return true;
         }
 
         public override void InitMessages()
@@ -131,6 +136,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask SnapTo(Vector3 position)
         {
             return ballMovement.SnapTo(position);
+        }
+
+        public override void OnSnapped()
+        {
+            
         }
     }
 }

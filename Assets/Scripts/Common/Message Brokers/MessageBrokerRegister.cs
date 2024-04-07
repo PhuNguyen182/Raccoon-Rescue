@@ -2,29 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Messages;
 using MessagePipe;
 
 namespace Scripts.Common.MessageBrokers
 {
     public class MessageBrokerRegister
     {
-        private readonly IServiceProvider _provider;
-        private readonly BuiltinContainerBuilder _builder;
+        private IServiceProvider _provider;
+        private BuiltinContainerBuilder _builder;
 
-        public MessageBrokerRegister()
+        public void InitializeMessages()
         {
             _builder = new();
-            AddMeggageBrokers();
+            _builder.AddMessagePipe();
 
+            AddMeggageBrokers();
             _provider = _builder.BuildServiceProvider();
             GlobalMessagePipe.SetProvider(_provider);
         }
 
         private void AddMeggageBrokers()
         {
-            // Add message type here. For example:
-            // _builder.AddMessageBroker<int>();
-            // _builder.AddMessageBroker<Vector2>();
+            _builder.AddMessageBroker<CheckMatchMessage>();
         }
     }
 }

@@ -50,5 +50,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public abstract void Destroy();
 
         public abstract void SetWorldPosition(Vector3 position);
+
+        public abstract void OnSnapped();
     }
 }

@@ -6,6 +6,8 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using BubbleShooter.Scripts.Common.Messages;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -25,6 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite orange;
 
+        private IPublisher<CheckMatchMessage> _checkMatchPublisher;
         private EntityType _entityType = EntityType.ColorfulBall;
 
         public bool CanMove
@@ -128,6 +131,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void ChangeLayerMask(bool isFixed)
         {
             ballMovement.ChangeLayerMask(isFixed);
+        }
+
+        public override void OnSnapped()
+        {
+            _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
     }
 }

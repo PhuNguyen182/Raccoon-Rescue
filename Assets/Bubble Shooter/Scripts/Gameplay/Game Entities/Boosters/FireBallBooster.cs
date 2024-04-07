@@ -93,5 +93,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             
         }
+
+        public override void OnSnapped()
+        {
+            // To do: execute active booster
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
 
         public UniTask Blast();
         public void Destroy();
+        public void OnSnapped();
         public void SetWorldPosition(Vector3 position);
     }
 }

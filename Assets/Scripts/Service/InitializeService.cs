@@ -16,7 +16,8 @@ namespace Scripts.Service
 
         private void InitMessageBroker()
         {
-            //_messageBroker = new();
+            _messageBroker = new();
+            _messageBroker.InitializeMessages();
         }
     }
 }

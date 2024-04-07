@@ -82,5 +82,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             
         }
+
+        public override void OnSnapped()
+        {
+            
+        }
     }
 }

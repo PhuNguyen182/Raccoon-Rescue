@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -26,6 +28,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [SerializeField] private Sprite violet;
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
+
+        private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove 
         { 
@@ -56,7 +60,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            
+            _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
         public void OnFixedUpdate()
@@ -161,6 +165,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public override void OnSnapped()
+        {
+            _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
         private void OnDisable()

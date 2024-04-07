@@ -1,36 +1,48 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class MatchBallHandler
+    public class MatchBallHandler : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
         private List<IGridCell> _matchCluster = new();
+        private ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
+        private IDisposable _disposable;
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+
+            var builder = DisposableBag.CreateBuilder();
+
+            _checkMatchSubscriber = GlobalMessagePipe.GetSubscriber<CheckMatchMessage>();
+            _checkMatchSubscriber.Subscribe(Match).AddTo(builder);
+
+            _disposable = builder.Build();
         }
 
-        public void Match(Vector3Int position)
+        public void Match(CheckMatchMessage message)
         {
-            MatchAsync(position).Forget();
+            MatchAsync(message.Position).Forget();
         }
 
         private async UniTask MatchAsync(Vector3Int position)
         {
             _matchCluster.Clear();
             CheckMatch(position);
-            await ExecuteCluster(_matchCluster);
             _gridCellManager.ClearVisitedPositions();
+            await ExecuteCluster(_matchCluster);
         }
 
         private void CheckMatch(Vector3Int position)
@@ -48,13 +60,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (!neighbours[i].ContainsBall)
                     continue;
 
+                if (!neighbours[i].BallEntity.IsMatchable)
+                    continue;
+
                 if (neighbours[i].BallEntity.EntityType != ballEntity.EntityType)
                     continue;
 
-                if (!_gridCellManager.IsVisited(neighbours[i].GridPosition))
+                if (!_gridCellManager.GetIsVisited(neighbours[i].GridPosition))
                 {
                     _matchCluster.Add(neighbours[i]);
-                    _gridCellManager.MarkAsVisited(neighbours[i].GridPosition);
+                    _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
                     CheckMatch(neighbours[i].GridPosition);
                 }
             }
@@ -71,6 +86,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 await UniTask.WhenAll(breakTask);
             }
+        }
+
+        public void Dispose()
+        {
+            _disposable.Dispose();
         }
     }
 }

@@ -5,19 +5,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
-using UnityEngine.Pool;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class GridCellManager : IDisposable
     {
         private BoundsInt _gridBounds;
+        private List<Vector3Int> _gridPosition;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
+        private Dictionary<Vector3Int, bool> _visitedMatrix;
 
         private readonly int[] _xNeighbours;
         private readonly int[] _yNeighbours;
-
-        private bool[,] _visitedMatrix;
 
         public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
 
@@ -95,14 +94,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public bool DestroyAt(Vector3Int position)
         {
             IGridCell gridCell = Get(position);
-
-            if (gridCell != null)
-            {
-                gridCell.SetBall(null);
-                return gridCell.Destroy();
-            }
-
-            return false;
+            return gridCell != null ? gridCell.Destroy() : false;
         }
 
         public List<IGridCell> GetNeighbourGrids(Vector3Int checkPosition)
@@ -119,35 +111,39 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Encapsulate()
         {
-            List<Vector3Int> positions = _gridCells.Keys.ToList();
-            _gridBounds = BoundsExtension.Encapsulate(positions);
-            _visitedMatrix = new bool[_gridBounds.size.x, _gridBounds.size.y];
+            _gridPosition = _gridCells.Keys.ToList();
+            _gridBounds = BoundsExtension.Encapsulate(_gridPosition);
+            
+            _visitedMatrix = new Dictionary<Vector3Int, bool>();
+            for (int i = 0; i < _gridPosition.Count; i++)
+            {
+                _visitedMatrix.Add(_gridPosition[i], false);
+            }
         }
 
-        public bool IsVisited(Vector3Int position)
+        public bool GetIsVisited(Vector3Int position)
         {
-            return _visitedMatrix[position.x, position.y];
+            return _visitedMatrix[position];
         }
 
-        public void MarkAsVisited(Vector3Int position)
+        public void SetAsVisited(Vector3Int position)
         {
-            _visitedMatrix[position.x, position.y] = true;
+            _visitedMatrix[position] = true;
         }
 
         public void ClearVisitedPositions()
         {
-            for (int i = 0; i < _visitedMatrix.GetLength(0); i++)
+            for (int i = 0; i < _gridPosition.Count; i++)
             {
-                for (int j = 0; j < _visitedMatrix.GetLength(1); j++)
-                {
-                    _visitedMatrix[i, j] = false;
-                }
+                _visitedMatrix[_gridPosition[i]] = false;
             }
         }
 
         public void ClearAll()
         {
             _gridCells?.Clear();
+            _gridPosition?.Clear();
+            _visitedMatrix?.Clear();
         }
 
         public void Dispose()

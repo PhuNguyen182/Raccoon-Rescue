@@ -29,6 +29,11 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             
         }
 
+        public void OnSnapped()
+        {
+            
+        }
+
         public void SetWorldPosition(Vector3 position)
         {
             

@@ -129,12 +129,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                     // Check nearest grid cell an snap to it;
                     CanMove = false;
                     ChangeLayerMask(true);
-                    CheckNearestGrid();
+                    CheckNearestGrid().Forget();
                 }
             }
         }
 
-        private void CheckNearestGrid()
+        private async UniTask CheckNearestGrid()
         {
             float nearestGridDistance = Mathf.Infinity;
             _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
@@ -164,8 +164,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             targetGridCell = GameController.Instance.GridCellManager.Get(cellHolder.GridPosition);
             MovementState = BallMovementState.Fixed;
             
-            SnapTo(targetCellInfo.transform.position);
             SetItemToGrid(targetGridCell);
+            await SnapTo(targetCellInfo.transform.position);
+            _currentBall.OnSnapped();
         }
 
         private void SetItemToGrid(IGridCell gridCell)

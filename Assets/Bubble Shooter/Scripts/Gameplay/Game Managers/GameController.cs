@@ -47,12 +47,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void Awake()
         {
-            Setup();
-            Initialize();
+            
         }
 
         private void Start()
         {
+            Setup();
+            Initialize();
             GetLevel();
         }
 

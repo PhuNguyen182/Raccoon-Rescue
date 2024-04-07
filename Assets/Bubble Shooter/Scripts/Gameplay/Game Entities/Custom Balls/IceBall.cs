@@ -110,5 +110,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
             entityGraphics.SetEntitySprite(toColor);
         }
+
+        public override void OnSnapped()
+        {
+            
+        }
     }
 }
