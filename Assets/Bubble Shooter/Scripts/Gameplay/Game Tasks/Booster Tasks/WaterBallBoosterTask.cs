@@ -24,7 +24,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
-                _gridCellManager.GetColumn(position, out List<IGridCell> row);
+                _gridCellManager.GetRow(position, out List<IGridCell> row);
 
                 for (int i = 0; i < row.Count; i++)
                 {
