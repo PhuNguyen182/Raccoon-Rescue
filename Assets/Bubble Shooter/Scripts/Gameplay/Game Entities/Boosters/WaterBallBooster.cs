@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class WaterBallBooster : BaseEntity, IBallBooster, IBallMovement
+    public class WaterBallBooster : BaseEntity, IBallBooster, IBallMovement, IBallPhysics
     {
         public override EntityType EntityType => EntityType.WaterBall;
 
@@ -66,7 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void SetMoveDirection(Vector2 direction)
         {
-            
+            ballMovement.SetMoveDirection(direction);
         }
 
         public UniTask SnapTo(Vector3 position)
@@ -77,6 +77,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public UniTask MoveTo(Vector3 position)
         {
             return UniTask.CompletedTask;
+        }
+
+        public void ChangeLayerMask(bool isFixed)
+        {
+            ballMovement.ChangeLayerMask(isFixed);
+        }
+
+        public void SetBodyActive(bool active)
+        {
+            ballMovement.SetBodyActive(active);
+        }
+
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            
         }
     }
 }

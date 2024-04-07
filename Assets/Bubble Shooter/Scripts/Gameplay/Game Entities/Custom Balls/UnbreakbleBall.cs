@@ -77,5 +77,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             return ballMovement.SnapTo(position);
         }
+
+        public void ChangeLayerMask(bool isFixed)
+        {
+            
+        }
     }
 }

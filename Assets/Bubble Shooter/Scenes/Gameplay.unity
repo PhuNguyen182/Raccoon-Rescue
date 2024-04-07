@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92fe3649ff8daa749ae09877c4cc051a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballShooter: {fileID: 1108513992}
   inputHandler: {fileID: 1278411868}
   gridPrefab: {fileID: 4104601519159242090, guid: 69860e985986c3a49858b200fe1ae2d6, type: 3}
   entityDatabase: {fileID: 11400000, guid: 036f3d47e66dffa438f2c5e7237e5a0e, type: 2}
@@ -1163,7 +1164,7 @@ GameObject:
   - component: {fileID: 1867997070}
   - component: {fileID: 1867997071}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: Board Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

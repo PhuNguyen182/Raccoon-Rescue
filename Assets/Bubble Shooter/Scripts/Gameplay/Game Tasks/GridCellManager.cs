@@ -17,6 +17,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly int[] _xNeighbours;
         private readonly int[] _yNeighbours;
 
+        private bool[,] _visitedMatrix;
+
+        public bool[,] VisitedMatrix => _visitedMatrix;
         public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
 
         public GridCellManager(Func<Vector3Int, Vector3> convertFunction)
@@ -26,6 +29,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _xNeighbours = new int[] { 0, 1, 0, -1, -1, -1 };
             _yNeighbours = new int[] { 1, 0, -1, -1, 0, 1 };
+        }
+
+        public Dictionary<Vector3Int, IGridCell> GetBoardGridCells()
+        {
+            return _gridCells;
         }
 
         public IGridCell Get(Vector3Int position)
@@ -110,52 +118,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             return gridCells;
         }
 
-        public bool CheckNeighbours(Vector3Int checkPosition, out List<Vector3Int> neighbourPositions)
-        {
-            // Check 6 neighbour cells
-            List<Vector3Int> positions;
-
-            IGridCell checkCell = Get(checkPosition);
-            if(checkCell.BallEntity == null)
-            {
-                neighbourPositions = null;
-                return false;
-            }
-
-            using (var listPool = ListPool<Vector3Int>.Get(out positions))
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    Vector3Int checkPos = new(_xNeighbours[i], _yNeighbours[i]);
-                    IGridCell gridCell = Get(checkPos);
-
-                    if (gridCell.BallEntity == null)
-                        continue;
-
-                    if (gridCell.BallEntity.EntityType != checkCell.BallEntity.EntityType)
-                        continue;
-
-                    if (!gridCell.BallEntity.IsMatchable)
-                        continue;
-
-                    positions.Add(checkPos);
-                }
-
-                if (positions.Count > 0)
-                {
-                    neighbourPositions = positions;
-                    return true;
-                }
-            }
-
-            neighbourPositions = null;
-            return false;
-        }
-
         public void Encapsulate()
         {
             List<Vector3Int> positions = _gridCells.Keys.ToList();
             _gridBounds = BoundsExtension.Encapsulate(positions);
+            _visitedMatrix = new bool[_gridBounds.size.x, _gridBounds.size.y];
+        }
+
+        public void ClearVisitedMatrix()
+        {
+            for (int i = 0; i < _visitedMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < _visitedMatrix.GetLength(1); j++)
+                {
+                    _visitedMatrix[i, j] = false;
+                }
+            }
         }
 
         public void ClearAll()

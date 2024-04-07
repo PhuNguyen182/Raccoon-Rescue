@@ -94,7 +94,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             }
         }
 
-        public void ChangelayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed)
         {
             ballMovement.ChangeLayerMask(isFixed);
         }

@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameDatas;
+using BubbleShooter.Scripts.Gameplay.GameEntities;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -31,12 +35,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private Vector2 _direction;
         private Vector3 _startPosition;
+        private EntityType _ballColor;
         private float _limitAngleSine = 0;
 
         private CancellationToken _token;
+        private EntityFactory _entityFactory;
 
         private void Awake()
         {
+            SetColor(EntityType.Blue);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
@@ -56,11 +63,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             }
         }
 
+        public void SetBallFactory(EntityFactory factory)
+        {
+            _entityFactory = factory;
+        }
+
         public void SetStartPosition()
         {
             _startPosition = mainCamera.ViewportToWorldPoint(normalizePosition);
             _startPosition.z = 0;
             transform.position = _startPosition;
+        }
+
+        public void SetColor(EntityType ballColor)
+        {
+            _ballColor = ballColor;
         }
 
         private void GetInputDirection()
@@ -76,17 +93,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (_token.IsCancellationRequested)
                 return;
 
-            CommonBall ball = SimplePool.Spawn(prefab, ballContainer
-                                               , spawnPoint.position
-                                               , Quaternion.identity);
-            ball.CanMove = false;
-            ball.MovementState = BallMovementState.Ready;
-            ball.ChangelayerMask(false);
+            BaseEntity newBall = _entityFactory.Create(new EntityMapData 
+            {
+                HP = 1,
+                EntityType = _ballColor 
+            });
 
-            ball.SetBodyActive(false);
-            ball.SetMoveDirection(_direction);
-            ball.MovementState = BallMovementState.Moving;
-            ball.CanMove = true;
+            newBall.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
+
+            if (newBall is IBallMovement ballMovement && newBall is IBallPhysics ballPhysics)
+            {
+                ballMovement.CanMove = false;
+                ballMovement.MovementState = BallMovementState.Ready;
+                ballPhysics.ChangeLayerMask(false);
+
+                ballPhysics.SetBodyActive(false);
+                ballMovement.SetMoveDirection(_direction);
+                ballMovement.MovementState = BallMovementState.Moving;
+                ballMovement.CanMove = true;
+            }
         }
 
         private void RotatePointer()

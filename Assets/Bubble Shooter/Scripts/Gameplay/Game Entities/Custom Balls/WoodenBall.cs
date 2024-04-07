@@ -109,5 +109,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             transform.position = position;
         }
+
+        public void ChangeLayerMask(bool isFixed)
+        {
+            
+        }
     }
 }

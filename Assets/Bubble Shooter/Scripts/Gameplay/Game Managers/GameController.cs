@@ -20,6 +20,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
     public class GameController : MonoBehaviour, IService
     {
         [Header("Game Handler")]
+        [SerializeField] private BallShooter ballShooter;
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private GridCellHolder gridPrefab;
         [SerializeField] private EntityDatabase entityDatabase;
@@ -70,6 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             _entityFactory = new(entityDatabase, entityContainer);
             _targetFactory = new(entityDatabase, entityContainer);
+            ballShooter.SetBallFactory(_entityFactory);
 
             _metaBallManager = new();
             _metaBallManager.AddTo(ref builder);
