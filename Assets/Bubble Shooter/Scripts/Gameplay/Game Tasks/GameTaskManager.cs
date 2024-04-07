@@ -19,24 +19,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler)
         {
-            var d = Disposable.CreateBuilder();
+            DisposableBuilder builder = Disposable.CreateBuilder();
 
             _gridCellManager = gridCellManager;
-            _gridCellManager.AddTo(ref d);
+            _gridCellManager.AddTo(ref builder);
 
             _inputProcessor = new(inputHandler, _gridCellManager);
-            _inputProcessor.AddTo(ref d);
+            _inputProcessor.AddTo(ref builder);
 
             
             _boosterHandleTask = new(_breakGridTask, _gridCellManager);
-            _boosterHandleTask.AddTo(ref d);
+            _boosterHandleTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager, _boosterHandleTask);
 
             _matchBallHandler = new(_gridCellManager, _breakGridTask);
-            _matchBallHandler.AddTo(ref d);
+            _matchBallHandler.AddTo(ref builder);
 
-            _disposable = d.Build();
+            _disposable = builder.Build();
         }
 
         public void Dispose()
