@@ -24,11 +24,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
-                _gridCellManager.GetRow(position, out List<IGridCell> row);
+                _gridCellManager.GetColumn(position, out List<IGridCell> column);
 
-                for (int i = 0; i < row.Count; i++)
+                for (int i = 0; i < column.Count; i++)
                 {
-                    breakTasks.Add(_breakGridTask.Break(row[i]));
+                    if (column[i].ContainsBall)
+                        breakTasks.Add(_breakGridTask.Break(column[i]));
                 }
 
                 await UniTask.WhenAll(breakTasks);

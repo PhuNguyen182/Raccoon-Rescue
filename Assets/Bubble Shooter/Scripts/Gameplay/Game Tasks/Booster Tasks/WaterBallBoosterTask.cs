@@ -28,7 +28,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < row.Count; i++)
                 {
-                    breakTasks.Add(_breakGridTask.Break(row[i]));
+                    if (row[i].ContainsBall)
+                        breakTasks.Add(_breakGridTask.Break(row[i]));
                 }
 
                 await UniTask.WhenAll(breakTasks);
