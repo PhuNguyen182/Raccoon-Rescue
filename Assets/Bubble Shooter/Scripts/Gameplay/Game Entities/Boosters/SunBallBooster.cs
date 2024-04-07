@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class SunBallBooster : BaseEntity, IBallBooster
+    public class SunBallBooster : BaseEntity, IBallBooster, IBallMovement
     {
         public override EntityType EntityType => EntityType.SunBall;
 
@@ -18,6 +18,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override Vector3 WorldPosition => transform.position;
 
         public override Vector3Int GridPosition { get; set; }
+
+        public bool CanMove { get => false; set { } }
+
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
 
         public UniTask Activate()
         {
@@ -47,6 +55,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public override void ResetBall()
+        {
+            base.ResetBall();
+            IsFixedOnStart = true;
+            MovementState = BallMovementState.Fixed;
+        }
+
+        public void SetMoveDirection(Vector2 direction)
+        {
+            
+        }
+
+        public UniTask SnapTo(Vector3 position)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return UniTask.CompletedTask;
         }
     }
 }

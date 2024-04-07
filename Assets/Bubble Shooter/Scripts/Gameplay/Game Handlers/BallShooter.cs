@@ -1,9 +1,12 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
-using BubbleShooter.Scripts.Utils.BoundsUtils;
-using System.Linq;
+using BubbleShooter.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -14,10 +17,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [Space(10)]
         [SerializeField] private Transform pointer;
         [SerializeField] private Transform spawnPoint;
+        [SerializeField] private Transform ballContainer;
 
         [Space(10)]
         [SerializeField] private LineDrawer lineDrawer;
         [SerializeField] private InputHandler inputHandler;
+        [SerializeField] private MainCharacter mainCharacter;
         
         [Space(10)]
         [Header("Start Position Setting")]
@@ -28,9 +33,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private Vector3 _startPosition;
         private float _limitAngleSine = 0;
 
+        private CancellationToken _token;
+
         private void Awake()
         {
             SetStartPosition();
+            _token = this.GetCancellationTokenOnDestroy();
         }
 
         private void Update()
@@ -39,7 +47,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
-                SpawnABall();
+                SpawnABall().Forget();
             }
 
             lineDrawer.DrawLine(inputHandler.IsMouseHold);
@@ -58,14 +66,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _direction = inputHandler.MousePosition - spawnPoint.position;
         }
 
-        private void SpawnABall()
+        private async UniTaskVoid SpawnABall()
         {
-            CommonBall ball = SimplePool.Spawn(prefab, EntityContainer.Transform
-                                        , spawnPoint.position, Quaternion.identity);
+            mainCharacter.Shoot();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(0.167f), cancellationToken: _token);
+            if (_token.IsCancellationRequested)
+                return;
 
+            CommonBall ball = SimplePool.Spawn(prefab, ballContainer
+                                               , spawnPoint.position
+                                               , Quaternion.identity);
             ball.CanMove = false;
+            ball.MovementState = BallMovementState.Ready;
+            ball.ChangelayerMask(false);
+
             ball.SetBodyActive(false);
             ball.SetMoveDirection(_direction);
+            ball.MovementState = BallMovementState.Moving;
             ball.CanMove = true;
         }
 

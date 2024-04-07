@@ -95,7 +95,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballBody: {fileID: 7539416394719927547}
   ballCollider: {fileID: 626577872113275415}
+  moveState: 0
   moveDuration: 0.2
   moveEase: 6
   snapDuration: 0.2
@@ -168,6 +169,9 @@ MonoBehaviour:
   ballMask:
     serializedVersion: 2
     m_Bits: 8
+  cellMask:
+    serializedVersion: 2
+    m_Bits: 0
   reflectMask:
     serializedVersion: 2
     m_Bits: 1536

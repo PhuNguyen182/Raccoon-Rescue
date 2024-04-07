@@ -21,6 +21,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool CanMove { get => false; set { } }
 
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -59,6 +65,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public override void ResetBall()
+        {
+            base.ResetBall();
+            IsFixedOnStart = true;
         }
 
         public UniTask SnapTo(Vector3 position)

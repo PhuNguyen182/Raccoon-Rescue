@@ -43,6 +43,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override Vector3Int GridPosition { get; set; }
 
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
         public override void InitMessages()
         {
             

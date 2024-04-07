@@ -1,7 +1,9 @@
-using BubbleShooter.Scripts.Common.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
+using BubbleShooter.Scripts.Common.Interfaces;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -14,31 +16,37 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _breakGridTask = breakGridTask;
         }
 
-        public bool CheckCluster(IBallEntity ball, List<IGridCell> cluster)
+        public async UniTask<bool> CheckCluster(IBallEntity ball, List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
                 return false;
 
-            List<Vector3Int> balls = new();
-
-            for (int i = 0; i < cluster.Count; i++)
+            using (var ballCluster = ListPool<Vector3Int>.Get(out var balls))
             {
-                if (cluster[i].BallEntity.EntityType == ball.EntityType)
-                    balls.Add(cluster[i].GridPosition);
+                for (int i = 0; i < cluster.Count; i++)
+                {
+                    if (cluster[i].BallEntity.EntityType == ball.EntityType)
+                        balls.Add(cluster[i].GridPosition);
+                }
+
+                if (balls.Count < 3)
+                    return false;
+
+                await ExecuteCluster(balls);
+                return true;
             }
-
-            if (balls.Count < 3)
-                return false;
-
-            ExecuteCluster(balls);
-            return true;
         }
 
-        private void ExecuteCluster(List<Vector3Int> clusterPositions)
+        private async UniTask ExecuteCluster(List<Vector3Int> clusterPositions)
         {
-            for (int i = 0; i < clusterPositions.Count; i++)
+            using (var cluster = ListPool<UniTask>.Get(out var listPool))
             {
-                _breakGridTask.Break(clusterPositions[i]);
+                for (int i = 0; i < clusterPositions.Count; i++)
+                {
+                    listPool.Add(_breakGridTask.Break(clusterPositions[i]));
+                }
+
+                await UniTask.WhenAll(listPool);
             }
         }
     }

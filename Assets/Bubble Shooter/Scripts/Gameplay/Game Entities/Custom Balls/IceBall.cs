@@ -92,6 +92,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             base.ResetBall();
             _isMatchable = false;
             entityType = EntityType.IceBall;
+            IsFixedOnStart = true;
         }
 
         public void TransformTo(EntityType color)

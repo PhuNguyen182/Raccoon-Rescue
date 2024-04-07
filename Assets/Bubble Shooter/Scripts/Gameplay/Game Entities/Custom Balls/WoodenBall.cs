@@ -29,6 +29,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override Vector3Int GridPosition { get; set; }
 
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
         public override void InitMessages()
         {
             
@@ -71,6 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             base.ResetBall();
             SetRenderer();
+            IsFixedOnStart = true;
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)

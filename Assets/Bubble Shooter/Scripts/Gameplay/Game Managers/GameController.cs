@@ -10,12 +10,10 @@ using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
+using BubbleShooter.Scripts.Gameplay.Strategies;
+using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
-using BubbleShooter.Scripts.Gameplay.Strategies;
-using BubbleShooter.Scripts.Common.Interfaces;
-using Newtonsoft.Json;
-using BubbleShooter.Scripts.Gameplay.GameEntities;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {
@@ -42,6 +40,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         
         private IDisposable _disposable;
 
+        public GridCellManager GridCellManager => _gridCellManager;
+
+        public static GameController Instance { get; private set; }
+
         private void Awake()
         {
             Setup();
@@ -55,6 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void Setup()
         {
+            Instance = this;
             Application.targetFrameRate = GameSetupConstants.MaxTargetFramerate;
         }
 

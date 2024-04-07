@@ -10,6 +10,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
     {
         private IBallEntity _ballEntity;
 
+        public bool ContainsBall => _ballEntity != null;
         public IBallEntity BallEntity => _ballEntity;
 
         public EntityType EntityType => _ballEntity.EntityType;

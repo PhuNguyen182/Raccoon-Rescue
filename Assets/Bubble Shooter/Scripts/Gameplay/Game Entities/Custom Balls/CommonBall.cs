@@ -43,6 +43,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override Vector3Int GridPosition { get; set; }
 
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
         private void OnEnable()
         {
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
@@ -86,6 +92,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
                     entityGraphics.SetEntitySprite(orange);
                     break;
             }
+        }
+
+        public void ChangelayerMask(bool isFixed)
+        {
+            ballMovement.ChangeLayerMask(isFixed);
         }
 
         public void SetBodyActive(bool active)
@@ -142,6 +153,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             base.ResetBall();
             CanMove = false;
+            MovementState = BallMovementState.Fixed;
             IsFixedOnStart = true;
             SetBodyActive(false);
         }

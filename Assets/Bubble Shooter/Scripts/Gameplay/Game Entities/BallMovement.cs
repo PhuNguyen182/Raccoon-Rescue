@@ -4,7 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.GameManagers;
 using BubbleShooter.Scripts.Common.Configs;
+using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using DG.Tweening;
@@ -15,6 +18,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         [SerializeField] private Rigidbody2D ballBody;
         [SerializeField] private Collider2D ballCollider;
+        [SerializeField] private BallMovementState moveState;
 
         [Header("Moving")]
         [BoxGroup(GroupID = "Move")]
@@ -39,15 +43,29 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask ballMask;
         [FoldoutGroup("Check Layer Maskes")]
+        [SerializeField] private LayerMask cellMask;
+        [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask reflectMask;
+
+        private const string BallLayer = "Ball";
+        private const string DefaultLayer = "Default";
+
+        private int _ballLayer;
+        private int _defaultLayer;
 
         private float _ballSpeed = 0;
         private bool _isReflect = false;
 
         private Tweener _movingTween;
         private Tweener _snappingTween;
+
         private CancellationToken _token;
         private Vector2 _moveDirection = Vector2.zero;
+
+        private IBallEntity _currentBall;
+        private RaycastHit2D _reflectHitInfo;
+        private RaycastHit2D[] _nearestGridHitInfos;
+        private Collider2D _neighborBallCollider;
 
         public bool CanMove
         {
@@ -55,31 +73,110 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             set => _ballSpeed = value ? BallConstants.BallMoveSpeed : 0;
         }
 
+        public BallMovementState MovementState 
+        { 
+            get => moveState; 
+            set => moveState = value; 
+        }
+
         private void Awake()
         {
+            _currentBall = GetComponent<IBallEntity>();
+            _ballLayer = LayerMask.NameToLayer(BallLayer);
+            _defaultLayer = LayerMask.NameToLayer(DefaultLayer);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
         public void Move()
         {
             MoveBall();
+            CheckNeighborBallToSnap();
             CheckReflection().Forget();
         }
 
         private async UniTaskVoid CheckReflection()
         {
-            RaycastHit2D hitInfor = Physics2D.CircleCast(transform.position, ballRadius, transform.up, ballDistance, reflectMask);
+            if (!CanMove)
+                return;
 
-            if (hitInfor && !_isReflect)
+            _reflectHitInfo = Physics2D.CircleCast(transform.position, ballRadius, transform.up, ballDistance, reflectMask);
+
+            if (_reflectHitInfo && !_isReflect)
             {
                 _isReflect = true;
-                Vector2 hitNormal = hitInfor.normal;
+                Vector2 hitNormal = _reflectHitInfo.normal;
                 Vector2 newDirection = Vector2.Reflect(_moveDirection, hitNormal);
                 _moveDirection = newDirection.normalized;
 
                 await UniTask.DelayFrame(delayFrame, delayTiming: PlayerLoopTiming.FixedUpdate, cancellationToken: _token);
                 _isReflect = false;
             }
+        }
+
+        private void CheckNeighborBallToSnap()
+        {
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius, ballMask);
+            
+            if (_neighborBallCollider == null)
+                return;
+
+            if (_neighborBallCollider.GetInstanceID() == GetInstanceID())
+                return;
+
+            if(_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+            {
+                if (movement.MovementState == BallMovementState.Fixed)
+                {
+                    // Check nearest grid cell an snap to it;
+                    CanMove = false;
+                    ChangeLayerMask(true);
+                    CheckNearestGrid();
+                }
+            }
+        }
+
+        private void CheckNearestGrid()
+        {
+            float nearestGridDistance = Mathf.Infinity;
+            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
+                                                          , transform.up, ballDistance, cellMask);
+
+            IGridCell targetGridCell;
+            RaycastHit2D targetCellInfo = _nearestGridHitInfos[0];
+            for (int i = 0; i < _nearestGridHitInfos.Length; i++)
+            {
+                if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder gridHolder))
+                    continue;
+
+                IGridCell gridCell = GameController.Instance.GridCellManager.Get(gridHolder.GridPosition);
+                if (gridCell == null || gridCell.ContainsBall)
+                    continue;
+
+                float checkDistance = Vector3.SqrMagnitude(_nearestGridHitInfos[i].transform.position - transform.position);
+                
+                if(checkDistance < nearestGridDistance)
+                {
+                    nearestGridDistance = checkDistance;
+                    targetCellInfo = _nearestGridHitInfos[i];
+                }
+            }
+
+            GridCellHolder cellHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
+            targetGridCell = GameController.Instance.GridCellManager.Get(cellHolder.GridPosition);
+            MovementState = BallMovementState.Fixed;
+            
+            SnapTo(targetCellInfo.transform.position);
+            SetItemToGrid(targetGridCell);
+        }
+
+        private void SetItemToGrid(IGridCell gridCell)
+        {
+            gridCell.SetBall(_currentBall);
+        }
+
+        public void ChangeLayerMask(bool isFixed)
+        {
+            gameObject.layer = isFixed ? _ballLayer : _defaultLayer;
         }
 
         public UniTask MoveTo(Vector3 position)
@@ -108,6 +205,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public void SetBodyActive(bool active)
         {
+            if (active)
+                MovementState = BallMovementState.Fall;
+
             ballBody.bodyType = active ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
         }
 
@@ -138,6 +238,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private void OnDestroy()
         {
+            _movingTween?.Kill();
             _snappingTween?.Kill();
         }
     }

@@ -44,6 +44,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public int ID => id;
 
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
         protected override void OnStart()
         {
             entityGraphics.PlaySadEmotion();
@@ -114,6 +120,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public override void ResetBall()
+        {
+            base.ResetBall();
+            IsFixedOnStart = true;
         }
 
         public UniTask SnapTo(Vector3 position)
