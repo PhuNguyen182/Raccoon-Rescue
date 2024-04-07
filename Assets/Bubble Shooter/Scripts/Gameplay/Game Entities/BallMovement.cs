@@ -99,8 +99,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             if (!CanMove)
                 return;
 
-            _reflectHitInfo = Physics2D.CircleCast(transform.position, ballRadius, transform.up, ballDistance, reflectMask);
-
+            _reflectHitInfo = Physics2D.CircleCast(transform.position, ballRadius
+                                                   , transform.up, ballDistance
+                                                   , reflectMask);
             if (_reflectHitInfo && !_isReflect)
             {
                 _isReflect = true;
@@ -108,19 +109,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 Vector2 newDirection = Vector2.Reflect(_moveDirection, hitNormal);
                 _moveDirection = newDirection.normalized;
 
-                await UniTask.DelayFrame(delayFrame, delayTiming: PlayerLoopTiming.FixedUpdate, cancellationToken: _token);
+                await UniTask.DelayFrame(delayFrame, PlayerLoopTiming.FixedUpdate, _token);
                 _isReflect = false;
             }
         }
 
         private void CheckNeighborBallToSnap()
         {
-            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius, ballMask);
-            
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position
+                                                            , ballRadius * 0.8f
+                                                            , ballMask);
             if (_neighborBallCollider == null)
-                return;
-
-            if (_neighborBallCollider.GetInstanceID() == GetInstanceID())
                 return;
 
             if(_neighborBallCollider.TryGetComponent(out IBallMovement movement))

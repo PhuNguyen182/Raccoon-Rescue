@@ -98,6 +98,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             return false;
         }
 
+        public List<IGridCell> GetNeighbourGrids(Vector3Int checkPosition)
+        {
+            List<IGridCell> gridCells = new();
+
+            for (int i = 0; i < 6; i++)
+            {
+                gridCells.Add(Get(checkPosition + new Vector3Int(_xNeighbours[i], _yNeighbours[i])));
+            }
+
+            return gridCells;
+        }
+
         public bool CheckNeighbours(Vector3Int checkPosition, out List<Vector3Int> neighbourPositions)
         {
             // Check 6 neighbour cells

@@ -6,6 +6,7 @@ using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Common.Factories
 {
@@ -33,6 +34,7 @@ namespace BubbleShooter.Scripts.Common.Factories
                     target.SetID(data.ID);
                     target.SetColor(data.Color);
                     target.SetTargetColor(data.TargetColor);
+                    target.MovementState = BallMovementState.Fixed;
                     target.InitMessages();
                     target.ResetBall();
 

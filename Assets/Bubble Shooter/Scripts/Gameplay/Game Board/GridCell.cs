@@ -23,7 +23,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
             if(_ballEntity != null)
             {
                 _ballEntity.Destroy();
-                _ballEntity = null;
+                SetBall(null);
                 return true;
             }
 
