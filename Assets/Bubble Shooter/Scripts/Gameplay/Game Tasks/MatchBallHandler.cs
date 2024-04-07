@@ -77,6 +77,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask ExecuteCluster(List<IGridCell> cluster)
         {
+            if (cluster.Count < 3)
+                return;
+
             using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
                 for (int i = 0; i < cluster.Count; i++)
