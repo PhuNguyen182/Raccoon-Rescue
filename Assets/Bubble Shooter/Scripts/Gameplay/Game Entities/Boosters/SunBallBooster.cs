@@ -33,6 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
         }
+
         public bool IsIgnored { get; set; }
 
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
