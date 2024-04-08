@@ -90,7 +90,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void Move()
         {
             MoveBall();
-            CheckNeighborBallToSnap();
+            
+            // If cannot snap to ceil, find a neighbour ball and try to snap to it
+            if(!CheckCeilToSnap())
+                CheckNeighborBallToSnap();
+            
             CheckReflection().Forget();
         }
 
@@ -114,6 +118,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
+        private bool CheckCeilToSnap()
+        {
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position
+                                                           , ballRadius, ceilMask);
+            if (_neighborBallCollider == null)
+                return false;
+
+            CanMove = false;
+            ChangeLayerMask(true);
+            CheckNearestGrid().Forget();
+            return true;
+        }
+
         private void CheckNeighborBallToSnap()
         {
             _neighborBallCollider = Physics2D.OverlapCircle(transform.position
@@ -126,7 +143,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 if (movement.MovementState == BallMovementState.Fixed)
                 {
-                    // Check nearest grid cell an snap to it;
+                    // Check nearest grid cell and snap to it;
                     CanMove = false;
                     ChangeLayerMask(true);
                     CheckNearestGrid().Forget();
