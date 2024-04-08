@@ -60,7 +60,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (!neighbours[i].ContainsBall)
                     continue;
 
-                if (!neighbours[i].BallEntity.IsMatchable)
+                // XOR operator: if the ball is not matchable and is booster or is matchable and is not booster
+                // Can use != instead of ^
+                if (!(neighbours[i].BallEntity.IsMatchable ^ neighbours[i].BallEntity is IBallBooster))
                     continue;
 
                 if (neighbours[i].BallEntity.EntityType != ballEntity.EntityType)
@@ -93,6 +95,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            _matchCluster.Clear();
             _disposable.Dispose();
         }
     }

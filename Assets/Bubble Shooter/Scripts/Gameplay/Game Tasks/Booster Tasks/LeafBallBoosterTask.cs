@@ -22,18 +22,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         // To do: Destroy a vertical line of ball
         public async UniTask Execute(Vector3Int position)
         {
+            IGridCell boosterCell = _gridCellManager.Get(position);
+            if (boosterCell.BallEntity is IBallBooster booster)
+                await booster.Activate();
+
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
                 _gridCellManager.GetColumn(position, out List<IGridCell> column);
 
                 for (int i = 0; i < column.Count; i++)
                 {
+                    if (position == column[i].GridPosition)
+                        continue;
+
                     if (column[i].ContainsBall)
                         breakTasks.Add(_breakGridTask.Break(column[i]));
                 }
 
                 await UniTask.WhenAll(breakTasks);
             }
+
+            _gridCellManager.DestroyAt(position);
         }
 
         public void Dispose()

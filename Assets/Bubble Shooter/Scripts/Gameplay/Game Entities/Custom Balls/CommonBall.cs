@@ -157,7 +157,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             base.ResetBall();
             CanMove = false;
-            MovementState = BallMovementState.Fixed;
             IsFixedOnStart = true;
             SetBodyActive(false);
         }

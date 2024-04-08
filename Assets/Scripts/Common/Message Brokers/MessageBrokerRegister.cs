@@ -25,6 +25,7 @@ namespace Scripts.Common.MessageBrokers
         private void AddMeggageBrokers()
         {
             _builder.AddMessageBroker<CheckMatchMessage>();
+            _builder.AddMessageBroker<ActiveBoosterMessage>();
         }
     }
 }

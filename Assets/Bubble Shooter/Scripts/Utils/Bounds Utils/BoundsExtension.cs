@@ -89,5 +89,28 @@ namespace BubbleShooter.Scripts.Utils.BoundsUtils
                 }
             }
         }
+
+        public static IEnumerable<Vector3Int> IteratorIgnoreCorner(this BoundsInt boundsInt)
+        {
+            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            {
+                for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+                {
+                    if (x == boundsInt.xMin && y == boundsInt.yMin)
+                        continue;
+
+                    if (x == boundsInt.xMin && y == boundsInt.yMax)
+                        continue;
+
+                    if (x == boundsInt.xMax && y == boundsInt.yMin)
+                        continue;
+
+                    if (x == boundsInt.xMax && y == boundsInt.yMax)
+                        continue;
+
+                    yield return new Vector3Int(x, y);
+                }
+            }
+        }
     }
 }

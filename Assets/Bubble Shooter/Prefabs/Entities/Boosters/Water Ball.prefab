@@ -251,6 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballBody: {fileID: 2849242324432716676}
   ballCollider: {fileID: 5985776738741170986}
+  moveState: 0
   moveDuration: 0.2
   moveEase: 6
   snapDuration: 0.2
@@ -264,6 +265,9 @@ MonoBehaviour:
   ballMask:
     serializedVersion: 2
     m_Bits: 8
+  cellMask:
+    serializedVersion: 2
+    m_Bits: 128
   reflectMask:
     serializedVersion: 2
     m_Bits: 1536

@@ -41,7 +41,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected virtual void OnStart() { }
 
-        public virtual void ResetBall() { }
+        public virtual void ResetBall() 
+        {
+            ballMovement.MovementState = BallMovementState.Fixed;
+        }
 
         public abstract void InitMessages();
 

@@ -24,25 +24,37 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         // To do: Destroy a big area of ball (5x5 perhaps ?!!)
         public async UniTask Execute(Vector3Int position)
         {
+            IGridCell boosterCell = _gridCellManager.Get(position);
+            if (boosterCell.BallEntity is IBallBooster booster)
+                await booster.Activate();
+
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
                 Vector3Int[] gridPosition = GetBoosterRange(position);
                 for (int i = 0; i < gridPosition.Length; i++)
                 {
+                    if (position == gridPosition[i])
+                        continue;
+
                     IGridCell cell = _gridCellManager.Get(gridPosition[i]);
                     
-                    if(cell != null && cell.ContainsBall)
-                        breakTasks.Add(_breakGridTask.Break(cell));
+                    if(cell != null)
+                    {
+                        if (cell.ContainsBall)
+                            breakTasks.Add(_breakGridTask.Break(cell));
+                    }
                 }
 
                 await UniTask.WhenAll(breakTasks);
             }
+                
+            _gridCellManager.DestroyAt(position);
         }
 
         private Vector3Int[] GetBoosterRange(Vector3Int position)
         {
             BoundsInt boosterRange = position.GetBounds2D(5);
-            return boosterRange.Iterator().ToArray();
+            return boosterRange.IteratorIgnoreCorner().ToArray();
         }
 
         public void Dispose()

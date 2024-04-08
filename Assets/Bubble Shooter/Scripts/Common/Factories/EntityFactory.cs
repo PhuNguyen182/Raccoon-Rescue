@@ -48,6 +48,7 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     booster.ResetBall();
                     booster.transform.SetParent(_entityContainer);
+                    booster.IsFixedOnStart = false;
                     booster.InitMessages();
 
                     return booster;

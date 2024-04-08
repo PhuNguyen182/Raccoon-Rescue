@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Interfaces;
+using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class FireBallBooster : BaseEntity, IBallBooster, IBallMovement, IBallPhysics
+    public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
         public override EntityType EntityType => EntityType.FireBall;
 
@@ -19,7 +22,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override Vector3Int GridPosition { get; set; }
 
-        public bool CanMove { get => false; set { } }
+        public bool CanMove
+        {
+            get => ballMovement.CanMove;
+            set => ballMovement.CanMove = value;
+        }
 
         public BallMovementState MovementState
         {
@@ -27,9 +34,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             set => ballMovement.MovementState = value;
         }
 
-        public UniTask Activate()
+        private IPublisher<ActiveBoosterMessage> _boosterPublisher;
+
+        private void OnEnable()
         {
-            return UniTask.CompletedTask;
+            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
+        }
+
+        public void OnFixedUpdate()
+        {
+            if (CanMove && !IsFixedOnStart)
+            {
+                ballMovement.Move();
+            }
+        }
+
+        public async UniTask Activate()
+        {
+            await Blast();
         }
 
         public override UniTask Blast()
@@ -39,7 +61,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void Destroy()
         {
-            
+            SimplePool.Despawn(this.gameObject);
         }
 
         public UniTask Explode()
@@ -49,7 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void InitMessages()
         {
-            
+            _boosterPublisher = GlobalMessagePipe.GetPublisher<ActiveBoosterMessage>();
         }
 
         public override void SetWorldPosition(Vector3 position)
@@ -61,7 +83,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             base.ResetBall();
             IsFixedOnStart = true;
-            MovementState = BallMovementState.Fixed;
         }
 
         public void SetMoveDirection(Vector2 direction)
@@ -97,6 +118,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void OnSnapped()
         {
             // To do: execute active booster
+            _boosterPublisher.Publish(new ActiveBoosterMessage
+            {
+                Position = GridPosition
+            });
+        }
+
+        private void OnDisable()
+        {
+            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

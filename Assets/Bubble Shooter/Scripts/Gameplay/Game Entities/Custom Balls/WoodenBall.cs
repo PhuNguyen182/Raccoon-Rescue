@@ -102,7 +102,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private void SetRenderer()
         {
-            entityGraphics.SetEntitySprite(hpStates[_hp - 1]);
+            if (_hp > 0)
+            {
+                entityGraphics.SetEntitySprite(hpStates[_hp - 1]);
+            }
         }
 
         public override void SetWorldPosition(Vector3 position)
