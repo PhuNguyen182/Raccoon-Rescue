@@ -33,6 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
         }
+        public bool IsIgnored { get; set; }
 
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 
@@ -83,6 +84,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             base.ResetBall();
             IsFixedOnStart = true;
+            IsIgnored = false;
         }
 
         public void SetMoveDirection(Vector2 direction)
@@ -117,6 +119,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void OnSnapped()
         {
+            IsIgnored = true;
             // To do: execute active booster
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {

@@ -35,8 +35,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                     if (position == column[i].GridPosition)
                         continue;
 
-                    if (column[i].ContainsBall)
-                        breakTasks.Add(_breakGridTask.Break(column[i]));
+                    if (!column[i].ContainsBall)
+                        continue;
+
+                    if (column[i].BallEntity is IBallBooster ballBooster)
+                        if (ballBooster.IsIgnored)
+                            continue;
+
+                    breakTasks.Add(_breakGridTask.Break(column[i]));
                 }
 
                 await UniTask.WhenAll(breakTasks);

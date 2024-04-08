@@ -37,12 +37,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                         continue;
 
                     IGridCell cell = _gridCellManager.Get(gridPosition[i]);
-                    
-                    if(cell != null)
-                    {
-                        if (cell.ContainsBall)
-                            breakTasks.Add(_breakGridTask.Break(cell));
-                    }
+                    if (cell == null)
+                        continue;
+
+                    if (!cell.ContainsBall)
+                        continue;
+
+                    if (cell.BallEntity is IBallBooster ballBooster)
+                        if (ballBooster.IsIgnored)
+                            continue;
+
+                    breakTasks.Add(_breakGridTask.Break(cell));
                 }
 
                 await UniTask.WhenAll(breakTasks);

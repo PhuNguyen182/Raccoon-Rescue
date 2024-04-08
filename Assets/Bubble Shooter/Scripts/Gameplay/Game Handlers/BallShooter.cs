@@ -43,7 +43,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void Awake()
         {
-            SetColor(EntityType.Violet);
+            SetColor(EntityType.FireBall);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
