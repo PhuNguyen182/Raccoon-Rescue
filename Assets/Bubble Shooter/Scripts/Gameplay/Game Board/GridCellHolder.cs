@@ -6,14 +6,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
 {
     public class GridCellHolder : MonoBehaviour
     {
-        [SerializeField] private Collider2D cellCollider;
-
-        public bool IsCeilGrid { get; set; }
+        [SerializeField] private bool isCeil = false;
+        
         public Vector3Int GridPosition { get; set; }
 
-        public void SetColliderEnable(bool enable)
-        {
-            cellCollider.enabled = enable;
+        public bool IsCeilGrid 
+        { 
+            get => isCeil; 
+            set => isCeil = value; 
         }
     }
 }

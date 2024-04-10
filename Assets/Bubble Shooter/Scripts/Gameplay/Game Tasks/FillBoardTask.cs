@@ -27,6 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 IGridCell gridCell = _gridCellManager.Get(positions[i]);
                 IBallEntity ballEntity = _metaBallManager.Get(positions[i]);
 
+                ballEntity.CheckCeilAttach();
                 gridCell.SetBall(ballEntity);
             }
 

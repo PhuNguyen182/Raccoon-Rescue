@@ -11,6 +11,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
     {
         public List<int> MoveSequence = new();
         public List<BoardMapPosition> BoardMapPositions = new();
+        public List<CeilMapPosition> CeilMapPositions = new();
         public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new(); // To be tested
         public List<ColorMapData> ColorMapDatas = new(); // To be tested
         public List<EntityMapPosition> StartingEntityMap = new();
@@ -20,6 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
         {
             MoveSequence.Clear();
             BoardMapPositions.Clear();
+            CeilMapPositions.Clear();
             BoardThresholdMapPositions.Clear();
             ColorMapDatas.Clear();
             StartingEntityMap.Clear();

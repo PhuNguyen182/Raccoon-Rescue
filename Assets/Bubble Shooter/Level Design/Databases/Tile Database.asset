@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tile Database
   m_EditorClassIdentifier: 
   boardTile: {fileID: 11400000, guid: fa09957dfb6cde14d9541d936eae6159, type: 2}
+  ceilTile: {fileID: 11400000, guid: 461d644174aaba44995755c0c3bb2eec, type: 2}
   thresholdTile: {fileID: 11400000, guid: 283bb9dcc8a61014689a68101409cb1e, type: 2}
   ballTiles:
   - {fileID: 11400000, guid: d4da3c63a156a974da527d1eebc2c35b, type: 2}

@@ -14,6 +14,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
     {
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
+        private readonly CheckBallClusterTask _checkBallClusterTask;
 
         private readonly FireBallBoosterTask _fireBallBoosterTask;
         private readonly LeafBallBoosterTask _leafBallBoosterTask;
@@ -23,9 +24,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private IDisposable _disposable;
 
-        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager)
+        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager, CheckBallClusterTask checkBallClusterTask)
         {
             _breakGridTask = breakGridTask;
+            _checkBallClusterTask = checkBallClusterTask;
             _gridCellManager = gridCellManager;
 
             _fireBallBoosterTask = new(_gridCellManager, _breakGridTask);
@@ -37,7 +39,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _boosterSubscriber = GlobalMessagePipe.GetSubscriber<ActiveBoosterMessage>();
             _boosterSubscriber.Subscribe(message => ActiveBooster(message.Position).Forget()).AddTo(builder);
-            
+
             _disposable = builder.Build();
         }
 
@@ -66,6 +68,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                     await _sunBallBoosterTask.Execute(position);
                     break;
             }
+
+            //_checkBallClusterTask.CheckCluster();
         }
 
         public void Dispose()

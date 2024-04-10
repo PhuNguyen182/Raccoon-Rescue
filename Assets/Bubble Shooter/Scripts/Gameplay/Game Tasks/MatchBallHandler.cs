@@ -12,16 +12,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class MatchBallHandler : IDisposable
     {
-        private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
+        private readonly CheckBallClusterTask _checkBallClusterTask;
+        private readonly GridCellManager _gridCellManager;
 
         private List<IGridCell> _matchCluster = new();
         private ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
         private IDisposable _disposable;
 
-        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask, CheckBallClusterTask checkBallClusterTask)
         {
             _gridCellManager = gridCellManager;
+            _checkBallClusterTask = checkBallClusterTask;
             _breakGridTask = breakGridTask;
 
             var builder = DisposableBag.CreateBuilder();
@@ -43,6 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckMatch(position);
             _gridCellManager.ClearVisitedPositions();
             await ExecuteCluster(_matchCluster);
+            //_checkBallClusterTask.CheckCluster();
         }
 
         private void CheckMatch(Vector3Int position)

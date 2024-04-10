@@ -15,6 +15,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
     {
         [Header("Builder Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
+        [SerializeField] private Tilemap ceilTilemap;
         [SerializeField] private Tilemap boardThresholdTilemap;
         [SerializeField] private Tilemap entityTilemap;
         [SerializeField] private TileDatabase tileDatabase;
@@ -38,6 +39,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             moveSequence.Clear();
             colorProportions.Clear();
             boardTilemap.ClearAllTiles();
+            ceilTilemap.ClearAllTiles();
             boardThresholdTilemap.ClearAllTiles();
             entityTilemap.ClearAllTiles();
         }
@@ -58,6 +60,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
             string output = _levelExporter.Clear()
                                           .BuildBoardMap(boardTilemap)
+                                          .BuildCeilMap(ceilTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
                                           .BuildBallMap(entityTilemap)
                                           .BuildMoveSequence(moveSequence)
@@ -90,6 +93,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
             _levelImporter = new(tileDatabase);
             _levelImporter.BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
+                          .BuildCeilMap(ceilTilemap, levelModel.CeilMapPositions)
                           .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
                           .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildColorProportion(levelModel.ColorMapDatas, out colorProportions)

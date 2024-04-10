@@ -44,6 +44,25 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelExporter BuildCeilMap(Tilemap tilemap)
+        {
+            var positions = tilemap.cellBounds.Iterator();
+            foreach (Vector3Int position in positions)
+            {
+                var tile = tilemap.GetTile<CeilTile>(position);
+
+                if (tile == null)
+                    continue;
+
+                _levelModel.CeilMapPositions.Add(new CeilMapPosition
+                {
+                    Position = position
+                });
+            }
+
+            return this;
+        }
+
         public LevelExporter BuildBoardThresholdMap(Tilemap tilemap)
         {
             var positions = tilemap.cellBounds.Iterator();

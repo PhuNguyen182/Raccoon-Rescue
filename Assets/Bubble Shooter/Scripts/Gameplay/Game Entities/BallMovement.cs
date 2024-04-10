@@ -121,14 +121,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private bool CheckCeilToSnap()
         {
             _neighborBallCollider = Physics2D.OverlapCircle(transform.position
-                                                           , ballRadius, ceilMask);
+                                                           , ballRadius, cellMask);
             if (_neighborBallCollider == null)
                 return false;
 
-            CanMove = false;
-            ChangeLayerMask(true);
-            CheckNearestGrid().Forget();
-            return true;
+            Vector3Int position = GameController.Instance.GridCellManager
+                                                .ConvertWorldToGridFunction(transform.position);
+            var checkCell = GameController.Instance.GridCellManager.Get(position);
+            if (checkCell == null)
+                return false;
+
+            if (checkCell.IsCeil)
+            {
+                CanMove = false;
+                ChangeLayerMask(true);
+                CheckNearestGrid().Forget();
+                return true;
+            }
+
+            return false;
         }
 
         private void CheckNeighborBallToSnap()
@@ -159,6 +170,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
             IGridCell targetGridCell;
             RaycastHit2D targetCellInfo = _nearestGridHitInfos[0];
+
             for (int i = 0; i < _nearestGridHitInfos.Length; i++)
             {
                 if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder gridHolder))
@@ -177,8 +189,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 }
             }
 
-            GridCellHolder cellHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
-            targetGridCell = GameController.Instance.GridCellManager.Get(cellHolder.GridPosition);
+            Vector3Int position = GameController.Instance.GridCellManager
+                                                .ConvertWorldToGridFunction(transform.position);
+            targetGridCell = GameController.Instance.GridCellManager.Get(position);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);

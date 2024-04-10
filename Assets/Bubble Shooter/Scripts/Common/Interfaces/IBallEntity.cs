@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     public interface IBallEntity
     {
         public bool IsMatchable { get; }
+        public bool IsCeilAttached { get; set; }
         public bool IsFixedOnStart { get; set; }
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }
@@ -18,5 +19,6 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public void Destroy();
         public void OnSnapped();
         public void SetWorldPosition(Vector3 position);
+        public void CheckCeilAttach();
     }
 }

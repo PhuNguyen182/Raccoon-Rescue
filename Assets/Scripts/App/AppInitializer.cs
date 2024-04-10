@@ -7,7 +7,7 @@ namespace Scripts.App
 {
     public class AppInitializer : Singleton<AppInitializer>, IService
     {
-        private void Start()
+        protected override void OnAwake()
         {
             Initialize();
         }

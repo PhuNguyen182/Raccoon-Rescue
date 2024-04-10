@@ -14,8 +14,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] protected EntityGraphics entityGraphics;
         [SerializeField] protected EntityAudio entityAudio;
 
+        private const string CeilLayerMask = "Ceil";
+
+        private int _ceilLayerMask = 0;
         protected CancellationToken onDestroyToken;
 
+        public bool IsCeilAttached { get; set; }
         public abstract bool IsMatchable { get; }
 
         public abstract bool IsFixedOnStart { get; set; }
@@ -28,7 +32,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private void Awake()
         {
+            _ceilLayerMask = LayerMask.NameToLayer(CeilLayerMask);
             onDestroyToken = this.GetCancellationTokenOnDestroy();
+
             OnAwake();
         }
 
@@ -55,5 +61,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public abstract void SetWorldPosition(Vector3 position);
 
         public abstract void OnSnapped();
+
+        public void CheckCeilAttach()
+        {
+            Collider2D ceilCollider = Physics2D.OverlapCircle(transform.position, 0.3f, _ceilLayerMask);
+            IsCeilAttached = ceilCollider != null;
+        }
     }
 }

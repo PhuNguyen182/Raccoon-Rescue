@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
-using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Pool;
 
@@ -14,18 +13,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
-        private readonly int[] _xNeighbours;
-        private readonly int[] _yNeighbours;
-        private HashSet<int> _checkedIndicies;
-
         public SunBallBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
-
-            _checkedIndicies = new();
-            _xNeighbours = new int[] { 0, 1, 0, -1, -1, -1 };
-            _yNeighbours = new int[] { 1, 0, -1, -1, 0, 1 };
         }
 
         // To do: Destroy a triple of ball
@@ -63,17 +54,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private List<Vector3Int> GetTripleBall(Vector3Int position)
         {
-            _checkedIndicies.Clear();
             List<Vector3Int> triplePosition = new();
 
-            while(_checkedIndicies.Count < 3)
+            for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
             {
-                int rand = Random.Range(0, 6);
-                if (!_checkedIndicies.Contains(rand))
-                {
-                    _checkedIndicies.Add(rand);
-                    triplePosition.Add(new Vector3Int(_xNeighbours[rand], _yNeighbours[rand]));
-                }
+                Vector3Int neighborOffset = CommonProperties.NeighborOffsets[i];
+                IGridCell gridCell = _gridCellManager.Get(position + neighborOffset);
+
+                if (triplePosition.Count == 3)
+                    break;
+
+                if (gridCell == null)
+                    continue;
+
+                if (!gridCell.ContainsBall)
+                    continue;
+
+                triplePosition.Add(neighborOffset);
             }
 
             return triplePosition;
@@ -81,7 +78,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-            _checkedIndicies.Clear();
+            
         }
     }
 }

@@ -12,12 +12,15 @@ namespace BubbleShooter.LevelDesign.Scripts.Databases
     public class TileDatabase : ScriptableObject
     {
         [SerializeField] private BoardTile boardTile;
+        [SerializeField] private CeilTile ceilTile;
         [SerializeField] private BoardThresholdTile thresholdTile;
         [SerializeField] private List<BallTile> ballTiles;
         [SerializeField] private List<EntityTile> entityTiles;
         [SerializeField] private List<TargetTile> targetTiles;
 
         public BoardTile GetBoardTile() => boardTile;
+
+        public CeilTile GetCeilTile() => ceilTile;
 
         public BoardThresholdTile GetBoardThresholdTile() => thresholdTile;
 

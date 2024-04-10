@@ -18,10 +18,16 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
         public Vector3Int GridPosition { get; set; }
 
         public EntityType EntityType { get; }
+        public bool IsCeilAttached { get; set; }
 
         public UniTask Blast()
         {
             return UniTask.CompletedTask;
+        }
+
+        public void CheckCeilAttach()
+        {
+            
         }
 
         public void Destroy()

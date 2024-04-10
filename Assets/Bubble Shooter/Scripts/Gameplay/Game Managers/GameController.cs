@@ -47,13 +47,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void Awake()
         {
-            
+            Setup();
+            Initialize();
         }
 
         private void Start()
         {
-            Setup();
-            Initialize();
             GetLevel();
         }
 
@@ -67,7 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
             
-            _gridCellManager = new(ConvertGridPositionToWolrdPosition);
+            _gridCellManager = new(ConvertGridPositionToWolrdPosition, ConvertWorldPositionToGridPosition);
             _gridCellManager.AddTo(ref builder);
 
             _entityFactory = new(entityDatabase, entityContainer);
@@ -101,10 +100,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 Vector3 worldPosition = ConvertGridPositionToWolrdPosition(gridPosition);
                 var gridHolder = Instantiate(gridPrefab, worldPosition, Quaternion.identity, gridCellContainer);
                 gridHolder.GridPosition = gridPosition;
-                
+
                 gridCell = new();
                 gridCell.GridPosition = gridPosition;
                 _gridCellManager.Add(gridCell);
+            }
+
+            for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
+            {
+                var gridCell = _gridCellManager.Get(levelModel.CeilMapPositions[i].Position);
+                gridCell.IsCeil = true;
             }
 
             for (int i = 0; i < levelModel.StartingEntityMap.Count; i++)
@@ -127,6 +132,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)
         {
             return boardTilemap.GetCellCenterWorld(position);
+        }
+
+        private Vector3Int ConvertWorldPositionToGridPosition(Vector3 position)
+        {
+            return boardTilemap.WorldToCell(position);
         }
 
         private void OnDestroy()

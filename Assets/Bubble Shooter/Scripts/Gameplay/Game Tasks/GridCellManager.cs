@@ -15,18 +15,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private Dictionary<Vector3Int, IGridCell> _gridCells;
         private Dictionary<Vector3Int, bool> _visitedMatrix;
 
-        private readonly int[] _xNeighbours;
-        private readonly int[] _yNeighbours;
+        public List<Vector3Int> GridPositions => _gridPosition;
+        public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
+        public Func<Vector3, Vector3Int> ConvertWorldToGridFunction { get; }
 
-        public Func<Vector3Int, Vector3> ConvertPositionFunction { get; }
-
-        public GridCellManager(Func<Vector3Int, Vector3> convertFunction)
+        public GridCellManager(Func<Vector3Int, Vector3> gridToWorld, Func<Vector3, Vector3Int> worldToGrid)
         {
             _gridCells = new();
-            ConvertPositionFunction = convertFunction;
-
-            _xNeighbours = new int[] { 0, 1, 0, -1, -1, -1 };
-            _yNeighbours = new int[] { 1, 0, -1, -1, 0, 1 };
+            ConvertGridToWorldFunction = gridToWorld;
+            ConvertWorldToGridFunction = worldToGrid;
         }
 
         public Dictionary<Vector3Int, IGridCell> GetBoardGridCells()
@@ -71,7 +68,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if(gridCell != null)
             {
-                gridCell.WorldPosition = ConvertPositionFunction.Invoke(gridCell.GridPosition);
+                gridCell.WorldPosition = ConvertGridToWorldFunction.Invoke(gridCell.GridPosition);
             }
 
             if(_gridCells.ContainsKey(gridCell.GridPosition))
@@ -101,9 +98,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             List<IGridCell> gridCells = new();
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
             {
-                gridCells.Add(Get(checkPosition + new Vector3Int(_xNeighbours[i], _yNeighbours[i])));
+                Vector3Int neighborOffset = CommonProperties.NeighborOffsets[i];
+                gridCells.Add(Get(checkPosition + neighborOffset));
             }
 
             return gridCells;
@@ -139,7 +137,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void ClearAll()
+        private void ClearAll()
         {
             _gridCells?.Clear();
             _gridPosition?.Clear();
