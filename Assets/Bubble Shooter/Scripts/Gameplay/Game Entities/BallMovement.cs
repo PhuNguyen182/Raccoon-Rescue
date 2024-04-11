@@ -90,11 +90,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void Move()
         {
             MoveBall();
-            
-            // If cannot snap to ceil, find a neighbour ball and try to snap to it
-            if(!CheckCeilToSnap())
-                CheckNeighborBallToSnap();
-            
+            CheckNeighborBallToSnap();
             CheckReflection().Forget();
         }
 
@@ -118,48 +114,52 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
-        private bool CheckCeilToSnap()
+        private void CheckNeighborBallToSnap()
         {
             _neighborBallCollider = Physics2D.OverlapCircle(transform.position
-                                                           , ballRadius, cellMask);
+                                              , ballRadius * 0.8f, ballMask);
+
             if (_neighborBallCollider == null)
-                return false;
+                return;
 
             Vector3Int position = GameController.Instance.GridCellManager
-                                                .ConvertWorldToGridFunction(transform.position);
-            var checkCell = GameController.Instance.GridCellManager.Get(position);
-            if (checkCell == null)
-                return false;
+                                  .ConvertWorldToGridFunction(transform.position);
 
+            IGridCell checkCell = GameController.Instance.GridCellManager.Get(position);
+            
+            if (checkCell == null)
+                return;
+
+            // If this cell is ceil cell, snap to it as soon as posible
             if (checkCell.IsCeil)
             {
                 CanMove = false;
                 ChangeLayerMask(true);
-                CheckNearestGrid().Forget();
-                return true;
+                SnapToCeilCell(checkCell).Forget();
             }
 
-            return false;
-        }
-
-        private void CheckNeighborBallToSnap()
-        {
-            _neighborBallCollider = Physics2D.OverlapCircle(transform.position
-                                                            , ballRadius * 0.8f
-                                                            , ballMask);
-            if (_neighborBallCollider == null)
-                return;
-
-            if(_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+            // Check nearest grid cell and snap to it;
+            else
             {
+                if (!_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+                    return;
+
                 if (movement.MovementState == BallMovementState.Fixed)
                 {
-                    // Check nearest grid cell and snap to it;
                     CanMove = false;
                     ChangeLayerMask(true);
                     CheckNearestGrid().Forget();
                 }
             }
+        }
+
+        private async UniTaskVoid SnapToCeilCell(IGridCell ceilCell)
+        {
+            MovementState = BallMovementState.Fixed;
+
+            SetItemToGrid(ceilCell);
+            await SnapTo(ceilCell.WorldPosition);
+            _currentBall.OnSnapped();
         }
 
         private async UniTask CheckNearestGrid()
