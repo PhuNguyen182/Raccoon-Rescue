@@ -10,9 +10,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
+        [Header("Target Setting")]
         [SerializeField] private int id;
         [SerializeField] private EntityType entityColor;
         [SerializeField] private TargetType targetColor;
+        [SerializeField] private Animator targetAnimator;
 
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -27,6 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [SerializeField] private Sprite violet;
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
+
+        private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
         public override bool IsMatchable => true;
 
@@ -52,7 +56,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         protected override void OnStart()
         {
-            entityGraphics.PlaySadEmotion();
+            PlaySadEmotion();
         }
 
         public override UniTask Blast()
@@ -60,7 +64,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return UniTask.CompletedTask;
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }
@@ -142,5 +146,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             
         }
+
+        public void FreeTarget()
+        {
+            
+        }
+
+        public void PlaySadEmotion()
+        {
+            if (targetAnimator != null)
+            {
+                int rand = Random.Range(1, 7);
+                targetAnimator.SetInteger(_sadEmotionHash, rand);
+            }
+        }
+
     }
 }

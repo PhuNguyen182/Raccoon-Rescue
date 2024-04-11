@@ -219,6 +219,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41dbbad509553e4d9c0ca0392bf0c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyerLayer:
+    serializedVersion: 2
+    m_Bits: 256
   ballMovement: {fileID: 3825926557048467844}
   entityGraphics: {fileID: 3087672890164078302}
   entityAudio: {fileID: 8370520559272395788}
@@ -255,7 +258,7 @@ MonoBehaviour:
   moveDuration: 0.2
   moveEase: 6
   snapDuration: 0.2
-  snapEase: 6
+  snapEase: 7
   delayFrame: 3
   ballRadius: 0.3
   ballDistance: 1

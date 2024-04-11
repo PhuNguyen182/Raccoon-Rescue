@@ -9,16 +9,14 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     public interface IBallEntity
     {
         public bool IsMatchable { get; }
-        public bool IsCeilAttached { get; set; }
         public bool IsFixedOnStart { get; set; }
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }
         public EntityType EntityType { get; }
 
         public UniTask Blast();
-        public void Destroy();
+        public void DestroyEntity();
         public void OnSnapped();
         public void SetWorldPosition(Vector3 position);
-        public void CheckCeilAttach();
     }
 }

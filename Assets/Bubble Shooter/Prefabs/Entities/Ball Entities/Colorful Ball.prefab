@@ -137,8 +137,8 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -197,6 +197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe7d2ba68bb28641a1d7e92f759acf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyerLayer:
+    serializedVersion: 2
+    m_Bits: 256
   ballMovement: {fileID: 6886183230895498291}
   entityGraphics: {fileID: 5230310808196769777}
   entityAudio: {fileID: 5751660295790079609}
@@ -235,10 +238,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballBody: {fileID: 6765556615592148851}
   ballCollider: {fileID: 7771510009650981787}
+  moveState: 0
   moveDuration: 0.2
   moveEase: 6
   snapDuration: 0.2
-  snapEase: 6
+  snapEase: 7
   delayFrame: 3
   ballRadius: 0.3
   ballDistance: 1
@@ -248,6 +252,9 @@ MonoBehaviour:
   ballMask:
     serializedVersion: 2
     m_Bits: 8
+  cellMask:
+    serializedVersion: 2
+    m_Bits: 0
   reflectMask:
     serializedVersion: 2
     m_Bits: 1536

@@ -45,7 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckMatch(position);
             _gridCellManager.ClearVisitedPositions();
             await ExecuteCluster(_matchCluster);
-            //_checkBallClusterTask.CheckCluster();
+            _checkBallClusterTask.CheckCluster();
         }
 
         private void CheckMatch(Vector3Int position)

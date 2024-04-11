@@ -69,7 +69,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                     break;
             }
 
-            //_checkBallClusterTask.CheckCluster();
+            _checkBallClusterTask.CheckCluster();
         }
 
         public void Dispose()

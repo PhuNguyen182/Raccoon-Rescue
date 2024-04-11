@@ -54,7 +54,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 ballAnimation.PlayBounceAnimation();
 
             if (ball is IBallEffect ballEffect)
-                ballEffect.PlayBounceEffect();
+                ballEffect.PlayBlastEffect();
 
             _currentGridCell = null;
             _gridCollider = null;

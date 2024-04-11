@@ -30,7 +30,7 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             
         }
 
-        public void Destroy()
+        public void DestroyEntity()
         {
             
         }

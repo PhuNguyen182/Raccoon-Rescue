@@ -143,12 +143,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             
         }
 
-        public void PlayBounceEffect()
+        public void PlayBlastEffect()
         {
             
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }

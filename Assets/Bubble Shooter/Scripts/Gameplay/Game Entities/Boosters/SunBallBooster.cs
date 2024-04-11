@@ -61,7 +61,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             return UniTask.CompletedTask;
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }

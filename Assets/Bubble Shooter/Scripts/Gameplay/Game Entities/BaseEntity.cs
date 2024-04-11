@@ -2,24 +2,22 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Configs;
 using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseEntity : BaseBallEntity, IBallEntity
+    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics
     {
+        [SerializeField] protected LayerMask destroyerLayer;
         [SerializeField] protected BallMovement ballMovement;
         [SerializeField] protected EntityGraphics entityGraphics;
         [SerializeField] protected EntityAudio entityAudio;
 
-        private const string CeilLayerMask = "Ceil";
-
-        private int _ceilLayerMask = 0;
         protected CancellationToken onDestroyToken;
 
-        public bool IsCeilAttached { get; set; }
         public abstract bool IsMatchable { get; }
 
         public abstract bool IsFixedOnStart { get; set; }
@@ -32,9 +30,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private void Awake()
         {
-            _ceilLayerMask = LayerMask.NameToLayer(CeilLayerMask);
             onDestroyToken = this.GetCancellationTokenOnDestroy();
-
             OnAwake();
         }
 
@@ -49,6 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public virtual void ResetBall() 
         {
+            ChangeLayer(BallConstants.NormalLayer);
             ballMovement.MovementState = BallMovementState.Fixed;
         }
 
@@ -56,16 +53,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public abstract UniTask Blast();
 
-        public abstract void Destroy();
+        public abstract void DestroyEntity();
 
         public abstract void SetWorldPosition(Vector3 position);
 
         public abstract void OnSnapped();
 
-        public void CheckCeilAttach()
+        public void ChangeLayer(string layerName)
         {
-            Collider2D ceilCollider = Physics2D.OverlapCircle(transform.position, 0.3f, _ceilLayerMask);
-            IsCeilAttached = ceilCollider != null;
+            entityGraphics.ChangeLayer(layerName);
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
+            {
+                DestroyEntity();
+            }
         }
     }
 }

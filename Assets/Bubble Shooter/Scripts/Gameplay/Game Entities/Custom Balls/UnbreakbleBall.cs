@@ -32,7 +32,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return UniTask.CompletedTask;
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }

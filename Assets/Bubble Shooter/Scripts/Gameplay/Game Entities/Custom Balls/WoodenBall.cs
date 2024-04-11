@@ -8,7 +8,7 @@ using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable
+    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable, IBallEffect
     {
         [Header("Health Sprites")]
         [SerializeField] private Sprite[] hpStates;
@@ -47,6 +47,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool Break()
         {
+            PlayBlastEffect();
+
             if (_hp > 0)
             {
                 _hp = _hp - 1;
@@ -57,7 +59,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return true;
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }
@@ -119,6 +121,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         }
 
         public override void OnSnapped()
+        {
+            
+        }
+
+        public void PlayBlastEffect()
         {
             
         }

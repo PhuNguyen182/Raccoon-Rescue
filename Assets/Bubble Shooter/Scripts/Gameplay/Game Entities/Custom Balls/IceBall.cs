@@ -8,9 +8,10 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class IceBall : BaseEntity, IBallHealth, IBreakable, IBallTransformation
+    public class IceBall : BaseEntity, IBallHealth, IBallPhysics, IBreakable, IBallTransformation, IBallEffect
     {
         [SerializeField] private EntityType entityType;
+        [SerializeField] private Animator ballAnimator;
         
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -52,21 +53,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             if(_hp > 0)
             {
-                _hp = _hp - 1;
-                int rand = Random.Range(1, 7); // Get random color between blue, green, orange, red, violet and yellow
-                EntityType color = (EntityType)rand;
+                _hp = _hp - 1;                
+                ballAnimator.enabled = false;
                 
+                int rand = Random.Range(1, 7); 
+                EntityType color = (EntityType)rand;
+                PlayBlastEffect();
+
                 _isMatchable = true;
                 entityType = color;
                 TransformTo(color);
 
-                return false;
+                return _hp <= 0;
             }
 
             return true;
         }
 
-        public override void Destroy()
+        public override void DestroyEntity()
         {
             SimplePool.Despawn(this.gameObject);
         }
@@ -91,8 +95,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             base.ResetBall();
             _isMatchable = false;
-            entityType = EntityType.IceBall;
+            ballAnimator.enabled = true;
             IsFixedOnStart = true;
+            entityType = EntityType.IceBall;
         }
 
         public void TransformTo(EntityType color)
@@ -112,6 +117,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         }
 
         public override void OnSnapped()
+        {
+            
+        }
+
+        public void ChangeLayerMask(bool isFixed)
+        {
+            
+        }
+
+        public void SetBodyActive(bool active)
+        {
+            ballMovement.SetBodyActive(active);
+        }
+
+        public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
+        {
+            ballMovement.AddForce(force, forceMode);
+        }
+
+        public void PlayBlastEffect()
         {
             
         }

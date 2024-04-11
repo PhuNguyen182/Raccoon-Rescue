@@ -14,7 +14,7 @@ TagManager:
   - UI
   - Ceil
   - Grid
-  - 
+  - Destroyer
   - LeftWall
   - RightWall
   - 
@@ -50,6 +50,9 @@ TagManager:
     locked: 0
   - name: Objects
     uniqueID: 1592121711
+    locked: 0
+  - name: HigherObjects
+    uniqueID: 413393473
     locked: 0
   - name: Effects
     uniqueID: 231000935

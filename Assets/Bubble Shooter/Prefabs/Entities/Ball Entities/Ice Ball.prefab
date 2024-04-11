@@ -159,8 +159,8 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -219,10 +219,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b1e9db41959aa4dafcae726298c374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyerLayer:
+    serializedVersion: 2
+    m_Bits: 256
   ballMovement: {fileID: 8418358627647204705}
   entityGraphics: {fileID: 3004196628998565189}
   entityAudio: {fileID: -175614566852079362}
   entityType: 10
+  ballAnimator: {fileID: 773041862644955857}
   blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
   green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
   orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
@@ -258,10 +262,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballBody: {fileID: 3561969301962652813}
   ballCollider: {fileID: 6002656946251509348}
+  moveState: 0
   moveDuration: 0.2
   moveEase: 6
   snapDuration: 0.2
-  snapEase: 6
+  snapEase: 7
   delayFrame: 3
   ballRadius: 0.3
   ballDistance: 1
@@ -271,6 +276,9 @@ MonoBehaviour:
   ballMask:
     serializedVersion: 2
     m_Bits: 8
+  cellMask:
+    serializedVersion: 2
+    m_Bits: 0
   reflectMask:
     serializedVersion: 2
     m_Bits: 1536

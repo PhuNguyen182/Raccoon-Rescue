@@ -10,20 +10,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] private SpriteRenderer entityRenderer;
         [SerializeField] private Renderer[] additionalRenderers;
 
-        private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
+        public Animator EntityAnimator => entityAnimator;
 
         public void SetEntitySprite(Sprite sprite)
         {
             entityRenderer.sprite = sprite;
-        }
-
-        public void PlaySadEmotion()
-        {
-            if (entityAnimator != null)
-            {
-                int rand = Random.Range(1, 7);
-                entityAnimator.SetInteger(_sadEmotionHash, rand);
-            }
         }
 
         public void ChangeLayer(string layerName)

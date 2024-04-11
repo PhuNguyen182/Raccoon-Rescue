@@ -19,13 +19,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             _breakGridTask = breakGridTask;
         }
 
-        // To do: Destroy a triple of ball
         public async UniTask Execute(Vector3Int position)
         {
             IGridCell boosterCell = _gridCellManager.Get(position);
             if (boosterCell.BallEntity is IBallBooster booster)
                 await booster.Activate();
-            
+
+            _gridCellManager.DestroyAt(position);
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
                 List<Vector3Int> gridPosition = GetTripleBall(position);
