@@ -84,7 +84,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (_gridCells.ContainsKey(position))
             {
-                _gridCells[position] = null;
+                _gridCells[position].SetBall(null);
             }
         }
 
@@ -100,7 +100,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
             {
-                Vector3Int neighborOffset = CommonProperties.NeighborOffsets[i];
+                Vector3Int neighborOffset = checkPosition.y % 2 == 0 
+                                            ? CommonProperties.EvenYNeighborOffsets[i] 
+                                            : CommonProperties.OddYNeighborOffsets[i];
                 gridCells.Add(Get(checkPosition + neighborOffset));
             }
 

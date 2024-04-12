@@ -58,7 +58,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
             for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
             {
-                Vector3Int neighborOffset = CommonProperties.NeighborOffsets[i];
+                Vector3Int neighborOffset = position.y % 2 == 0 
+                                            ? CommonProperties.EvenYNeighborOffsets[i]
+                                            : CommonProperties.OddYNeighborOffsets[i];
                 IGridCell gridCell = _gridCellManager.Get(position + neighborOffset);
 
                 if (triplePosition.Count == 3)

@@ -43,21 +43,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             _matchCluster.Clear();
             CheckMatch(position);
+            
             _gridCellManager.ClearVisitedPositions();
-            await ExecuteCluster(_matchCluster);
-            _checkBallClusterTask.CheckCluster();
+            bool isCluster = await ExecuteCluster(_matchCluster);
+            
+            if(isCluster)
+                _checkBallClusterTask.CheckCluster();
         }
 
         private void CheckMatch(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
             IBallEntity ballEntity = gridCell.BallEntity;
-
             var neighbours = _gridCellManager.GetNeighbourGrids(position);
-            
+
             for (int i = 0; i < neighbours.Count; i++)
             {
                 if (neighbours[i] == null)
+                    continue;
+
+                if (_gridCellManager.GetIsVisited(neighbours[i].GridPosition))
                     continue;
 
                 if (!neighbours[i].ContainsBall)
@@ -71,19 +76,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (neighbours[i].BallEntity.EntityType != ballEntity.EntityType)
                     continue;
 
-                if (!_gridCellManager.GetIsVisited(neighbours[i].GridPosition))
-                {
-                    _matchCluster.Add(neighbours[i]);
-                    _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
-                    CheckMatch(neighbours[i].GridPosition);
-                }
+                _matchCluster.Add(neighbours[i]);
+                _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
+                CheckMatch(neighbours[i].GridPosition);
             }
         }
 
-        private async UniTask ExecuteCluster(List<IGridCell> cluster)
+        private async UniTask<bool> ExecuteCluster(List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
-                return;
+                return false;
 
             using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
@@ -94,6 +96,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 await UniTask.WhenAll(breakTask);
             }
+
+            return true;
         }
 
         public void Dispose()

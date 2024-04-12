@@ -48,7 +48,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
             {
-                Vector3Int neighborOffset = CommonProperties.NeighborOffsets[i];
+                Vector3Int neighborOffset = position.y % 2 == 0 
+                                            ? CommonProperties.EvenYNeighborOffsets[i]
+                                            : CommonProperties.OddYNeighborOffsets[i];
                 FindCluster(position + neighborOffset, clusterModel);
             }
         }
@@ -56,11 +58,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private bool IsValidCell(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
-            bool hasVisited = _gridCellManager.GetIsVisited(position);
             
             if (gridCell == null)
                 return false;
 
+            bool hasVisited = _gridCellManager.GetIsVisited(position);
             bool containBall = gridCell.ContainsBall;
             return !hasVisited && containBall;
         }

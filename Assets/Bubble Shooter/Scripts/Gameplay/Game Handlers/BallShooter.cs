@@ -4,13 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using BubbleShooter.Scripts.Gameplay.GameDatas;
+using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Common.Interfaces;
-using BubbleShooter.Scripts.Gameplay.GameDatas;
-using BubbleShooter.Scripts.Gameplay.GameEntities;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -40,10 +40,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
+        private List<int> _shootQueue;
 
         private void Awake()
         {
-            SetColor(EntityType.FireBall);
+            //SetColor(EntityType.FireBall);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
@@ -54,18 +55,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
-                SpawnABall().Forget();
-            }
-
-            if (lineDrawer.isActiveAndEnabled)
-            {
-                lineDrawer.DrawLine(inputHandler.IsMouseHold);
+                ShootBall();
+                PopSequence();
             }
         }
 
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
+        }
+
+        public void SetShootQueue(List<int> queue)
+        {
+            _shootQueue = queue;
+            PopSequence();
         }
 
         public void SetStartPosition()
@@ -75,9 +78,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             transform.position = _startPosition;
         }
 
-        public void SetColor(EntityType ballColor)
+        private void SetColor(EntityType ballColor)
         {
             _ballColor = ballColor;
+        }
+
+        private void PopSequence()
+        {
+            if (_shootQueue.Count > 0)
+            {
+                SetColor((EntityType)_shootQueue[_shootQueue.Count - 1]);
+                _shootQueue.RemoveAt(_shootQueue.Count - 1);
+            }
+
+            else Debug.Log("Out of move!");
         }
 
         private void GetInputDirection()
@@ -85,7 +99,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _direction = inputHandler.MousePosition - spawnPoint.position;
         }
 
-        private async UniTaskVoid SpawnABall()
+        private void ShootBall()
+        {
+            SpawnBallAsync().Forget();
+        }
+
+        private async UniTaskVoid SpawnBallAsync()
         {
             mainCharacter.Shoot();
             

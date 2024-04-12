@@ -32,6 +32,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < row.Count; i++)
                 {
+                    if (row[i] == null)
+                        continue;
+
                     if (position == row[i].GridPosition)
                         continue;
 

@@ -11,6 +11,7 @@ using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Strategies;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
@@ -31,6 +32,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
+
+        [Header("Miscs")]
+        [SerializeField] private GameDecorator gameDecorator;
 
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
@@ -106,6 +110,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 _gridCellManager.Add(gridCell);
             }
 
+            SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {
                 var gridCell = _gridCellManager.Get(levelModel.CeilMapPositions[i].Position);
@@ -126,17 +131,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 _metaBallManager.Add(levelModel.TargetMapPositions[i].Position, targetEntity);
             }
 
+            SetShootQueue(levelModel);
             _fillBoardTask.Fill();
         }
 
-        private Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)
+        public Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)
         {
             return boardTilemap.GetCellCenterWorld(position);
         }
 
-        private Vector3Int ConvertWorldPositionToGridPosition(Vector3 position)
+        public Vector3Int ConvertWorldPositionToGridPosition(Vector3 position)
         {
             return boardTilemap.WorldToCell(position);
+        }
+
+        private void SetShootQueue(LevelModel levelModel)
+        {
+            ballShooter.SetShootQueue(levelModel.MoveSequence);
+        }
+
+        private void SetTopCeilPosition(Vector3Int position)
+        {
+            Vector3 pos = ConvertGridPositionToWolrdPosition(position);
+            Vector3 ceilPosition = new Vector3(0, pos.y + 0.5f);
+            gameDecorator.SetTopCeilPosition(ceilPosition);
         }
 
         private void OnDestroy()

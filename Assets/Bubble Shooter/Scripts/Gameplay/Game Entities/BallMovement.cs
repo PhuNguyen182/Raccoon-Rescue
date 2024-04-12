@@ -65,6 +65,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private IBallEntity _currentBall;
         private RaycastHit2D _reflectHitInfo;
         private RaycastHit2D[] _nearestGridHitInfos;
+
+        private Collider2D _ceilCollider;
         private Collider2D _neighborBallCollider;
 
         public bool CanMove
@@ -90,11 +92,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void Move()
         {
             MoveBall();
+            CheckSnapToCeil();
             CheckNeighborBallToSnap();
-            CheckReflection().Forget();
+            CheckReflection();
         }
 
-        private async UniTaskVoid CheckReflection()
+        private void CheckReflection()
+        {
+            CheckReflectionAsync().Forget();
+        }
+
+        private void CheckSnapToCeil()
+        {
+            CheckSnapToCeilAsync().Forget();
+        }
+
+        private async UniTaskVoid CheckReflectionAsync()
         {
             if (!CanMove)
                 return;
@@ -114,42 +127,49 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
-        private void CheckNeighborBallToSnap()
+        private async UniTaskVoid CheckSnapToCeilAsync()
         {
-            _neighborBallCollider = Physics2D.OverlapCircle(transform.position
-                                              , ballRadius * 0.8f, ballMask);
+            _ceilCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 1.5f, cellMask);
 
-            if (_neighborBallCollider == null)
+            if (_ceilCollider == null)
                 return;
 
-            Vector3Int position = GameController.Instance.GridCellManager
-                                  .ConvertWorldToGridFunction(transform.position);
-
+            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
             IGridCell checkCell = GameController.Instance.GridCellManager.Get(position);
-            
+
             if (checkCell == null)
                 return;
 
-            // If this cell is ceil cell, snap to it as soon as posible
             if (checkCell.IsCeil)
             {
                 CanMove = false;
                 ChangeLayerMask(true);
+                await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
                 SnapToCeilCell(checkCell).Forget();
             }
+        }
 
-            // Check nearest grid cell and snap to it;
-            else
+        private void CheckNeighborBallToSnap()
+        {
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 0.8f, ballMask);
+
+            if (_neighborBallCollider == null)
+                return;
+
+            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
+            IGridCell checkCell = GameController.Instance.GridCellManager.Get(position);
+
+            if (checkCell == null)
+                return;
+
+            if (!_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+                return;
+
+            if (movement.MovementState == BallMovementState.Fixed)
             {
-                if (!_neighborBallCollider.TryGetComponent(out IBallMovement movement))
-                    return;
-
-                if (movement.MovementState == BallMovementState.Fixed)
-                {
-                    CanMove = false;
-                    ChangeLayerMask(true);
-                    CheckNearestGrid().Forget();
-                }
+                CanMove = false;
+                ChangeLayerMask(true);
+                CheckNearestGrid().Forget();
             }
         }
 
@@ -165,8 +185,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private async UniTask CheckNearestGrid()
         {
             float nearestGridDistance = Mathf.Infinity;
-            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
-                                                          , transform.up, ballDistance, cellMask);
+            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius, transform.up, ballDistance, cellMask);
 
             IGridCell targetGridCell;
             RaycastHit2D targetCellInfo = _nearestGridHitInfos[0];
@@ -189,9 +208,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 }
             }
 
-            Vector3Int position = GameController.Instance.GridCellManager
-                                                .ConvertWorldToGridFunction(transform.position);
-            targetGridCell = GameController.Instance.GridCellManager.Get(position);
+            var gridContainer = targetCellInfo.collider.GetComponent<GridCellHolder>();
+            targetGridCell = GameController.Instance.GridCellManager.Get(gridContainer.GridPosition);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);
