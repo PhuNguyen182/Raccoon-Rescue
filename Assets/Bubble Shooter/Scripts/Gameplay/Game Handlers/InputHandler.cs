@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using R3;
+using UnityEngine.EventSystems;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -34,17 +35,38 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void ProcessInput()
         {
-            IsMousePress = Input.GetMouseButtonDown(0);
-            IsMouseHold = Input.GetMouseButton(0);
-            IsMouseUp = Input.GetMouseButtonUp(0);
-
             MousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-            if (IsMousePress)
-                OnClicked?.Invoke();
+            if (!IsUiOverlap(MousePosition))
+            {
+                IsMousePress = Input.GetMouseButtonDown(0);
+                IsMouseHold = Input.GetMouseButton(0);
+                IsMouseUp = Input.GetMouseButtonUp(0);
 
-            if (IsMouseUp)
-                OnRelease?.Invoke();
+                if (IsMousePress)
+                    OnClicked?.Invoke();
+
+                if (IsMouseUp)
+                    OnRelease?.Invoke();
+            }
+        }
+
+        private bool IsUiOverlap(Vector3 position)
+        {
+#if UNITY_EDITOR
+            return EventSystem.current.IsPointerOverGameObject();
+#elif UNITY_ANDROID || UNITY_IOS
+            return IsPointerOverUIObject(position);
+#endif
+        }
+
+        private bool IsPointerOverUIObject(Vector3 position)
+        {
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+            eventDataCurrentPosition.position = new Vector2(position.x, position.y);
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+            return results.Count > 0;
         }
 
         private void OnDestroy()

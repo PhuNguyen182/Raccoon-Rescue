@@ -153,7 +153,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void SetTopCeilPosition(Vector3Int position)
         {
             Vector3 pos = ConvertGridPositionToWolrdPosition(position);
-            Vector3 ceilPosition = new Vector3(0, pos.y + 0.5f);
+            Vector3 ceilPosition = new Vector3(0, pos.y + 0.425f);
             gameDecorator.SetTopCeilPosition(ceilPosition);
         }
 
