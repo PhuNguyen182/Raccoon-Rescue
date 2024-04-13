@@ -17,4 +17,10 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas
         public int Coefficient;
         public EntityType Color;
     }
+
+    public struct ColorDistribution
+    {
+        public float Probability;
+        public EntityType Color;
+    }
 }

@@ -4,13 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
-using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using Newtonsoft.Json;
 using Scripts.Configs;
@@ -38,6 +39,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
+        private EntityManager _entityManager;
         private GridCellManager _gridCellManager;
         private MetaBallManager _metaBallManager;
         private FillBoardTask _fillBoardTask;
@@ -77,7 +79,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _targetFactory = new(entityDatabase, entityContainer);
             ballShooter.SetBallFactory(_entityFactory);
 
-            _metaBallManager = new();
+            _entityManager = new(_targetFactory, _entityFactory);
+            _metaBallManager = new(_entityManager);
             _metaBallManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
@@ -90,7 +93,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_1").text;
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
         }
@@ -103,6 +106,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 Vector3Int gridPosition = levelModel.BoardMapPositions[i].Position;
                 Vector3 worldPosition = ConvertGridPositionToWolrdPosition(gridPosition);
                 var gridHolder = Instantiate(gridPrefab, worldPosition, Quaternion.identity, gridCellContainer);
+                gridHolder.gameObject.name = $"Grid Cell: ({gridPosition.x}, {gridPosition.y})";
                 gridHolder.GridPosition = gridPosition;
 
                 gridCell = new();
@@ -117,21 +121,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 gridCell.IsCeil = true;
             }
 
+            _metaBallManager.SetColorStrategy(levelModel.ColorMapDatas);
             for (int i = 0; i < levelModel.StartingEntityMap.Count; i++)
             {
                 var data = levelModel.StartingEntityMap[i].MapData;
-                var ballEntity = _entityFactory.Create(data);
-                _metaBallManager.Add(levelModel.StartingEntityMap[i].Position, ballEntity);
+                if(data.EntityType == EntityType.Random)
+                {
+                    _metaBallManager.AddRandomMapPosition(levelModel.StartingEntityMap[i]);
+                    continue;
+                }
+
+                _metaBallManager.AddEntity(levelModel.StartingEntityMap[i]);
             }
 
             for (int i = 0; i < levelModel.TargetMapPositions.Count; i++)
             {
-                var data = levelModel.TargetMapPositions[i].MapData;
-                var targetEntity = _targetFactory.Create(data);
-                _metaBallManager.Add(levelModel.TargetMapPositions[i].Position, targetEntity);
+                _metaBallManager.AddTarget(levelModel.TargetMapPositions[i]);
             }
 
-            SetShootQueue(levelModel);
+            SetShootSequence(levelModel);
             _fillBoardTask.Fill();
         }
 
@@ -145,9 +153,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             return boardTilemap.WorldToCell(position);
         }
 
-        private void SetShootQueue(LevelModel levelModel)
+        private void SetShootSequence(LevelModel levelModel)
         {
-            ballShooter.SetShootQueue(levelModel.MoveSequence);
+            ballShooter.SetShootSequence(levelModel.MoveSequence);
         }
 
         private void SetTopCeilPosition(Vector3Int position)

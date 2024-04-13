@@ -196,7 +196,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 #endif
             }
 
-            Debug.Log(useResource ? json : "Get level data at output placehold!");
+            Debug.Log(useResource ? json : "GetEntity level data at output placehold!");
             return json;
         }
     }

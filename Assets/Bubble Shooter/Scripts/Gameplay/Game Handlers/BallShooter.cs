@@ -40,11 +40,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
-        private List<int> _shootQueue;
+        private List<int> _shootSequence;
 
         private void Awake()
         {
-            //SetColor(EntityType.FireBall);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
@@ -65,9 +64,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _entityFactory = factory;
         }
 
-        public void SetShootQueue(List<int> queue)
+        public void SetShootSequence(List<int> queue)
         {
-            _shootQueue = queue;
+            _shootSequence = queue;
             PopSequence();
         }
 
@@ -85,10 +84,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void PopSequence()
         {
-            if (_shootQueue.Count > 0)
+            if (_shootSequence.Count > 0)
             {
-                SetColor((EntityType)_shootQueue[_shootQueue.Count - 1]);
-                _shootQueue.RemoveAt(_shootQueue.Count - 1);
+                SetColor((EntityType)_shootSequence[_shootSequence.Count - 1]);
+                _shootSequence.RemoveAt(_shootSequence.Count - 1);
             }
 
             else Debug.Log("Out of move!");
