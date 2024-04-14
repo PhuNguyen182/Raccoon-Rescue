@@ -43,6 +43,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private GridCellManager _gridCellManager;
         private MetaBallManager _metaBallManager;
         private FillBoardTask _fillBoardTask;
+        private CheckTargetTask _checkTargetTask;
+        private CheckScoreTask _checkScoreTask;
         private GameTaskManager _gameTaskManager;
         
         private IDisposable _disposable;
@@ -84,6 +86,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _metaBallManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
+            
+            _checkTargetTask = new();
+            _checkScoreTask.AddTo(ref builder);
+
+            _checkScoreTask = new();
+            _checkScoreTask.AddTo(ref builder);
 
             _gameTaskManager = new(_gridCellManager, inputHandler);
             _gameTaskManager.AddTo(ref builder);
@@ -138,6 +146,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             {
                 _metaBallManager.AddTarget(levelModel.TargetMapPositions[i]);
             }
+
+            _checkScoreTask.SetScores(levelModel);
+            _checkTargetTask.SetTargetCount(levelModel);
 
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();

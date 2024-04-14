@@ -25,6 +25,20 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelExporter BuildTarget(int targetCount)
+        {
+            _levelModel.TargetCount = targetCount;
+            return this;
+        }
+
+        public LevelExporter BuildScores(int tier1, int tier2, int tier3)
+        {
+            _levelModel.TierOneScore = tier1;
+            _levelModel.TierTwoScore = tier2;
+            _levelModel.TierThreeScore = tier3;
+            return this;
+        }
+
         public LevelExporter BuildBoardMap(Tilemap tilemap)
         {
             var positions = tilemap.cellBounds.Iterator();

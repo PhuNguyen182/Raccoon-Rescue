@@ -27,6 +27,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public override int Score => 0;
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -60,11 +62,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void SetMoveDirection(Vector2 direction)
         {
             
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void ResetBall()

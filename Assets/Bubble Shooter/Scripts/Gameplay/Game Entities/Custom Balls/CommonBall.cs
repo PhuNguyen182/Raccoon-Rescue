@@ -29,6 +29,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
+        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove 
@@ -36,6 +37,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             get => ballMovement.CanMove; 
             set => ballMovement.CanMove = value; 
         }
+
+        public override int Score => 10;
 
         public override EntityType EntityType => ballColor;
 
@@ -60,6 +63,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
@@ -150,6 +154,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -159,11 +164,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             CanMove = false;
             IsFixedOnStart = true;
             SetBodyActive(false);
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void OnSnapped()

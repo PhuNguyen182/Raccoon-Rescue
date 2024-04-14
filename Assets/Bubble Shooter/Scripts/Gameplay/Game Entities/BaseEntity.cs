@@ -18,6 +18,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected CancellationToken onDestroyToken;
 
+        public abstract int Score { get; }
+
         public abstract bool IsMatchable { get; }
 
         public abstract bool IsFixedOnStart { get; set; }
@@ -43,21 +45,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected virtual void OnStart() { }
 
-        public virtual void ResetBall() 
-        {
-            ChangeLayer(BallConstants.NormalLayer);
-            ballMovement.MovementState = BallMovementState.Fixed;
-        }
-
         public abstract void InitMessages();
 
         public abstract UniTask Blast();
 
         public abstract void DestroyEntity();
 
-        public abstract void SetWorldPosition(Vector3 position);
-
         public abstract void OnSnapped();
+
+        public virtual void ResetBall() 
+        {
+            ChangeLayer(BallConstants.NormalLayer);
+            ballMovement.MovementState = BallMovementState.Fixed;
+        }
+
+        public void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
+        }
 
         public void ChangeLayer(string layerName)
         {
@@ -68,7 +73,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         {
             if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
             {
-                DestroyEntity();
+                SimplePool.Despawn(this.gameObject);
             }
         }
     }

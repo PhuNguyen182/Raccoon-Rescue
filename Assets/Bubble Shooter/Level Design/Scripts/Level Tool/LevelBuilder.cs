@@ -24,10 +24,18 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [SerializeField] private string inputLevel;
         [SerializeField] private string outputLevel;
 
+        [Space(10)]
+        [SerializeField] private int targetCount;
+
+        [Header("Score Tiers")]
+        [SerializeField] private int tierOneScore;
+        [SerializeField] private int tierTwoScore;
+        [SerializeField] private int tierThreeScore;
+
         [Header("Move Sequence")]
         [SerializeField] private List<EntityType> moveSequence;
 
-        [Header("Color Proportion")]
+        [Header("Random Fill Color Proportion")]
         [SerializeField] private List<ColorProportion> colorProportions;
 
         private LevelImporter _levelImporter;
@@ -36,6 +44,11 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [Button]
         public void Clear()
         {
+            targetCount = 0;
+            tierOneScore = 0;
+            tierTwoScore = 0;
+            tierThreeScore = 0;
+
             moveSequence.Clear();
             colorProportions.Clear();
             boardTilemap.ClearAllTiles();
@@ -59,6 +72,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             CompressTilemaps();
 
             string output = _levelExporter.Clear()
+                                          .BuildTarget(targetCount)
+                                          .BuildScores(tierOneScore, tierTwoScore, tierThreeScore)
                                           .BuildBoardMap(boardTilemap)
                                           .BuildCeilMap(ceilTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
@@ -92,7 +107,10 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
 
             _levelImporter = new(tileDatabase);
-            _levelImporter.BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
+            _levelImporter.BuildTarget(levelModel.TargetCount, out targetCount)
+                          .BuildScore(levelModel.TierOneScore, levelModel.TierTwoScore, levelModel.TierThreeScore,
+                                      out tierOneScore, out tierTwoScore, out tierThreeScore)
+                          .BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
                           .BuildCeilMap(ceilTilemap, levelModel.CeilMapPositions)
                           .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
                           .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)

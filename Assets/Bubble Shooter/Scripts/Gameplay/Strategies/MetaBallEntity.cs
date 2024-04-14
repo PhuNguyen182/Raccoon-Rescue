@@ -20,6 +20,8 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
         public EntityType EntityType { get; }
         public bool IsCeilAttached { get; set; }
 
+        public int Score { get; }
+
         public UniTask Blast()
         {
             return UniTask.CompletedTask;

@@ -36,6 +36,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public bool IsIgnored { get; set; }
 
+        public override int Score => 25;
+
+        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 
         private void OnEnable()
@@ -63,6 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -73,12 +77,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void InitMessages()
         {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _boosterPublisher = GlobalMessagePipe.GetPublisher<ActiveBoosterMessage>();
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void ResetBall()

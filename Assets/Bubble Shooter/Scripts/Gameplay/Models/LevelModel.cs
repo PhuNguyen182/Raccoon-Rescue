@@ -9,6 +9,11 @@ namespace BubbleShooter.Scripts.Gameplay.Models
     [Serializable]
     public class LevelModel
     {
+        public int TargetCount = 0;
+        public int TierOneScore = 0;
+        public int TierTwoScore = 0;
+        public int TierThreeScore = 0;
+
         public List<int> MoveSequence = new();
         public List<BoardMapPosition> BoardMapPositions = new();
         public List<CeilMapPosition> CeilMapPositions = new();
@@ -19,6 +24,11 @@ namespace BubbleShooter.Scripts.Gameplay.Models
 
         public void ClearData()
         {
+            TargetCount = 0;
+            TierOneScore = 0;
+            TierTwoScore = 0;
+            TierThreeScore = 0;
+
             MoveSequence.Clear();
             BoardMapPositions.Clear();
             CeilMapPositions.Clear();

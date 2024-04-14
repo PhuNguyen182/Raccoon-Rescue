@@ -17,6 +17,20 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             _tileDatabase = tileDatabase;
         }
 
+        public LevelImporter BuildTarget(int targets, out int targetCount)
+        {
+            targetCount = targets;
+            return this;
+        }
+
+        public LevelImporter BuildScore(int tier1, int tier2, int tier3, out int score1, out int score2, out int score3)
+        {
+            score1 = tier1;
+            score2 = tier2;
+            score3 = tier3;
+            return this;
+        }
+
         public LevelImporter BuildBoardMap(Tilemap tilemap, List<BoardMapPosition> mapPositions)
         {
             tilemap.ClearAllTiles();

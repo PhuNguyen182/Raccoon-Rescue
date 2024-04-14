@@ -27,6 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite orange;
 
+        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
         private EntityType _entityType = EntityType.ColorfulBall;
 
@@ -39,6 +40,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override EntityType EntityType => _entityType;
 
         public override bool IsMatchable => true;
+
+        public override int Score => 10;
 
         public override bool IsFixedOnStart { get; set; }
 
@@ -54,7 +57,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+            _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
         public void TransformTo(EntityType color)
@@ -87,6 +91,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -123,11 +128,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
-        }
-
         public void ChangeLayerMask(bool isFixed)
         {
             ballMovement.ChangeLayerMask(isFixed);
@@ -135,7 +135,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void OnSnapped()
         {
-            _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
+            _checkMatchPublisher.Publish(new CheckMatchMessage());
         }
     }
 }

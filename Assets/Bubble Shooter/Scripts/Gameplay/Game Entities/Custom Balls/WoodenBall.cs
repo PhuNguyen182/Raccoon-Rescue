@@ -5,6 +5,8 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.Messages;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -15,6 +17,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private int _hp = 0;
         private int _maxHp = 0;
+
+        private IPublisher<AddScoreMessage> _addScorePublisher;
 
         public bool CanMove { get => false; set { } }
         public override EntityType EntityType => EntityType.WoodenBall;
@@ -35,9 +39,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public override int Score => 15;
+
         public override void InitMessages()
         {
-            
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
         }
 
         public override UniTask Blast()
@@ -61,6 +67,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -108,11 +115,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             {
                 entityGraphics.SetEntitySprite(hpStates[_hp - 1]);
             }
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public void ChangeLayerMask(bool isFixed)

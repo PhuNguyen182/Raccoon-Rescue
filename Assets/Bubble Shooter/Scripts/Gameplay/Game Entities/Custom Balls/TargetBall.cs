@@ -6,6 +6,8 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using BubbleShooter.Scripts.Common.Messages;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -35,6 +37,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
+        private IPublisher<AddScoreMessage> _addScorePublisher;
+        private IPublisher<CheckTargetMessage> _checkTargetPublisher;
+
         public override bool IsMatchable => true;
 
         public override bool IsFixedOnStart { get => true; set { } }
@@ -57,6 +62,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public override int Score => 35;
+
         protected override void OnStart()
         {
             PlaySadEmotion();
@@ -69,6 +76,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            _checkTargetPublisher.Publish(new CheckTargetMessage());
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
+
             SimplePool.Spawn(freedTarget, EffectContainer.Transform, transform.position, Quaternion.identity);
             SimplePool.Despawn(this.gameObject);
         }
@@ -80,7 +90,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+            _checkTargetPublisher = GlobalMessagePipe.GetPublisher<CheckTargetMessage>();
         }
 
         public UniTask MoveTo(Vector3 position)
@@ -128,11 +139,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void SetTargetColor(TargetType targetColor)
         {
             this.targetColor = targetColor;
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void ResetBall()

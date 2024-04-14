@@ -5,6 +5,8 @@ using Sirenix.OdinInspector;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Common.Messages;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -44,6 +46,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public int MaxHP => _maxHp;
 
+        public override int Score => 15;
+
+        private IPublisher<AddScoreMessage> _addScorePublisher;
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -72,23 +78,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
         public override void InitMessages()
         {
-            
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
         }
 
         public void SetMaxHP(int maxHP)
         {
             _maxHp = maxHP;
             _hp = _maxHp;
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void ResetBall()

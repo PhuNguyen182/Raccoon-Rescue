@@ -8,6 +8,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
 {
     public interface IBallEntity
     {
+        public int Score { get; }
         public bool IsMatchable { get; }
         public bool IsFixedOnStart { get; set; }
         public Vector3 WorldPosition { get; }

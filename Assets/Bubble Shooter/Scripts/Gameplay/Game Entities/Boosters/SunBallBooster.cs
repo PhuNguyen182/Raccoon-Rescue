@@ -12,6 +12,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class SunBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
+        public override int Score => 20;
+
         public override EntityType EntityType => EntityType.SunBall;
 
         public override bool IsMatchable => false;
@@ -21,6 +23,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override Vector3 WorldPosition => transform.position;
 
         public override Vector3Int GridPosition { get; set; }
+
+        private IPublisher<AddScoreMessage> _addScorePublisher;
 
         public bool CanMove 
         {
@@ -63,6 +67,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void DestroyEntity()
         {
+            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -73,12 +78,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void InitMessages()
         {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _boosterPublisher = GlobalMessagePipe.GetPublisher<ActiveBoosterMessage>();
-        }
-
-        public override void SetWorldPosition(Vector3 position)
-        {
-            transform.position = position;
         }
 
         public override void ResetBall()
