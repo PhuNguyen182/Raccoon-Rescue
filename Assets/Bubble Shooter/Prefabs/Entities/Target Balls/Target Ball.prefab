@@ -113,9 +113,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4797a1da1bf389943adfa5406a862e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   ballMovement: {fileID: 117439469235793562}
   entityGraphics: {fileID: 2321141897896256763}
   entityAudio: {fileID: 9025547474888883602}
+  freedTarget: {fileID: 5489758021592695362, guid: a92825164f2361646bd0b341e2048f0a, type: 3}
   id: 0
   entityColor: 0
   targetColor: 0

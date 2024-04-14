@@ -1,4 +1,4 @@
-namespace BubbleShooter.Scripts.Common.Configs
+namespace BubbleShooter.Scripts.Common.Constants
 {
     public static class BallConstants
     {

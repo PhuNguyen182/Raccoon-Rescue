@@ -2,7 +2,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Common.Configs;
+using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;

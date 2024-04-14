@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
-using BubbleShooter.Scripts.Common.Configs;
+using BubbleShooter.Scripts.Common.Constants;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {

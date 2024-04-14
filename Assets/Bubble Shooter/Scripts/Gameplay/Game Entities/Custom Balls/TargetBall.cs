@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 
@@ -10,6 +11,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
+        [SerializeField] private FreedTarget freedTarget;
+
         [Header("Target Setting")]
         [SerializeField] private int id;
         [SerializeField] private EntityType entityColor;
@@ -66,6 +69,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            SimplePool.Spawn(freedTarget, EffectContainer.Transform, transform.position, Quaternion.identity);
             SimplePool.Despawn(this.gameObject);
         }
 
