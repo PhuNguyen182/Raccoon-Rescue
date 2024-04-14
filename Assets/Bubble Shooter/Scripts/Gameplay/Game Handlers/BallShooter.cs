@@ -55,7 +55,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
                 ShootBall();
-                PopSequence();
+                //PopSequence();
             }
         }
 
@@ -67,7 +67,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetShootSequence(List<int> queue)
         {
             _shootSequence = queue;
-            PopSequence();
+            SetColor(EntityType.ColorfulBall);
+            //PopSequence();
         }
 
         public void SetStartPosition()

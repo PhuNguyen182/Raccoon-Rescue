@@ -88,7 +88,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
             
             _checkTargetTask = new();
-            _checkScoreTask.AddTo(ref builder);
+            _checkTargetTask.AddTo(ref builder);
 
             _checkScoreTask = new();
             _checkScoreTask.AddTo(ref builder);
@@ -101,7 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_1").text;
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
         }

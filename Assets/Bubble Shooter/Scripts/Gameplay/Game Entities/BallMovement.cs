@@ -213,7 +213,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);
-            await SnapTo(targetCellInfo.transform.position);
+            SnapTo(targetCellInfo.transform.position).Forget();
+            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             _currentBall.OnSnapped();
         }
 

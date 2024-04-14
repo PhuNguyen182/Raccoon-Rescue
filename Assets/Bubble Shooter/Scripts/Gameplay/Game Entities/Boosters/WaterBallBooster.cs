@@ -115,7 +115,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
         {
-            
+            ballMovement.AddForce(force, forceMode);
         }
 
         public override void OnSnapped()

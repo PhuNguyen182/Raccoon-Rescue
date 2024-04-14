@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
-using BubbleShooter.Scripts.Common.Messages;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallTransformation, IBreakable
+    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
@@ -29,7 +29,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
-        private EntityType _entityType = EntityType.ColorfulBall;
 
         public bool CanMove
         {
@@ -37,7 +36,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.CanMove = value;
         }
 
-        public override EntityType EntityType => _entityType;
+        public override EntityType EntityType => EntityType.ColorfulBall;
 
         public override bool IsMatchable => true;
 
@@ -55,28 +54,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        private void OnEnable()
+        {
+            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
+        }
+
         public override void InitMessages()
         {
             _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
-        }
-
-        public void TransformTo(EntityType color)
-        {
-            _entityType = color;
-
-            Sprite colorSprite = color switch
-            {
-                EntityType.Red => red,
-                EntityType.Yellow => yellow,
-                EntityType.Green => green,
-                EntityType.Blue => blue,
-                EntityType.Violet => violet,
-                EntityType.Orange => orange,
-                _ => null
-            };
-
-            entityGraphics.SetEntitySprite(colorSprite);
         }
 
         public override async UniTask Blast()
@@ -86,7 +72,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool Break()
         {
-            return false;
+            return true;
         }
 
         public override void DestroyEntity()
@@ -135,7 +121,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void OnSnapped()
         {
-            _checkMatchPublisher.Publish(new CheckMatchMessage());
+            _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
+        }
+
+        private void OnDisable()
+        {
+            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

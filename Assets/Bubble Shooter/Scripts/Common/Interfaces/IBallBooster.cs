@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Common.Interfaces
 {

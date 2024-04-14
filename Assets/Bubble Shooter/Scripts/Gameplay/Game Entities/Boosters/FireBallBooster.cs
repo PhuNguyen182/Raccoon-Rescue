@@ -7,6 +7,7 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
@@ -115,7 +116,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
         {
-            
+            ballMovement.AddForce(force, forceMode);
         }
 
         public override void OnSnapped()

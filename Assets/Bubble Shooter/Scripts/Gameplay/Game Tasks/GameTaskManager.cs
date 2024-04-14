@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly MatchBallHandler _matchBallHandler;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly BoosterHandleTask _boosterHandleTask;
+        private readonly InGamePowerupControlTask _powerupControlTask;
         private readonly IDisposable _disposable;
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler)
@@ -27,6 +28,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _inputProcessor = new(inputHandler, _gridCellManager);
             _inputProcessor.AddTo(ref builder);
+
+            _powerupControlTask = new();
+            _powerupControlTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
             _checkBallClusterTask = new(_gridCellManager);

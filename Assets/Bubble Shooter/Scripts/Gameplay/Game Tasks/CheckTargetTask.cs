@@ -31,6 +31,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private void CheckTarget()
         {
             _targetCount = _targetCount - 1;
+            if(_targetCount <= 0)
+            {
+                // To do: show game lose
+            }
         }
 
         public void Dispose()

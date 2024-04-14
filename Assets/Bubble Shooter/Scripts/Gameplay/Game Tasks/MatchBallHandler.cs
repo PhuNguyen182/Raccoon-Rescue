@@ -7,6 +7,7 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -54,31 +55,61 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private void CheckMatch(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
+            if (gridCell == null)
+                return;
+
             IBallEntity ballEntity = gridCell.BallEntity;
+            if (ballEntity == null)
+                return;
+
             var neighbours = _gridCellManager.GetNeighbourGrids(position);
 
-            for (int i = 0; i < neighbours.Count; i++)
+            if (ballEntity.EntityType != EntityType.ColorfulBall)
             {
-                if (neighbours[i] == null)
-                    continue;
+                for (int i = 0; i < neighbours.Count; i++)
+                {
+                    if (neighbours[i] == null)
+                        continue;
 
-                if (_gridCellManager.GetIsVisited(neighbours[i].GridPosition))
-                    continue;
+                    if (_gridCellManager.GetIsVisited(neighbours[i].GridPosition))
+                        continue;
 
-                if (!neighbours[i].ContainsBall)
-                    continue;
+                    if (!neighbours[i].ContainsBall)
+                        continue;
 
-                // XOR operator: if the ball is not matchable and is booster or is matchable and is not booster
-                // Can use != instead of ^
-                if (!(neighbours[i].BallEntity.IsMatchable ^ neighbours[i].BallEntity is IBallBooster))
-                    continue;
+                    // XOR operator: if the ball is not matchable and is booster or is matchable and is not booster
+                    // Can use != instead of ^
+                    if (!(neighbours[i].BallEntity.IsMatchable ^ neighbours[i].BallEntity is IBallBooster))
+                        continue;
 
-                if (neighbours[i].BallEntity.EntityType != ballEntity.EntityType)
-                    continue;
+                    if(neighbours[i].EntityType != EntityType.ColorfulBall)
+                        if (neighbours[i].EntityType != ballEntity.EntityType)
+                            continue;
 
-                _matchCluster.Add(neighbours[i]);
-                _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
-                CheckMatch(neighbours[i].GridPosition);
+                    _matchCluster.Add(neighbours[i]);
+                    _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
+                    CheckMatch(neighbours[i].GridPosition);
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < neighbours.Count; i++)
+                {
+                    if (neighbours[i] == null)
+                        continue;
+
+                    if (!neighbours[i].ContainsBall)
+                        continue;
+
+                    if (!neighbours[i].BallEntity.IsMatchable)
+                        continue;
+
+                    if (neighbours[i].EntityType == EntityType.ColorfulBall)
+                        continue;
+
+                    CheckMatch(neighbours[i].GridPosition);
+                }
             }
         }
 
