@@ -101,7 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_1").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
         }

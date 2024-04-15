@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -16,9 +16,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
+        private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
-        private List<IGridCell> _matchCluster = new();
-        private ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
         private IDisposable _disposable;
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask, CheckBallClusterTask checkBallClusterTask)
@@ -42,17 +41,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask MatchAsync(Vector3Int position)
         {
-            _matchCluster.Clear();
-            CheckMatch(position);
-            
-            _gridCellManager.ClearVisitedPositions();
-            bool isCluster = await ExecuteCluster(_matchCluster);
-            
-            if(isCluster)
-                _checkBallClusterTask.CheckCluster();
+            using (var listPool = ListPool<IGridCell>.Get(out var matchCluster))
+            {
+                CheckMatch(position, matchCluster);
+
+                _gridCellManager.ClearVisitedPositions();
+                bool isClusterMatched = await ExecuteCluster(matchCluster);
+
+                if (isClusterMatched)
+                    _checkBallClusterTask.CheckFreeCluster();
+                else
+                    _checkBallClusterTask.CheckNeighborCluster(position);
+            }
         }
 
-        private void CheckMatch(Vector3Int position)
+        private void CheckMatch(Vector3Int position, List<IGridCell> matchCluster)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
             if (gridCell == null)
@@ -86,9 +89,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                         if (neighbours[i].EntityType != ballEntity.EntityType)
                             continue;
 
-                    _matchCluster.Add(neighbours[i]);
+                    matchCluster.Add(neighbours[i]);
                     _gridCellManager.SetAsVisited(neighbours[i].GridPosition);
-                    CheckMatch(neighbours[i].GridPosition);
+                    CheckMatch(neighbours[i].GridPosition, matchCluster);
                 }
             }
 
@@ -108,7 +111,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     if (neighbours[i].EntityType == EntityType.ColorfulBall)
                         continue;
 
-                    CheckMatch(neighbours[i].GridPosition);
+                    CheckMatch(neighbours[i].GridPosition, matchCluster);
                 }
             }
         }
@@ -133,7 +136,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-            _matchCluster.Clear();
             _disposable.Dispose();
         }
     }

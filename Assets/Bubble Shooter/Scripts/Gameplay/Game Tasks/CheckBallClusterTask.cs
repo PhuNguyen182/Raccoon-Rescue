@@ -4,19 +4,22 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Constants;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class CheckBallClusterTask
     {
+        private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         
-        public CheckBallClusterTask(GridCellManager gridCellManager)
+        public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
+            _breakGridTask = breakGridTask;
         }
 
-        public void CheckCluster()
+        public void CheckFreeCluster()
         {
             for (int i = 0; i < _gridCellManager.GridPositions.Count; i++)
             {
@@ -32,6 +35,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
 
             _gridCellManager.ClearVisitedPositions();
+        }
+
+        public void CheckNeighborCluster(Vector3Int checkPosition)
+        {
+            var neighbors = _gridCellManager.GetNeighbourGrids(checkPosition);
+
+            for (int i = 0; i < neighbors.Count; i++)
+            {
+                if (neighbors[i] == null)
+                    continue;
+
+                if (!neighbors[i].ContainsBall)
+                    continue;
+
+                IBallEntity ball = neighbors[i].BallEntity;
+
+                if (ball is IBreakable breakable)
+                {
+                    if (breakable.EasyBreak)
+                        _breakGridTask.Break(neighbors[i]).Forget();
+                }
+            }
         }
 
         private void FindCluster(Vector3Int position, BallClusterModel clusterModel)

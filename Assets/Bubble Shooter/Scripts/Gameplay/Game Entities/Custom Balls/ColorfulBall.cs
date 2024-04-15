@@ -40,8 +40,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override bool IsMatchable => true;
 
-        public override int Score => 10;
-
         public override bool IsFixedOnStart { get; set; }
 
         public override Vector3 WorldPosition => transform.position;
@@ -53,6 +51,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
         }
+
+        public bool EasyBreak => false;
 
         private void OnEnable()
         {

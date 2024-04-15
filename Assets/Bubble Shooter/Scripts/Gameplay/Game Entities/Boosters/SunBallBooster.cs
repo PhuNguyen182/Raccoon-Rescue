@@ -12,8 +12,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class SunBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
-        public override int Score => 20;
-
         public override EntityType EntityType => EntityType.SunBall;
 
         public override bool IsMatchable => false;

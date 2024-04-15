@@ -30,13 +30,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             _gridCellManager.DestroyAt(position);
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
-                Vector3Int[] gridPosition = GetBoosterRange(position);
-                for (int i = 0; i < gridPosition.Length; i++)
+                var gridPositions = GetBoosterRange(position);
+                foreach(Vector3Int gridPosition in gridPositions)
                 {
-                    if (position == gridPosition[i])
+                    if (position == gridPosition)
                         continue;
 
-                    IGridCell cell = _gridCellManager.Get(gridPosition[i]);
+                    IGridCell cell = _gridCellManager.Get(gridPosition);
                     if (cell == null)
                         continue;
 
@@ -54,10 +54,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        private Vector3Int[] GetBoosterRange(Vector3Int position)
+        private IEnumerable<Vector3Int> GetBoosterRange(Vector3Int position)
         {
             BoundsInt boosterRange = position.GetBounds2D(5);
-            return boosterRange.IteratorIgnoreCorner().ToArray();
+            return boosterRange.IteratorIgnoreCorner();
         }
 
         public void Dispose()

@@ -28,7 +28,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             _gridCellManager.DestroyAt(position);
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
-                List<Vector3Int> gridPosition = GetTripleBall(position);
+                var gridPosition = GetHexagonClusterBall(position);
                 for (int i = 0; i < gridPosition.Count; i++)
                 {
                     if (position == gridPosition[i])
@@ -49,10 +49,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                gridPosition.Clear();
             }
         }
 
-        private List<Vector3Int> GetTripleBall(Vector3Int position)
+        private List<Vector3Int> GetHexagonClusterBall(Vector3Int position)
         {
             List<Vector3Int> triplePosition = new();
 
@@ -61,18 +62,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 Vector3Int neighborOffset = position.y % 2 == 0 
                                             ? CommonProperties.EvenYNeighborOffsets[i]
                                             : CommonProperties.OddYNeighborOffsets[i];
-                IGridCell gridCell = _gridCellManager.Get(position + neighborOffset);
-
-                if (triplePosition.Count == 3)
-                    break;
-
-                if (gridCell == null)
-                    continue;
-
-                if (!gridCell.ContainsBall)
-                    continue;
-
-                triplePosition.Add(neighborOffset);
+                triplePosition.Add(position + neighborOffset);
             }
 
             return triplePosition;

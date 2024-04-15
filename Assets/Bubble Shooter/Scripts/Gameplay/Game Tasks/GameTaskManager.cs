@@ -33,7 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupControlTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
-            _checkBallClusterTask = new(_gridCellManager);
+            _checkBallClusterTask = new(_gridCellManager, _breakGridTask);
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask);
 
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);

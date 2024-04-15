@@ -62,7 +62,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
-        public override int Score => 35;
+        public bool EasyBreak => false;
 
         protected override void OnStart()
         {

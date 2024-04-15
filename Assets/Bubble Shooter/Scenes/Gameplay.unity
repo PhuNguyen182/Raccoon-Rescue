@@ -2595,6 +2595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topCeil: {fileID: 1323791888}
+  groundingArea: {fileID: 0}
 --- !u!4 &1176530405
 Transform:
   m_ObjectHideFlags: 0
@@ -2805,7 +2806,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1023, y: 243}
+  m_SizeDelta: {x: 1023, y: 220}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1241987706
 MonoBehaviour:
@@ -2829,7 +2830,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: ee747db6904a845ccb2b9d83e99d8d19, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3045,7 +3046,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

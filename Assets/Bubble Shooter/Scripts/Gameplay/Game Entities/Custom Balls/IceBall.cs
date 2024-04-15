@@ -32,6 +32,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         private int _hp = 0;
         private int _maxHp = 0;
 
+        private bool _isEasyBreak;
         private bool _isMatchable;
 
         public override bool IsMatchable => _isMatchable;
@@ -46,7 +47,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public int MaxHP => _maxHp;
 
-        public override int Score => 15;
+        public bool EasyBreak => _isEasyBreak;
 
         private IPublisher<AddScoreMessage> _addScorePublisher;
 
@@ -59,7 +60,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             if(_hp > 0)
             {
-                _hp = _hp - 1;                
+                _hp = _hp - 1;
+                _isEasyBreak = false;
                 ballAnimator.enabled = false;
                 
                 int rand = Random.Range(1, 7); 
@@ -96,9 +98,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void ResetBall()
         {
             base.ResetBall();
+            _isEasyBreak = true;
             _isMatchable = false;
-            ballAnimator.enabled = true;
+
             IsFixedOnStart = true;
+            ballAnimator.enabled = true;
+
             entityType = EntityType.IceBall;
         }
 

@@ -36,8 +36,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public bool IsIgnored { get; set; }
 
-        public override int Score => 25;
-
         private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 

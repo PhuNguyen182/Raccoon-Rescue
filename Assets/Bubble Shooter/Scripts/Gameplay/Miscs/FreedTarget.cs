@@ -20,6 +20,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [Space(10)]
         [SerializeField] private Animator animalAnimator;
         [SerializeField] private GameObject shadowObject;
+        [SerializeField] private GameObject parachute;
 
         [Header("Audios")]
         [SerializeField] private AudioClip[] babyClips;
@@ -81,6 +82,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         {
             PlayGroundAudio();
             shadowObject.SetActive(true);
+            parachute.SetActive(false);
             animalAnimator.SetTrigger(_groundedHash);
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.75f), cancellationToken: _token);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
@@ -28,7 +29,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             _gridCellManager.DestroyAt(position);
             using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
             {
-                _gridCellManager.GetColumn(position, out List<IGridCell> column);
+                var column = GetVerticalLine(position);
 
                 for (int i = 0; i < column.Count; i++)
                 {
@@ -49,7 +50,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                column.Clear();
             }
+        }
+
+        private List<IGridCell> GetVerticalLine(Vector3Int startPosition)
+        {
+            List<IGridCell> column = new();
+
+            for (int i = 1; i < BoosterConstants.LeafBoosterAttackRange - 1; i++)
+            {
+                IGridCell gridCell = _gridCellManager.Get(startPosition + Vector3Int.up * i);
+                column.Add(gridCell);
+            }
+
+            return column;
         }
 
         public void Dispose()

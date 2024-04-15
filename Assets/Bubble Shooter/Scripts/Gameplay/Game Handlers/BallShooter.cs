@@ -10,6 +10,8 @@ using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Gameplay.Models;
+using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
@@ -35,7 +37,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private Vector2 _direction;
         private Vector3 _startPosition;
-        private EntityType _ballColor;
+        private BallShootModel _ballModel;
         private float _limitAngleSine = 0;
 
         private CancellationToken _token;
@@ -54,8 +56,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsMouseUp && _limitAngleSine > 0.15f)
             {
-                ShootBall();
-                //PopSequence();
+                ShootBall(_ballModel);
+                
+                if (!_ballModel.IsPowerup)
+                    PopSequence();
             }
         }
 
@@ -67,8 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetShootSequence(List<int> queue)
         {
             _shootSequence = queue;
-            SetColor(EntityType.ColorfulBall);
-            //PopSequence();
+            PopSequence();
         }
 
         public void SetStartPosition()
@@ -78,16 +81,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             transform.position = _startPosition;
         }
 
-        private void SetColor(EntityType ballColor)
+        private void SetColorModel(BallShootModel model)
         {
-            _ballColor = ballColor;
+            _ballModel = model;
         }
 
         private void PopSequence()
         {
             if (_shootSequence.Count > 0)
             {
-                SetColor((EntityType)_shootSequence[_shootSequence.Count - 1]);
+                SetColorModel(new BallShootModel
+                {
+                    IsPowerup = false,
+                    BallColor = (EntityType)_shootSequence[_shootSequence.Count - 1],
+                    BallCount = 1
+                });
+
                 _shootSequence.RemoveAt(_shootSequence.Count - 1);
             }
 
@@ -99,12 +108,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _direction = inputHandler.MousePosition - spawnPoint.position;
         }
 
-        private void ShootBall()
+        private void ShootBall(BallShootModel shootModel)
         {
-            SpawnBallAsync().Forget();
+            SpawnBallAsync(shootModel).Forget();
         }
 
-        private async UniTaskVoid SpawnBallAsync()
+        private async UniTaskVoid SpawnBallAsync(BallShootModel shootModel)
         {
             mainCharacter.Shoot();
             
@@ -112,23 +121,43 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (_token.IsCancellationRequested)
                 return;
 
-            BaseEntity newBall = _entityFactory.Create(new EntityMapData 
+            var ballData = new EntityMapData
             {
                 HP = 1,
-                EntityType = _ballColor 
-            });
+                EntityType = shootModel.BallColor
+            };
 
-            newBall.IsFixedOnStart = false;
-            newBall.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
-            
-            if (newBall.TryGetComponent(out IBallMovement ballMovement) && newBall.TryGetComponent(out IBallPhysics ballPhysics))
+            if (shootModel.BallCount == 1)
+            {
+                BaseEntity newBall = _entityFactory.Create(ballData);
+                ShootABall(newBall, _direction);
+            }
+
+            else
+            {
+                int _haftBallCount = shootModel.BallCount / 2;
+                for (int i = -_haftBallCount; i <= _haftBallCount; i++)
+                {
+                    BaseEntity newBall = _entityFactory.Create(ballData);
+                    Vector3 direction = Quaternion.AngleAxis(i * BallConstants.SpreadShootAngle, Vector3.forward) * _direction;
+                    ShootABall(newBall, direction);
+                }
+            }
+        }
+
+        private void ShootABall(BaseEntity ball, Vector3 direction)
+        {
+            ball.IsFixedOnStart = false;
+            ball.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
+
+            if (ball.TryGetComponent(out IBallMovement ballMovement) && ball.TryGetComponent(out IBallPhysics ballPhysics))
             {
                 ballMovement.CanMove = false;
                 ballMovement.MovementState = BallMovementState.Ready;
                 ballPhysics.ChangeLayerMask(false);
 
                 ballPhysics.SetBodyActive(false);
-                ballMovement.SetMoveDirection(_direction);
+                ballMovement.SetMoveDirection(direction);
                 ballMovement.MovementState = BallMovementState.Moving;
                 ballMovement.CanMove = true;
             }

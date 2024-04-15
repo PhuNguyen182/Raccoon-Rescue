@@ -39,8 +39,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.CanMove = value; 
         }
 
-        public override int Score => 10;
-
         public override EntityType EntityType => ballColor;
 
         public override bool IsMatchable => true;
@@ -56,6 +54,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
         }
+
+        public bool EasyBreak => false;
 
         private void OnEnable()
         {

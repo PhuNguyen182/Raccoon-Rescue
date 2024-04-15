@@ -18,7 +18,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected CancellationToken onDestroyToken;
 
-        public abstract int Score { get; }
+        public int Score => 10;
 
         public abstract bool IsMatchable { get; }
 

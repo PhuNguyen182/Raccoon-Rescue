@@ -27,8 +27,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
-        public override int Score => 0;
-
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
