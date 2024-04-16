@@ -48,11 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faffcdd3823c0004099e87f317c93a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravityScale: 0.075
-  checkGroundRadius: 0.3
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 2048
+  moveVelocity: 2.17
   animalAnimator: {fileID: 5979228329892309209}
   shadowObject: {fileID: 8561625771841793886}
   parachute: {fileID: 3528779661351710849}

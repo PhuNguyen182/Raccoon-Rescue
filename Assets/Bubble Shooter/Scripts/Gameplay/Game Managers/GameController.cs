@@ -49,6 +49,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         
         private IDisposable _disposable;
 
+        public GameDecorator GameDecorator => gameDecorator;
         public GridCellManager GridCellManager => _gridCellManager;
 
         public static GameController Instance { get; private set; }

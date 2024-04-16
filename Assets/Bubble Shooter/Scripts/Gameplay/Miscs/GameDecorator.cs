@@ -7,7 +7,10 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
     public class GameDecorator : MonoBehaviour
     {
         [SerializeField] private Transform topCeil;
+        [SerializeField] private Transform groundPointContainer;
         [SerializeField] private BoxCollider2D groundingArea;
+
+        public Transform GroundPointContainer => groundPointContainer;
 
         public void SetTopCeilPosition(Vector3 position)
         {

@@ -4,20 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Gameplay.GameManagers;
 using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
-    public class FreedTarget : MonoBehaviour, IFixedUpdateHandler
+    public class FreedTarget : MonoBehaviour
     {
-        [Header("Ground Checking")]
-        [SerializeField] private float gravityScale = 0.1f;
-        [SerializeField] private float checkGroundRadius = 0.3f;
-        [SerializeField] private LayerMask groundMask;
-
-        [Space(10)]
+        [SerializeField] private float moveVelocity = 1.05f;
         [SerializeField] private Animator animalAnimator;
         [SerializeField] private GameObject shadowObject;
         [SerializeField] private GameObject parachute;
@@ -29,64 +26,45 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private static readonly int _groundedHash = Animator.StringToHash("Grounded");
 
-        private float _yVelocity = 0;
-        private bool _isGrounded = false;
-        
-        private Vector3 _movementVector;
-        private Vector3 _checkPosition;
-        
-        private Collider2D _groundCollider;
-        private CancellationToken _token;
+        private Vector3 _toPosition;
+        private Transform _groundPoint;
+        private Sequence _moveSequence;
 
         private void Awake()
         {
-            _token = this.GetCancellationTokenOnDestroy();
             shadowObject.SetActive(false);
         }
 
-        private void OnEnable()
+        private void Start()
         {
             PlayFreedAudio();
-            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
+            MoveToTarget();
         }
 
-        public void OnFixedUpdate()
+        private void MoveToTarget()
         {
-            if (!_isGrounded)
+            _groundPoint = GameController.Instance
+                           .GameDecorator.GroundPointContainer;
+            _toPosition = GameController.Instance
+                          .GameDecorator.GetGroundingPoint();
+
+            transform.SetParent(_groundPoint);
+            _toPosition = _groundPoint.parent.InverseTransformPoint(_toPosition);
+            _moveSequence ??= CreateMoveTween(_toPosition);
+            _moveSequence.Rewind();
+            _moveSequence.PlayForward();
+            _moveSequence.OnComplete(() =>
             {
-                FallDown();
-                CheckGround();
-            }
+                OnGrounded();
+            });
         }
 
-        private void CheckGround()
-        {
-            _checkPosition = transform.position + new Vector3(0, -0.3f);
-            _groundCollider = Physics2D.OverlapCircle(_checkPosition, checkGroundRadius, groundMask);
-            
-            if(_groundCollider != null)
-            {
-                _isGrounded = true;
-                OnGrounded().Forget();
-            }
-        }
-
-        private void FallDown()
-        {
-            _yVelocity += (EntityConstants.Gravity + 0.5f) * gravityScale * Time.fixedDeltaTime;
-            _movementVector = new Vector3(0, _yVelocity, 0);
-            transform.Translate(_movementVector * Time.fixedDeltaTime);
-        }
-
-        private async UniTaskVoid OnGrounded()
+        private void OnGrounded()
         {
             PlayGroundAudio();
             shadowObject.SetActive(true);
             parachute.SetActive(false);
             animalAnimator.SetTrigger(_groundedHash);
-
-            await UniTask.Delay(TimeSpan.FromSeconds(0.75f), cancellationToken: _token);
-            SimplePool.Despawn(this.gameObject);
         }
 
         private void PlayFreedAudio()
@@ -101,11 +79,21 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             babySound.PlayOneShot(groundedClips[rand]);
         }
 
-        private void OnDisable()
+        private Sequence CreateMoveTween(Vector3 toPosition)
         {
-            _isGrounded = false;
-            shadowObject.SetActive(false);
-            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+            Sequence sequence = DOTween.Sequence();
+            float duration = Vector3.Distance(transform.position, toPosition) / moveVelocity;
+
+            sequence.Insert(0, transform.DOLocalMoveX(toPosition.x, duration).SetEase(Ease.Linear));
+            sequence.Insert(0, transform.DOLocalMoveY(toPosition.y, duration).SetEase(Ease.InQuad));
+            sequence.SetAutoKill(false);
+
+            return sequence;
+        }
+
+        private void OnDestroy()
+        {
+            _moveSequence?.Kill();
         }
     }
 }
