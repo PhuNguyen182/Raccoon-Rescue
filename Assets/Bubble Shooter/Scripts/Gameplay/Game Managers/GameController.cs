@@ -13,6 +13,7 @@ using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.GameUI.Screens;
 using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
@@ -33,6 +34,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
+
+        [Header("GUI")]
+        [SerializeField] private MainScreenManager mainScreen;
 
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
@@ -94,7 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask = new();
             _checkScoreTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler);
+            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen);
             _gameTaskManager.AddTo(ref builder);
 
             _disposable = builder.Build();

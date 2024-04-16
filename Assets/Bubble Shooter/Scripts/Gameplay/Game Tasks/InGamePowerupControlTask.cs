@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.GameUI.IngamePowerup;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Enums;
 using MessagePipe;
@@ -11,6 +12,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class InGamePowerupControlTask : IDisposable
     {
+        private readonly IngamePowerupPanel _ingamePowerupPanel;
         private readonly IDisposable _disposable;
         private readonly ISubscriber<PowerupMessage> _powerupSubscriber;
 
@@ -19,14 +21,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _yellowBallCount;
         private int _blueBallCount;
 
-        public InGamePowerupControlTask()
+        public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel)
         {
+            _ingamePowerupPanel = ingamePowerupPanel;
             _redBallCount = _greenBallCount = _yellowBallCount = _blueBallCount = 0;
 
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
             _powerupSubscriber = GlobalMessagePipe.GetSubscriber<PowerupMessage>();
             _powerupSubscriber.Subscribe(ProcessPowerup).AddTo(builder);
             _disposable = builder.Build();
+
+            CheckPowerup();
+        }
+
+        private void CheckPowerup()
+        {
+            CheckFireball();
+            CheckSunball();
+            CheckLeafball();
+            CheckWaterball();
         }
 
         private void ProcessPowerup(PowerupMessage message)
@@ -82,8 +95,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if(_redBallCount >= BoosterConstants.FireballThreashold)
             {
                 _redBallCount = BoosterConstants.FireballThreashold;
-                // To do: allow player to activate booster
             }
+
+            CheckFireball();
         }
 
         private void AddYellowBall()
@@ -93,8 +107,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if(_yellowBallCount >= BoosterConstants.SunballThreashold)
             {
                 _yellowBallCount = BoosterConstants.SunballThreashold;
-                // To do: allow player to activate booster
             }
+
+            CheckSunball();
         }
 
         private void AddGreenBall()
@@ -104,8 +119,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if (_greenBallCount >= BoosterConstants.LeafballThreashold)
             {
                 _greenBallCount = BoosterConstants.LeafballThreashold;
-                // To do: allow player to activate booster
             }
+
+            CheckLeafball();
         }
 
         private void AddBlueBall()
@@ -115,32 +131,53 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if (_blueBallCount >= BoosterConstants.WaterballThreashold)
             {
                 _blueBallCount = BoosterConstants.WaterballThreashold;
-                // To do: allow player to activate booster
             }
+
+            CheckWaterball();
         }
 
         private void FreeRedBall()
         {
             _redBallCount = 0;
-            // To do: Deactivate booster
+            CheckFireball();
         }
 
         private void FreeYellowBall()
         {
             _yellowBallCount = 0;
-            // To do: Deactivate booster
+            CheckSunball();
         }
 
         private void FreeGreenBall()
         {
             _greenBallCount = 0;
-            // To do: Deactivate booster
+            CheckLeafball();
         }
 
         private void FreeBlueBall()
         {
             _blueBallCount = 0;
-            // To do: Deactivate booster
+            CheckWaterball();
+        }
+
+        private void CheckFireball()
+        {
+            _ingamePowerupPanel.ControlPowerupButtons((float)_redBallCount / BoosterConstants.FireballThreashold, EntityType.FireBall);
+        }
+
+        private void CheckSunball()
+        {
+            _ingamePowerupPanel.ControlPowerupButtons((float)_yellowBallCount / BoosterConstants.SunballThreashold, EntityType.SunBall);
+        }
+
+        private void CheckLeafball()
+        {
+            _ingamePowerupPanel.ControlPowerupButtons((float)_greenBallCount / BoosterConstants.LeafballThreashold, EntityType.LeafBall);
+        }
+
+        private void CheckWaterball()
+        {
+            _ingamePowerupPanel.ControlPowerupButtons((float)_blueBallCount / BoosterConstants.WaterballThreashold, EntityType.WaterBall);
         }
 
         public void Dispose()

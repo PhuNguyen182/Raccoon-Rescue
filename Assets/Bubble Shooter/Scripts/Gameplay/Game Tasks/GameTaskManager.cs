@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.GameUI.Screens;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
 {
     public class GameTaskManager : IDisposable
     {
+        private readonly MainScreenManager _mainScreenManager;
         private readonly InputProcessor _inputProcessor;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
@@ -19,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly InGamePowerupControlTask _powerupControlTask;
         private readonly IDisposable _disposable;
 
-        public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler)
+        public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -29,7 +31,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _inputProcessor = new(inputHandler, _gridCellManager);
             _inputProcessor.AddTo(ref builder);
 
-            _powerupControlTask = new();
+            _mainScreenManager = mainScreenManager;
+            _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel);
             _powerupControlTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);

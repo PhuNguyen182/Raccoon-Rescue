@@ -36,6 +36,7 @@ namespace Scripts.App
         {
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
+            Register<MusicManager>("Managers/Music Manager");
         }
 
         private static void RegisterServicesAfterSceneLoad()
