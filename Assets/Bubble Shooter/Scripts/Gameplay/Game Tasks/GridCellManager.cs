@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -14,6 +16,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _gridPosition;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
         private Dictionary<Vector3Int, bool> _visitedMatrix;
+
+        private OrderablePartitioner<Vector3Int> _partitioner;
 
         public List<Vector3Int> GridPositions => _gridPosition;
         public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
@@ -48,20 +52,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
 
             row = gridCells;
-        }
-
-        public void GetColumn(Vector3Int position, out List<IGridCell> column)
-        {
-            List<IGridCell> gridCells = new();
-            var rowPositions = _gridBounds.GetColumn(position);
-
-            foreach (Vector3Int rowPosition in rowPositions)
-            {
-                IGridCell cell = Get(rowPosition);
-                gridCells.Add(cell);
-            }
-
-            column = gridCells;
         }
 
         public void Add(IGridCell gridCell)
@@ -113,7 +103,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             _gridPosition = _gridCells.Keys.ToList();
             _gridBounds = BoundsExtension.Encapsulate(_gridPosition);
-            
+            _partitioner = Partitioner.Create(_gridPosition, true);
+
             _visitedMatrix = new Dictionary<Vector3Int, bool>();
             for (int i = 0; i < _gridPosition.Count; i++)
             {
@@ -133,10 +124,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void ClearVisitedPositions()
         {
-            for (int i = 0; i < _gridPosition.Count; i++)
+            // It's okay when use paralel loop because it doesn't mean running in the main thread
+            Parallel.ForEach(_partitioner, gridPosition =>
             {
-                _visitedMatrix[_gridPosition[i]] = false;
-            }
+                _visitedMatrix[gridPosition] = false;
+            });
         }
 
         private void ClearAll()

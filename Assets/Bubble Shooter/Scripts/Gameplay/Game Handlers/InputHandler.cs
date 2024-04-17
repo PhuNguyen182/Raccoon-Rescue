@@ -1,8 +1,8 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using R3;
 using UnityEngine.EventSystems;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
