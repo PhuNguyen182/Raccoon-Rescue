@@ -22,13 +22,11 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
                 case EntityType.LeafBall:
                     leafballButton.SetFillAmount(fillAmount);
                     break;
-                case EntityType.IceBall:
-                    sunballButton.SetFillAmount(fillAmount);
-                    break;
                 case EntityType.WaterBall:
                     waterballButton.SetFillAmount(fillAmount);
                     break;
                 case EntityType.SunBall:
+                    sunballButton.SetFillAmount(fillAmount);
                     break;
             }
         }

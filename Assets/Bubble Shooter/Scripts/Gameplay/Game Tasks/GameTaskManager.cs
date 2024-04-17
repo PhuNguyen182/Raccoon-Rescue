@@ -28,7 +28,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
             _gridCellManager.AddTo(ref builder);
 
-            _inputProcessor = new(inputHandler, _gridCellManager);
+            _inputProcessor = new(inputHandler);
             _inputProcessor.AddTo(ref builder);
 
             _mainScreenManager = mainScreenManager;
@@ -36,13 +36,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupControlTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
-            _checkBallClusterTask = new(_gridCellManager, _breakGridTask);
-            _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask);
+            _checkBallClusterTask = new(_gridCellManager, _breakGridTask, _inputProcessor);
+            _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
 
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);
             _boosterHandleTask.AddTo(ref builder);
 
-            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask);
+            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor);
             _matchBallHandler.AddTo(ref builder);
 
             _disposable = builder.Build();

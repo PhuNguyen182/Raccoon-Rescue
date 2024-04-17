@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
@@ -54,7 +55,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private IDisposable _disposable;
 
         public GameDecorator GameDecorator => gameDecorator;
-        public GridCellManager GridCellManager => _gridCellManager;
 
         public static GameController Instance { get; private set; }
 
@@ -167,6 +167,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         public Vector3Int ConvertWorldPositionToGridPosition(Vector3 position)
         {
             return boardTilemap.WorldToCell(position);
+        }
+
+        public IGridCell GetCell(Vector3Int position)
+        {
+            return _gridCellManager.Get(position);
         }
 
         private void SetShootSequence(LevelModel levelModel)

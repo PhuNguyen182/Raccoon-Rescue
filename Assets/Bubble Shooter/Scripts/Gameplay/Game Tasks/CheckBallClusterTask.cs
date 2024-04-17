@@ -12,11 +12,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     {
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
+        private readonly InputProcessor _inputProcessor;
         
-        public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, InputProcessor inputProcessor)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+            _inputProcessor = inputProcessor;
         }
 
         public void CheckFreeCluster()
@@ -37,8 +39,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _gridCellManager.ClearVisitedPositions();
         }
 
-        public void CheckNeighborCluster(Vector3Int checkPosition)
+        public async UniTask CheckNeighborCluster(Vector3Int checkPosition)
         {
+            _inputProcessor.IsActive = false;
             var neighbors = _gridCellManager.GetNeighbourGrids(checkPosition);
 
             for (int i = 0; i < neighbors.Count; i++)
@@ -54,9 +57,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (ball is IBreakable breakable)
                 {
                     if (breakable.EasyBreak)
-                        _breakGridTask.Break(neighbors[i]).Forget();
+                        await _breakGridTask.Break(neighbors[i]);
                 }
             }
+
+            _inputProcessor.IsActive = true;
         }
 
         private void FindCluster(Vector3Int position, BallClusterModel clusterModel)
@@ -97,6 +102,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             if (clusterModel.IsCeilAttached)
                 return;
 
+            _inputProcessor.IsActive = false;
             for (int i = 0; i < clusterModel.Cluster.Count; i++)
             {
                 IBallEntity ball = clusterModel.Cluster[i].BallEntity;
@@ -117,6 +123,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _gridCellManager.Remove(clusterModel.Cluster[i].GridPosition);
                 }
             }
+
+            _inputProcessor.IsActive = false;
         }
 
         private void BallAddForce(IBallPhysics ballPhysics)

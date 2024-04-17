@@ -25,7 +25,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (isDraw)
             {
                 _linePoints[0] = spawnPoint.position;
-                _direction = inputHandler.MousePosition - spawnPoint.position;
+                _direction = inputHandler.InputPosition - spawnPoint.position;
                 Ray2D ray1 = new(spawnPoint.position, _direction);
                 _hitWall1 = Physics2D.Raycast(spawnPoint.position, _direction, 25);
 

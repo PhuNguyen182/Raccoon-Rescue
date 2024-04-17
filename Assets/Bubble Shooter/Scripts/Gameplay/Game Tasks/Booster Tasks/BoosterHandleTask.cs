@@ -15,6 +15,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         private readonly CheckBallClusterTask _checkBallClusterTask;
+        private readonly InputProcessor _inputProcessor;
 
         private readonly FireBallBoosterTask _fireBallBoosterTask;
         private readonly LeafBallBoosterTask _leafBallBoosterTask;
@@ -24,11 +25,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private IDisposable _disposable;
 
-        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager, CheckBallClusterTask checkBallClusterTask)
+        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager, CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor)
         {
             _breakGridTask = breakGridTask;
             _checkBallClusterTask = checkBallClusterTask;
             _gridCellManager = gridCellManager;
+            _inputProcessor = inputProcessor;
 
             _fireBallBoosterTask = new(_gridCellManager, _breakGridTask);
             _leafBallBoosterTask = new(_gridCellManager, _breakGridTask);
@@ -53,6 +55,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             if (!gridCell.ContainsBall)
                 return;
 
+            _inputProcessor.IsActive = false;
             switch (gridCell.BallEntity.EntityType)
             {
                 case EntityType.FireBall:
@@ -70,6 +73,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             _checkBallClusterTask.CheckFreeCluster();
+            _inputProcessor.IsActive = true;
         }
 
         public void Dispose()

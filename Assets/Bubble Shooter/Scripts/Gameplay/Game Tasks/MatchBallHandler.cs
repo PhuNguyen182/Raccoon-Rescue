@@ -13,6 +13,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class MatchBallHandler : IDisposable
     {
+        private readonly InputProcessor _inputProcessor;
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
@@ -20,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
-        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask, CheckBallClusterTask checkBallClusterTask)
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask, CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
@@ -32,6 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _checkMatchSubscriber.Subscribe(Match).AddTo(builder);
 
             _disposable = builder.Build();
+            _inputProcessor = inputProcessor;
         }
 
         public void Match(CheckMatchMessage message)
@@ -43,6 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             using (var listPool = ListPool<IGridCell>.Get(out var matchCluster))
             {
+                _inputProcessor.IsActive = false;
                 CheckMatch(position, matchCluster);
 
                 _gridCellManager.ClearVisitedPositions();
@@ -51,7 +54,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (isClusterMatched)
                     _checkBallClusterTask.CheckFreeCluster();
                 else
-                    _checkBallClusterTask.CheckNeighborCluster(position);
+                    await _checkBallClusterTask.CheckNeighborCluster(position);
+
+                _inputProcessor.IsActive = true;
             }
         }
 

@@ -135,7 +135,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 return;
 
             Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GridCellManager.Get(position);
+            IGridCell checkCell = GameController.Instance.GetCell(position);
 
             if (checkCell == null)
                 return;
@@ -157,7 +157,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 return;
 
             Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GridCellManager.Get(position);
+            IGridCell checkCell = GameController.Instance.GetCell(position);
 
             if (checkCell == null)
                 return;
@@ -196,7 +196,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder gridHolder))
                     continue;
 
-                IGridCell gridCell = GameController.Instance.GridCellManager.Get(gridHolder.GridPosition);
+                IGridCell gridCell = GameController.Instance.GetCell(gridHolder.GridPosition);
                 if (gridCell == null || gridCell.ContainsBall)
                     continue;
 
@@ -210,7 +210,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
 
             var gridContainer = targetCellInfo.collider.GetComponent<GridCellHolder>();
-            targetGridCell = GameController.Instance.GridCellManager.Get(gridContainer.GridPosition);
+            targetGridCell = GameController.Instance.GetCell(gridContainer.GridPosition);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);

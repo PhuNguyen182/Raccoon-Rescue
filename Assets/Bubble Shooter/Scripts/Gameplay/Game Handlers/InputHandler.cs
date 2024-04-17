@@ -11,14 +11,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private Camera mainCamera;
 
-        public Vector3 MousePosition { get; private set; }
-        public bool IsMousePress { get; private set; }
-        public bool IsMouseHold { get; private set; }
-        public bool IsMouseUp { get; private set; }
+        public Vector3 InputPosition { get; private set; }
+        public bool IsPressed { get; private set; }
+        public bool IsHolden { get; private set; }
+        public bool IsReleased { get; private set; }
 
-        public event Action OnClicked;
-        public event Action OnRelease;
+        public bool IsActive { get; set; }
 
+        private Touch _touch;
         private IDisposable _disposable;
 
         private void Awake()
@@ -31,23 +31,78 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                       .AddTo(ref d);
             
             _disposable = d.Build();
+            IsActive = true;
         }
 
         private void ProcessInput()
         {
-            MousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-            if (!IsUiOverlap(MousePosition))
+            if (IsActive)
             {
-                IsMousePress = Input.GetMouseButtonDown(0);
-                IsMouseHold = Input.GetMouseButton(0);
-                IsMouseUp = Input.GetMouseButtonUp(0);
+#if UNITY_EDITOR || UNITY_STANDALONE
+                StandaloneInput();
+#elif UNITY_ANDROID || UNITY_IOS
+                MobileInput();
+#endif
+            }
+        }
 
-                if (IsMousePress)
-                    OnClicked?.Invoke();
+        private void StandaloneInput()
+        {
+            InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                if (IsMouseUp)
-                    OnRelease?.Invoke();
+            if (!IsUiOverlap(InputPosition))
+            {
+                IsPressed = Input.GetMouseButtonDown(0);
+                IsHolden = Input.GetMouseButton(0);
+                IsReleased = Input.GetMouseButtonUp(0);
+            }
+            else
+            {
+                IsPressed = false;
+                IsHolden = false;
+                IsReleased = false;
+            }
+        }
+
+        private void MobileInput()
+        {
+            if(Input.touchCount > 0)
+            {
+                _touch = Input.GetTouch(0);
+                InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
+                
+                if (!IsUiOverlap(InputPosition))
+                {
+                    switch (_touch.phase)
+                    {
+                        case TouchPhase.Began:
+                            IsPressed = true;
+                            IsHolden = false;
+                            IsReleased = false;
+                            break;
+                        case TouchPhase.Moved:
+                            IsPressed = false;
+                            IsHolden = true;
+                            IsReleased = false;
+                            break;
+                        case TouchPhase.Stationary:
+                            IsPressed = false;
+                            IsHolden = true;
+                            IsReleased = false;
+                            break;
+                        case TouchPhase.Ended:
+                            IsPressed = false;
+                            IsHolden = false;
+                            IsReleased = true;
+                            break;
+                    }
+                }
+                else
+                {
+                    IsPressed = false;
+                    IsHolden = false;
+                    IsReleased = false;
+                }
             }
         }
 
