@@ -8,10 +8,12 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 {
     public class MainScreenManager : MonoBehaviour
     {
+        [SerializeField] private InGamePanel inGamePanel;
         [SerializeField] private IngamePowerupPanel powerupPanel;
         [SerializeField] private NotificationPanel notificationPanel;
         [SerializeField] private EndGameScreen endGameScreen;
 
+        public InGamePanel InGamePanel => inGamePanel;
         public IngamePowerupPanel IngamePowerupPanel => powerupPanel;
         public NotificationPanel NotificationPanel => notificationPanel;
         public EndGameScreen EndGameScreen => endGameScreen;

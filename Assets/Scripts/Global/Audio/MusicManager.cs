@@ -16,7 +16,7 @@ public class MusicManager : Singleton<MusicManager>
 
     private const string MasterVolumeMixer = "MasterVolume";
     private const string MusicVolumeMixer = "MusicVolume";
-    private const string SoundVolumeMixer = "SoundFXVolume";
+    private const string SoundVolumeMixer = "SoundVolume";
 
     private const string MasterVolumeKey = "MasterVolume";
     private const string MusicVolumeKey = "MusicVolume";

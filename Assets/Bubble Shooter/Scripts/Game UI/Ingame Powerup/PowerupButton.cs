@@ -1,8 +1,10 @@
+using R3;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Effects.Tweens;
 using BubbleShooter.Scripts.Common.Enums;
 using MessagePipe;
 
@@ -14,15 +16,18 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         [SerializeField] private GameObject glow;
         [SerializeField] private Button button;
         [SerializeField] private EntityType powerUpType;
+        [SerializeField] private TweenValueEffect tweenValueEffect;
 
         private bool _canActive = false;
         private IPublisher<PowerupMessage> _powerupPublisher;
+        private ReactiveProperty<float> _reactiveFillAmount = new(0);
 
         public EntityType PowerUpType => powerUpType;
 
         private void Awake()
         {
             button.onClick.AddListener(ActivePowerup);
+            tweenValueEffect.BindFloat(_reactiveFillAmount, ShowFillAmount);
         }
 
         private void Start()
@@ -50,9 +55,14 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
 
         public void SetFillAmount(float fillAmount)
         {
-            fill.fillAmount = fillAmount;
+            _reactiveFillAmount.Value = fillAmount;
             SetGlowActive(fillAmount >= 1);
             _canActive = fillAmount >= 1;
+        }
+
+        private void ShowFillAmount(float fillAmount)
+        {
+            fill.fillAmount = fillAmount;
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Scripts.Common.UpdateHandlerPattern
 {
-    public class UpdateHandlerManager : Singleton<UpdateHandlerManager>, IDisposable
+    public class UpdateHandlerManager : Singleton<UpdateHandlerManager>
     {
         private HashSet<IUpdateHandler> _updateHandlers;
         private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers;
@@ -90,10 +90,11 @@ namespace Scripts.Common.UpdateHandlerPattern
             }
         }
 
-        public void Dispose()
+        private void OnDestroy()
         {
-            _updateHandlers.Clear();
-            _fixedUpdateHandlers.Clear();
+            _updateHandlers?.Clear();
+            _fixedUpdateHandlers?.Clear();
+            _lateUpdateHandlers?.Clear();
         }
     }
 }

@@ -15,9 +15,10 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
         public void UpdateTarget(int currentTarget, int requiredTarget)
         {
             targetAmount.text = $"{currentTarget}/{requiredTarget}";
+            PlayTargetAnimation();
         }
 
-        public void PlayTargetAnimation()
+        private void PlayTargetAnimation()
         {
             targetImage.DOKill();
             targetImage.transform

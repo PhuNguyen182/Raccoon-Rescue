@@ -12,33 +12,73 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     {
         private readonly IDisposable _disposable;
         private readonly ISubscriber<CheckTargetMessage> _checkTargetSubscriber;
+        private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
+        private int _moveCount;
         private int _targetCount;
+
+        public Action<bool> OnEndGame;
 
         public CheckTargetTask()
         {
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
+
             _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<CheckTargetMessage>();
+            _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
+
             _checkTargetSubscriber.Subscribe(message => CheckTarget()).AddTo(builder);
+            _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
+
             _disposable = builder.Build();
         }
 
         public void SetTargetCount(LevelModel levelModel)
         {
+            _moveCount = levelModel.MoveCount;
             _targetCount = levelModel.TargetCount;
+        }
+
+        public void AddMove(int move)
+        {
+            _moveCount = _moveCount + move;
+            CheckTarget();
+        }
+
+        private void UpdateTarget()
+        {
+            // To do: update UI here
+        }
+
+        private void DecreaseMove()
+        {
+            _moveCount = _moveCount - 1;
+            CheckTarget();
         }
 
         private void CheckTarget()
         {
-            _targetCount = _targetCount - 1;
-            if(_targetCount <= 0)
+            if (_moveCount <= 0)
             {
-                // To do: show game lose
+                if (_targetCount > 0)
+                    OnEndGame?.Invoke(false);
             }
+
+            else if(_moveCount >= 0)
+            {
+                _targetCount = _targetCount - 1;
+
+                if (_targetCount <= 0)
+                {
+                    OnEndGame?.Invoke(true);
+                }
+            }
+
+            UpdateTarget();
         }
 
         public void Dispose()
         {
+            OnEndGame = null;
             _disposable.Dispose();
         }
     }

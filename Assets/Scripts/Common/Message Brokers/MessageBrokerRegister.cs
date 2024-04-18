@@ -28,6 +28,7 @@ namespace Scripts.Common.MessageBrokers
             _builder.AddMessageBroker<CheckMatchMessage>();
             _builder.AddMessageBroker<ActiveBoosterMessage>();
             _builder.AddMessageBroker<CheckTargetMessage>();
+            _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<AddScoreMessage>();
         }
     }

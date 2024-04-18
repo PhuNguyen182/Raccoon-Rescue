@@ -10,21 +10,23 @@ using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Factories;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
     public class BallShooter : MonoBehaviour
     {
         [SerializeField] private CommonBall prefab;
-        [SerializeField] private SpriteRenderer ballPreview;
+        [SerializeField] private BallProvider ballProvider;
+        [SerializeField] private DummyBall dummyBall;
 
         [Space(10)]
-        [SerializeField] private Transform pointer;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private Transform ballContainer;
 
@@ -38,21 +40,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private Camera mainCamera;
         [SerializeField] private Vector2 normalizePosition;
 
-        [Header("Ball Colors")]
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite blue;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite green;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite orange;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite red;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite violet;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite yellow;
-
-        private int _moveCount = 0;
         private bool _canFire = true;
         private float _limitAngleSine = 0;
 
@@ -62,19 +49,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
-        private List<ColorMapData> _colorStrategy;
 
-        #region Random color calculating
-        private List<int> _colorDensities = new();
-        private List<float> _probabilities = new();
-        private List<EntityType> _colors = new();
-        #endregion
+        private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
 
         public Action OnOutOfMove;
+        public BallShootModel BallModel => _ballModel;
 
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
+        }
+
+        private void Start()
+        {
+            _decreaseMovePublisher = GlobalMessagePipe.GetPublisher<DecreaseMoveMessage>();
         }
 
         private void Update()
@@ -84,21 +72,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsReleased && _limitAngleSine > 0.15f)
             {
-                ShootBall(_ballModel);                
+                ShootBall(_ballModel);
+                _decreaseMovePublisher.Publish(new DecreaseMoveMessage());
             }
         }
 
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
-        }
-
-        public void SetMoveCount(int moveCount, List<ColorMapData> colorMapDatas)
-        {
-            _moveCount = moveCount;
-            _colorStrategy = colorMapDatas;
-            CalculateRandomBall();
-            PopSequence();
         }
 
         public void SetStartPosition()
@@ -108,9 +89,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             transform.position = _startPosition;
         }
 
-        public void SetColorModel(BallShootModel model)
+        public void SetColorModel(BallShootModel model, bool isActive)
         {
             _ballModel = model;
+            SetBallColor(isActive, _ballModel.BallColor);
+        }
+
+        public void SetBallColor(bool isActive, EntityType color)
+        {
+            dummyBall.SetBallColor(isActive, color);
         }
 
         public bool IsIngamePowerupHolding()
@@ -118,44 +105,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             return _ballModel.IsPowerup;
         }
 
-        public void SwitchBall()
+        public void SwitchRandomBall()
         {
-            EntityType currentColor = _ballModel.BallColor;
-            int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType nextColor = _colors[randomIndex];
-
-            while(currentColor == nextColor)
-            {
-                randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-                nextColor = _colors[randomIndex];
-            }
-
-            _ballModel.BallColor = nextColor;
+            ballProvider.SwitchRandomBall();
         }
 
-        private void PopSequence()
+        public void SwitchBallInPot()
         {
-            if (_moveCount > 0)
-            {
-                int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-                EntityType color = _colors[randomIndex];
-
-                SetColorModel(new BallShootModel
-                {
-                    IsPowerup = false,
-                    BallColor = color,
-                    BallCount = 1
-                });
-
-                SetBallColor(true, color);
-                _moveCount = _moveCount - 1;
-            }
-
-            else
-            {
-                Debug.Log("Out of move!");
-                OnOutOfMove?.Invoke();
-            }
+            // To do: do along with switching ball animation
         }
 
         private void GetInputDirection()
@@ -207,7 +164,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
             if (!shootModel.IsPowerup)
-                PopSequence();
+                ballProvider.PopSequence();
 
             _canFire = true;
         }
@@ -233,40 +190,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private void RotatePointer()
         {
             float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
-            pointer.rotation = Quaternion.Euler(0, 0, angle);
             _limitAngleSine = Mathf.Sin((angle + 90f) / Mathf.Rad2Deg);
-        }
-
-        private void SetBallColor(bool isActive, EntityType ballColor)
-        {
-            Sprite color = ballColor switch
-            {
-                EntityType.Blue => blue,
-                EntityType.Green => green,
-                EntityType.Orange => orange,
-                EntityType.Red => red,
-                EntityType.Violet => violet,
-                EntityType.Yellow => yellow,
-                _ => null
-            };
-
-            ballPreview.sprite = color;
-            ballPreview.gameObject.SetActive(isActive);
-        }
-
-        private void CalculateRandomBall()
-        {
-            for (int i = 0; i < _colorStrategy.Count; i++)
-            {
-                _colorDensities.Add(_colorStrategy[i].ColorProportion.Coefficient);
-                _colors.Add(_colorStrategy[i].ColorProportion.Color);
-            }
-
-            for (int i = 0; i < _colorDensities.Count; i++)
-            {
-                float probability = DistributeCalculator.GetPercentage(_colorDensities[i], _colorDensities);
-                _probabilities.Add(probability * 100f);
-            }
         }
     }
 }

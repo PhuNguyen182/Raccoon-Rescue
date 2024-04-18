@@ -1,5 +1,4 @@
 using R3;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +24,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
     {
         [Header("Game Handler")]
         [SerializeField] private BallShooter ballShooter;
+        [SerializeField] private BallProvider ballProvider;
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private GridCellHolder gridPrefab;
         [SerializeField] private EntityDatabase entityDatabase;
@@ -52,10 +52,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private CheckScoreTask _checkScoreTask;
         private GameTaskManager _gameTaskManager;
         
-        private IDisposable _disposable;
-
         public GameDecorator GameDecorator => gameDecorator;
-
         public static GameController Instance { get; private set; }
 
         private void Awake()
@@ -98,10 +95,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask = new();
             _checkScoreTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen);
+            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, ballShooter);
             _gameTaskManager.AddTo(ref builder);
 
-            _disposable = builder.Build();
+            builder.RegisterTo(this.destroyCancellationToken);
         }
 
         private void GetLevel()
@@ -176,7 +173,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void SetShootSequence(LevelModel levelModel)
         {
-            ballShooter.SetMoveCount(levelModel.MoveCount, levelModel.ColorMapDatas);
+            ballProvider.SetMoveCount(levelModel.ColorMapDatas);
         }
 
         private void SetTopCeilPosition(Vector3Int position)
@@ -184,11 +181,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             Vector3 pos = ConvertGridPositionToWolrdPosition(position);
             Vector3 ceilPosition = new Vector3(0, pos.y + 0.425f);
             gameDecorator.SetTopCeilPosition(ceilPosition);
-        }
-
-        private void OnDestroy()
-        {
-            _disposable.Dispose();
         }
     }
 }

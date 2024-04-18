@@ -54,6 +54,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 // Mark a star 1 of score
             }
+
+            UpdateScore();
+        }
+
+        private void UpdateScore()
+        {
+            // To do: Update score UI here
         }
 
         public void Dispose()
