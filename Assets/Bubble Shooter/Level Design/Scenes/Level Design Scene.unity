@@ -175,10 +175,10 @@ MonoBehaviour:
   inputLevel: 
   outputLevel: 
   targetCount: 0
+  moveCount: 25
   tierOneScore: 0
   tierTwoScore: 0
   tierThreeScore: 0
-  moveSequence: 01000000010000000100000003000000050000000400000004000000020000000200000001000000
   colorProportions:
   - Coefficient: 1000
     Color: 1
@@ -186,6 +186,8 @@ MonoBehaviour:
     Color: 4
   - Coefficient: 1000
     Color: 5
+  - Coefficient: 1000
+    Color: 2
 --- !u!1 &375386102
 GameObject:
   m_ObjectHideFlags: 0

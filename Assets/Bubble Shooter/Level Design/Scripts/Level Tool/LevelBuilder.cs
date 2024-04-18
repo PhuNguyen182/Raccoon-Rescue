@@ -26,14 +26,12 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         [Space(10)]
         [SerializeField] private int targetCount;
+        [SerializeField] private int moveCount;
 
         [Header("Score Tiers")]
         [SerializeField] private int tierOneScore;
         [SerializeField] private int tierTwoScore;
         [SerializeField] private int tierThreeScore;
-
-        [Header("Move Sequence")]
-        [SerializeField] private List<EntityType> moveSequence;
 
         [Header("Random Fill Color Proportion")]
         [SerializeField] private List<ColorProportion> colorProportions;
@@ -49,7 +47,6 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             tierTwoScore = 0;
             tierThreeScore = 0;
 
-            moveSequence.Clear();
             colorProportions.Clear();
             boardTilemap.ClearAllTiles();
             ceilTilemap.ClearAllTiles();
@@ -73,12 +70,12 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
             string output = _levelExporter.Clear()
                                           .BuildTarget(targetCount)
+                                          .BuildMoveSequence(moveCount)
                                           .BuildScores(tierOneScore, tierTwoScore, tierThreeScore)
                                           .BuildBoardMap(boardTilemap)
                                           .BuildCeilMap(ceilTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
                                           .BuildBallMap(entityTilemap)
-                                          .BuildMoveSequence(moveSequence)
                                           .BuildColorProportion(colorProportions)
                                           .BuildEntityMap(entityTilemap)
                                           .BuildTargetMap(entityTilemap)
@@ -115,7 +112,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
                           .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)
                           .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildColorProportion(levelModel.ColorMapDatas, out colorProportions)
-                          .BuildMoveSequence(levelModel.MoveSequence, out moveSequence)
+                          .BuildMoveSequence(levelModel.MoveCount, out moveCount)
                           .BuildEntityMap(entityTilemap, levelModel.StartingEntityMap)
                           .BuildTargetMap(entityTilemap, levelModel.TargetMapPositions)
                           .Import();

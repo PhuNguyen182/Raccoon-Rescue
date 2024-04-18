@@ -109,13 +109,9 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelExporter BuildMoveSequence(List<EntityType> sequence)
+        public LevelExporter BuildMoveSequence(int moveCount)
         {
-            for (int i = 0; i < sequence.Count; i++)
-            {
-                _levelModel.MoveSequence.Add((int)sequence[i]);
-            }
-
+            _levelModel.MoveCount = moveCount;
             return this;
         }
 

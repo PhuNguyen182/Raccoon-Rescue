@@ -176,7 +176,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void SetShootSequence(LevelModel levelModel)
         {
-            ballShooter.SetShootSequence(levelModel.MoveSequence);
+            ballShooter.SetMoveCount(levelModel.MoveCount, levelModel.ColorMapDatas);
         }
 
         private void SetTopCeilPosition(Vector3Int position)

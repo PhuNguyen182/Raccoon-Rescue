@@ -6,6 +6,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Factories;
@@ -51,15 +52,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
+        private int _moveCount = 0;
+        private bool _canFire = true;
+        private float _limitAngleSine = 0;
+
         private Vector2 _direction;
         private Vector3 _startPosition;
         private BallShootModel _ballModel;
-        private float _limitAngleSine = 0;
-        private bool _canFire = true;
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
-        private List<int> _shootSequence;
+        private List<ColorMapData> _colorStrategy;
+
+        #region Random color calculating
+        private List<int> _colorDensities = new();
+        private List<float> _probabilities = new();
+        private List<EntityType> _colors = new();
+        #endregion
+
+        public Action OnOutOfMove;
 
         private void Awake()
         {
@@ -82,9 +93,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _entityFactory = factory;
         }
 
-        public void SetShootSequence(List<int> queue)
+        public void SetMoveCount(int moveCount, List<ColorMapData> colorMapDatas)
         {
-            _shootSequence = queue;
+            _moveCount = moveCount;
+            _colorStrategy = colorMapDatas;
+            CalculateRandomBall();
             PopSequence();
         }
 
@@ -107,22 +120,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         public void SwitchBall()
         {
-            int endIndex = _shootSequence.Count - 1;
             EntityType currentColor = _ballModel.BallColor;
-            EntityType nextColor = (EntityType)_shootSequence[endIndex];
-            
-            if (currentColor == nextColor)
-                return;
+            int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
+            EntityType nextColor = _colors[randomIndex];
+
+            while(currentColor == nextColor)
+            {
+                randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
+                nextColor = _colors[randomIndex];
+            }
 
             _ballModel.BallColor = nextColor;
-            _shootSequence[endIndex] = (int)currentColor;
         }
 
         private void PopSequence()
         {
-            if (_shootSequence.Count > 0)
+            if (_moveCount > 0)
             {
-                EntityType color = (EntityType)_shootSequence[_shootSequence.Count - 1];
+                int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
+                EntityType color = _colors[randomIndex];
 
                 SetColorModel(new BallShootModel
                 {
@@ -132,10 +148,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 });
 
                 SetBallColor(true, color);
-                _shootSequence.RemoveAt(_shootSequence.Count - 1);
+                _moveCount = _moveCount - 1;
             }
 
-            else Debug.Log("Out of move!");
+            else
+            {
+                Debug.Log("Out of move!");
+                OnOutOfMove?.Invoke();
+            }
         }
 
         private void GetInputDirection()
@@ -160,7 +180,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (_token.IsCancellationRequested)
                 return;
 
-            var ballData = new EntityMapData
+            EntityMapData ballData = new EntityMapData
             {
                 HP = 1,
                 EntityType = shootModel.BallColor
@@ -232,6 +252,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             ballPreview.sprite = color;
             ballPreview.gameObject.SetActive(isActive);
+        }
+
+        private void CalculateRandomBall()
+        {
+            for (int i = 0; i < _colorStrategy.Count; i++)
+            {
+                _colorDensities.Add(_colorStrategy[i].ColorProportion.Coefficient);
+                _colors.Add(_colorStrategy[i].ColorProportion.Color);
+            }
+
+            for (int i = 0; i < _colorDensities.Count; i++)
+            {
+                float probability = DistributeCalculator.GetPercentage(_colorDensities[i], _colorDensities);
+                _probabilities.Add(probability * 100f);
+            }
         }
     }
 }
