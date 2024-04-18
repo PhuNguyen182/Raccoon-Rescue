@@ -204,7 +204,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             }
 
             SetBallColor(false, EntityType.None);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
             if (!shootModel.IsPowerup)
                 PopSequence();
