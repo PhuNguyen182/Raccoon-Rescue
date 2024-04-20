@@ -5,7 +5,6 @@ using UnityEngine.Tilemaps;
 using BubbleShooter.LevelDesign.Scripts.Databases;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.Models;
-using BubbleShooter.Scripts.Common.Enums;
 using Sirenix.OdinInspector;
 using Newtonsoft.Json;
 
@@ -28,7 +27,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [SerializeField] private int targetCount;
         [SerializeField] private int moveCount;
 
-        [Header("Score Tiers")]
+        [Header("Scores")]
+        [SerializeField] private int maxScore;
         [SerializeField] private int tierOneScore;
         [SerializeField] private int tierTwoScore;
         [SerializeField] private int tierThreeScore;
@@ -71,7 +71,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             string output = _levelExporter.Clear()
                                           .BuildTarget(targetCount)
                                           .BuildMoveSequence(moveCount)
-                                          .BuildScores(tierOneScore, tierTwoScore, tierThreeScore)
+                                          .BuildScores(maxScore, tierOneScore, tierTwoScore, tierThreeScore)
                                           .BuildBoardMap(boardTilemap)
                                           .BuildCeilMap(ceilTilemap)
                                           .BuildBoardThresholdMap(boardThresholdTilemap)
@@ -105,8 +105,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
             _levelImporter = new(tileDatabase);
             _levelImporter.BuildTarget(levelModel.TargetCount, out targetCount)
-                          .BuildScore(levelModel.TierOneScore, levelModel.TierTwoScore, levelModel.TierThreeScore,
-                                      out tierOneScore, out tierTwoScore, out tierThreeScore)
+                          .BuildScore(levelModel.MaxScore, levelModel.TierOneScore, levelModel.TierTwoScore, levelModel.TierThreeScore,
+                                      out maxScore, out tierOneScore, out tierTwoScore, out tierThreeScore)
                           .BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
                           .BuildCeilMap(ceilTilemap, levelModel.CeilMapPositions)
                           .BuildBoardThresholdMap(boardThresholdTilemap, levelModel.BoardThresholdMapPositions)

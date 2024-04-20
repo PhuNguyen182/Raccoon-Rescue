@@ -23,11 +23,12 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelImporter BuildScore(int tier1, int tier2, int tier3, out int score1, out int score2, out int score3)
+        public LevelImporter BuildScore(int max, int tier1, int tier2, int tier3, out int maxScore, out int score1, out int score2, out int score3)
         {
             score1 = tier1;
             score2 = tier2;
             score3 = tier3;
+            maxScore = max;
             return this;
         }
 

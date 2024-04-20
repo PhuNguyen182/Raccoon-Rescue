@@ -12,6 +12,8 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
         [SerializeField] private Image targetImage;
         [SerializeField] private TMP_Text targetAmount;
 
+        public Transform TargetPoint => targetImage.transform;
+
         public void UpdateTarget(int currentTarget, int requiredTarget)
         {
             targetAmount.text = $"{currentTarget}/{requiredTarget}";

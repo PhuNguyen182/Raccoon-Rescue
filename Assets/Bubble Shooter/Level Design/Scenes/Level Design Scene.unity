@@ -174,11 +174,12 @@ MonoBehaviour:
   tileDatabase: {fileID: 11400000, guid: 430c3825efc17c44490a5aaf7708de7f, type: 2}
   inputLevel: 
   outputLevel: 
-  targetCount: 0
+  targetCount: 4
   moveCount: 25
-  tierOneScore: 0
-  tierTwoScore: 0
-  tierThreeScore: 0
+  maxScore: 1000
+  tierOneScore: 100
+  tierTwoScore: 250
+  tierThreeScore: 500
   colorProportions:
   - Coefficient: 1000
     Color: 1

@@ -89,10 +89,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
             
-            _checkTargetTask = new();
+            _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
 
-            _checkScoreTask = new();
+            _checkScoreTask = new(mainScreen.InGamePanel);
             _checkScoreTask.AddTo(ref builder);
 
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, ballShooter);

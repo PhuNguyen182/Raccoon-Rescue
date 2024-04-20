@@ -17,6 +17,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
+
+        private readonly IPublisher<PowerupMessage> _powerupPublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
         private IDisposable _disposable;
@@ -29,6 +31,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             var builder = DisposableBag.CreateBuilder();
 
+            _powerupPublisher = GlobalMessagePipe.GetPublisher<PowerupMessage>();
             _checkMatchSubscriber = GlobalMessagePipe.GetSubscriber<CheckMatchMessage>();
             _checkMatchSubscriber.Subscribe(Match).AddTo(builder);
 
@@ -128,6 +131,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
+                _powerupPublisher.Publish(new PowerupMessage
+                {
+                    Amount = cluster.Count,
+                    PowerupColor = cluster[2].EntityType,
+                    Command = ReactiveValueCommand.Changing
+                });
+
                 for (int i = 0; i < cluster.Count; i++)
                 {
                     breakTask.Add(_breakGridTask.Break(cluster[i]));

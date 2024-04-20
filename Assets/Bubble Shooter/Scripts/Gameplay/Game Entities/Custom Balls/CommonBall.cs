@@ -29,7 +29,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
-        private IPublisher<PowerupMessage> _powerupPublisher;
         private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
@@ -64,7 +63,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            _powerupPublisher = GlobalMessagePipe.GetPublisher<PowerupMessage>();
             _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
@@ -156,12 +154,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            _powerupPublisher.Publish(new PowerupMessage
-            {
-                IsAdd = true,
-                PowerupColor = ballColor
-            });
-
             _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }

@@ -14,6 +14,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
         public int TierOneScore = 0;
         public int TierTwoScore = 0;
         public int TierThreeScore = 0;
+        public int MaxScore = 0;
 
         public List<BoardMapPosition> BoardMapPositions = new();
         public List<CeilMapPosition> CeilMapPositions = new();
@@ -29,6 +30,7 @@ namespace BubbleShooter.Scripts.Gameplay.Models
             TierOneScore = 0;
             TierTwoScore = 0;
             TierThreeScore = 0;
+            MaxScore = 0;
 
             BoardMapPositions.Clear();
             CeilMapPositions.Clear();

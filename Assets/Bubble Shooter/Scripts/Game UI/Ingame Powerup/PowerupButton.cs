@@ -20,7 +20,7 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
 
         private bool _canActive = false;
         private IPublisher<PowerupMessage> _powerupPublisher;
-        private ReactiveProperty<float> _reactiveFillAmount = new(0);
+        private ReactiveProperty<float> _reactiveFillAmount = new();
 
         public EntityType PowerUpType => powerUpType;
 
@@ -28,6 +28,7 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             button.onClick.AddListener(ActivePowerup);
             tweenValueEffect.BindFloat(_reactiveFillAmount, ShowFillAmount);
+            _reactiveFillAmount.Value = 0;
         }
 
         private void Start()
@@ -41,8 +42,8 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
             {
                 _powerupPublisher.Publish(new PowerupMessage
                 {
-                    IsAdd = false,
-                    PowerupColor = powerUpType
+                    PowerupColor = powerUpType,
+                    Command = ReactiveValueCommand.Reset
                 });
                 // To do: fire a booster ball relative to powerup type
             }

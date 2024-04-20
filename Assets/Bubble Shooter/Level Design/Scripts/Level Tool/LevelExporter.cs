@@ -31,8 +31,9 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelExporter BuildScores(int tier1, int tier2, int tier3)
+        public LevelExporter BuildScores(int maxScore, int tier1, int tier2, int tier3)
         {
+            _levelModel.MaxScore = maxScore;
             _levelModel.TierOneScore = tier1;
             _levelModel.TierTwoScore = tier2;
             _levelModel.TierThreeScore = tier3;

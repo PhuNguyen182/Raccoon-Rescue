@@ -12,8 +12,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class InGamePowerupControlTask : IDisposable
     {
+        private readonly IDisposable _messageDisposable;
         private readonly IngamePowerupPanel _ingamePowerupPanel;
-        private readonly IDisposable _disposable;
         private readonly ISubscriber<PowerupMessage> _powerupSubscriber;
 
         private int _redBallCount;
@@ -26,52 +26,61 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _ingamePowerupPanel = ingamePowerupPanel;
             _redBallCount = _greenBallCount = _yellowBallCount = _blueBallCount = 0;
 
-            DisposableBagBuilder builder = DisposableBag.CreateBuilder();
-            _powerupSubscriber = GlobalMessagePipe.GetSubscriber<PowerupMessage>();
-            _powerupSubscriber.Subscribe(ProcessPowerup).AddTo(builder);
-            _disposable = builder.Build();
+            DisposableBagBuilder messageBuilder = DisposableBag.CreateBuilder();
 
+            _powerupSubscriber = GlobalMessagePipe.GetSubscriber<PowerupMessage>();
+            _powerupSubscriber.Subscribe(ProcessPowerup).AddTo(messageBuilder);
+
+
+            _messageDisposable = messageBuilder.Build();
             CheckPowerup();
         }
 
         private void CheckPowerup()
         {
             CheckFireball();
-            CheckSunball();
             CheckLeafball();
+            CheckSunball();
             CheckWaterball();
         }
 
         private void ProcessPowerup(PowerupMessage message)
         {
-            if (message.IsAdd)
-                PumbPowerup(message.PowerupColor);
-            else
-                FreePowerup(message.PowerupColor);
-        }
-
-        private void PumbPowerup(EntityType powerupColor)
-        {
-            switch (powerupColor)
+            switch (message.Command)
             {
-                case EntityType.Red:
-                    AddRedBall();
+                case ReactiveValueCommand.Changing:
+                    PumbPowerup(message);
                     break;
-                case EntityType.Yellow:
-                    AddYellowBall();
+                case ReactiveValueCommand.Remaining:
                     break;
-                case EntityType.Green:
-                    AddGreenBall();
-                    break;
-                case EntityType.Blue:
-                    AddBlueBall();
+                case ReactiveValueCommand.Reset:
+                    FreePowerup(message);
                     break;
             }
         }
 
-        private void FreePowerup(EntityType powerupColor)
+        private void PumbPowerup(PowerupMessage message)
         {
-            switch (powerupColor)
+            switch (message.PowerupColor)
+            {
+                case EntityType.Red:
+                    AddRedBall(message.Amount);
+                    break;
+                case EntityType.Yellow:
+                    AddYellowBall(message.Amount);
+                    break;
+                case EntityType.Green:
+                    AddGreenBall(message.Amount);
+                    break;
+                case EntityType.Blue:
+                    AddBlueBall(message.Amount);
+                    break;
+            }
+        }
+
+        private void FreePowerup(PowerupMessage message)
+        {
+            switch (message.PowerupColor)
             {
                 case EntityType.Red:
                     FreeRedBall();
@@ -88,51 +97,31 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void AddRedBall()
+        private void AddRedBall(int amount)
         {
-            _redBallCount = _redBallCount + 1;
-            
-            if(_redBallCount >= BoosterConstants.FireballThreashold)
-            {
-                _redBallCount = BoosterConstants.FireballThreashold;
-            }
-
+            _redBallCount = _redBallCount + amount;
+            _redBallCount = Mathf.Clamp(_redBallCount, 0, BoosterConstants.FireballThreashold);
             CheckFireball();
         }
 
-        private void AddYellowBall()
+        private void AddYellowBall(int amount)
         {
-            _yellowBallCount = _yellowBallCount + 1;
-
-            if(_yellowBallCount >= BoosterConstants.SunballThreashold)
-            {
-                _yellowBallCount = BoosterConstants.SunballThreashold;
-            }
-
+            _yellowBallCount = _yellowBallCount + amount;
+            _yellowBallCount = Mathf.Clamp(_yellowBallCount, 0, BoosterConstants.SunballThreashold);
             CheckSunball();
         }
 
-        private void AddGreenBall()
+        private void AddGreenBall(int amount)
         {
-            _greenBallCount = _greenBallCount + 1;
-
-            if (_greenBallCount >= BoosterConstants.LeafballThreashold)
-            {
-                _greenBallCount = BoosterConstants.LeafballThreashold;
-            }
-
+            _greenBallCount = _greenBallCount + amount;
+            _greenBallCount = Mathf.Clamp(_greenBallCount, 0, BoosterConstants.LeafballThreashold);
             CheckLeafball();
         }
 
-        private void AddBlueBall()
+        private void AddBlueBall(int amount)
         {
-            _blueBallCount = _blueBallCount + 1;
-
-            if (_blueBallCount >= BoosterConstants.WaterballThreashold)
-            {
-                _blueBallCount = BoosterConstants.WaterballThreashold;
-            }
-
+            _blueBallCount = _blueBallCount + amount;
+            _blueBallCount = Mathf.Clamp(_blueBallCount, 0, BoosterConstants.WaterballThreashold);
             CheckWaterball();
         }
 
@@ -182,7 +171,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-            _disposable.Dispose();
+            _messageDisposable.Dispose();
         }
     }
 }

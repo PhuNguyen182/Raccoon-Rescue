@@ -73,7 +73,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         {
             if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
             {
-                SimplePool.Despawn(this.gameObject);
+                DestroyEntity();
             }
         }
     }

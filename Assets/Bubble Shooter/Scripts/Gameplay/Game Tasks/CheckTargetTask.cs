@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.GameUI.Screens;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -11,6 +12,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     public class CheckTargetTask : IDisposable
     {
         private readonly IDisposable _disposable;
+        private readonly InGamePanel _inGamePanel;
         private readonly ISubscriber<CheckTargetMessage> _checkTargetSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
@@ -19,8 +21,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public Action<bool> OnEndGame;
 
-        public CheckTargetTask()
+        public CheckTargetTask(InGamePanel inGamePanel)
         {
+            _inGamePanel = inGamePanel;
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
 
             _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<CheckTargetMessage>();
@@ -46,7 +49,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void UpdateTarget()
         {
-            // To do: update UI here
+            _inGamePanel.SetMoveCount(_moveCount);
         }
 
         private void DecreaseMove()
