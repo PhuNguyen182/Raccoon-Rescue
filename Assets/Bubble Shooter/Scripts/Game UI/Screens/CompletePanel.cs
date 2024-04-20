@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private Button nextButton;
+        [SerializeField] private GameObject background;
         [SerializeField] private AnimationClip appearClip;
 
         [Header("Feel")]
@@ -64,6 +65,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         private async UniTask ShowNextStage()
         {
+            background.SetActive(true);
             await UniTask.Delay(TimeSpan.FromSeconds(appearClip.length + 0.5f), cancellationToken: _token);
             panelAnimator.SetInteger(_tierHash, _tier);
             _reactiveScore.Value = _score;

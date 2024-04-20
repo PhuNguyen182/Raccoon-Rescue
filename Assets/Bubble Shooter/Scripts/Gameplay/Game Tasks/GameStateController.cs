@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Stateless;
 using BubbleShooter.Scripts.GameUI.Screens;
+using Cysharp.Threading.Tasks;
+using Stateless;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -56,7 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                              .Permit(_endGameTrigger.Trigger, State.EndGame);
 
             _gameStateMachine.Configure(State.EndGame)
-                             .OnEntryFrom(_endGameTrigger, value => OnEndGame(value))
+                             .OnEntryFrom(_endGameTrigger, value => OnEndGame(value).Forget())
                              .Permit(Trigger.BuyMove, State.Playing)
                              .Permit(Trigger.Quit, State.Quit);
 
@@ -87,16 +88,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void OnEndGame(bool isWin)
+        private async UniTask OnEndGame(bool isWin)
         {
             if (isWin)
             {
-                // To do: Execute win game logic here
+                _endGameScreen.ShowWinPanel();
             }
 
             else
             {
-                // To do: Execute lose game logic here
+                bool canContinue = await _endGameScreen.ShowLosePanel();
+                if (canContinue)
+                {
+                    // Add 5 move to continue play game
+                    ContinuePlay();
+                }
+
+                else
+                {
+                    QuitGame();
+                }
             }
         }
 
