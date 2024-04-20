@@ -31,6 +31,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _addScoreSubscriber = GlobalMessagePipe.GetSubscriber<AddScoreMessage>();
             _addScoreSubscriber.Subscribe(message => AddScore(message.Score)).AddTo(builder);
             _disposable = builder.Build();
+            
+            UpdateScore();
         }
 
         public void SetScores(LevelModel levelModel)

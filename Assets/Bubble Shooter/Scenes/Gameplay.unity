@@ -2544,6 +2544,7 @@ GameObject:
   - component: {fileID: 352775975}
   - component: {fileID: 352775974}
   - component: {fileID: 352775976}
+  - component: {fileID: 352775977}
   m_Layer: 5
   m_Name: Starbar
   m_TagString: Untagged
@@ -2628,6 +2629,21 @@ MonoBehaviour:
   - {fileID: 911619962}
   - {fileID: 994487702}
   - {fileID: 1998363887}
+  starTween: {fileID: 352775977}
+--- !u!114 &352775977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352775972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a33bfbfbdc7d9941b266120d6e7b31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.3
+  ease: 6
 --- !u!1 &369087535
 GameObject:
   m_ObjectHideFlags: 0
@@ -5411,7 +5427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &850251485
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5886,11 +5902,11 @@ RectTransform:
   - {fileID: 682534374}
   m_Father: {fileID: 947000876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 2.48}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 65.5, y: 2.5}
   m_SizeDelta: {x: 9, y: 70}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &911619962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5904,6 +5920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   star: {fileID: 682534373}
+  rect: {fileID: 911619961}
 --- !u!114 &911619963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6609,11 +6626,11 @@ RectTransform:
   - {fileID: 1903867656}
   m_Father: {fileID: 947000876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2.48}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 155.5, y: 2.5}
   m_SizeDelta: {x: 9, y: 70}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &994487702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6627,6 +6644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   star: {fileID: 1903867655}
+  rect: {fileID: 994487701}
 --- !u!114 &994487703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7644,7 +7662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1146628854
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11212,10 +11230,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 352775973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -11, y: -11}
+  m_SizeDelta: {x: 309, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1741520577
 MonoBehaviour:
@@ -11242,7 +11260,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -13093,11 +13111,11 @@ RectTransform:
   - {fileID: 1031901869}
   m_Father: {fileID: 947000876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 120, y: 2.48}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 275.5, y: 2.5}
   m_SizeDelta: {x: 9, y: 70}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1998363887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13111,6 +13129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   star: {fileID: 1031901868}
+  rect: {fileID: 1998363886}
 --- !u!114 &1998363888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13243,6 +13262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2007505861}
   - component: {fileID: 2007505862}
+  - component: {fileID: 2007505863}
   m_Layer: 5
   m_Name: Score Panel
   m_TagString: Untagged
@@ -13285,6 +13305,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 110124417}
   starBar: {fileID: 352775976}
+  scoreTween: {fileID: 2007505863}
+--- !u!114 &2007505863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007505860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a33bfbfbdc7d9941b266120d6e7b31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.3
+  ease: 6
 --- !u!1 &2026232867
 GameObject:
   m_ObjectHideFlags: 0

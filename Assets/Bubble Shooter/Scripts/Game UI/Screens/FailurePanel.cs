@@ -48,13 +48,13 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         private void AddMove()
         {
-            _completionSource.TrySetResult(true);
+            _completionSource?.TrySetResult(true);
             Close().Forget();
         }
 
         private void OnAddMove()
         {
-            AddMove();
+            //AddMove();
         }
 
         private void Skip()
@@ -71,7 +71,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         private void Quit()
         {
-            _completionSource.TrySetResult(false);
+            _completionSource?.TrySetResult(false);
         }
 
         public async UniTaskVoid Close()

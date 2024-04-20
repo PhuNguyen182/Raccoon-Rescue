@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.GameUI.IngamePowerup;
+using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Enums;
 using MessagePipe;
+using BubbleShooter.Scripts.Gameplay.Models;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class InGamePowerupControlTask : IDisposable
     {
+        private readonly BallShooter _ballShooter;
         private readonly IDisposable _messageDisposable;
         private readonly IngamePowerupPanel _ingamePowerupPanel;
         private readonly ISubscriber<PowerupMessage> _powerupSubscriber;
@@ -21,10 +24,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _yellowBallCount;
         private int _blueBallCount;
 
-        public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel)
+        public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel, BallShooter ballShooter)
         {
             _ingamePowerupPanel = ingamePowerupPanel;
             _redBallCount = _greenBallCount = _yellowBallCount = _blueBallCount = 0;
+            _ballShooter = ballShooter;
 
             DisposableBagBuilder messageBuilder = DisposableBag.CreateBuilder();
 
@@ -129,24 +133,56 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             _redBallCount = 0;
             CheckFireball();
+
+            // If free ball, use this power up
+            _ballShooter.SetColorModel(new BallShootModel
+            {
+                BallCount = 1,
+                BallColor = EntityType.FireBall,
+                IsPowerup = true
+            }, true);
         }
 
         private void FreeYellowBall()
         {
             _yellowBallCount = 0;
             CheckSunball();
+
+            // If free ball, use this power up
+            _ballShooter.SetColorModel(new BallShootModel
+            {
+                BallCount = 3,
+                BallColor = EntityType.SunBall,
+                IsPowerup = true
+            }, true);
         }
 
         private void FreeGreenBall()
         {
             _greenBallCount = 0;
             CheckLeafball();
+
+            // If free ball, use this power up
+            _ballShooter.SetColorModel(new BallShootModel
+            {
+                BallCount = 1,
+                BallColor = EntityType.LeafBall,
+                IsPowerup = true
+            }, true);
         }
 
         private void FreeBlueBall()
         {
             _blueBallCount = 0;
             CheckWaterball();
+
+            // If free ball, use this power up
+            _ballShooter.SetColorModel(new BallShootModel
+            {
+                BallCount = 1,
+                BallColor = EntityType.WaterBall,
+                IsPowerup = true
+            }, true);
         }
 
         private void CheckFireball()

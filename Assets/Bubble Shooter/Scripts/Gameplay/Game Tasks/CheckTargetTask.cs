@@ -18,6 +18,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private int _moveCount;
         private int _targetCount;
+        private int _maxTarget;
 
         public Action<bool> OnEndGame;
 
@@ -29,7 +30,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<CheckTargetMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
 
-            _checkTargetSubscriber.Subscribe(message => CheckTarget()).AddTo(builder);
+            _checkTargetSubscriber.Subscribe(message => DecreaseTarget()).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
 
             _disposable = builder.Build();
@@ -38,7 +39,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public void SetTargetCount(LevelModel levelModel)
         {
             _moveCount = levelModel.MoveCount;
-            _targetCount = levelModel.TargetCount;
+            _maxTarget = levelModel.TargetCount;
+            _targetCount = 0;
+            CheckTarget();
         }
 
         public void AddMove(int move)
@@ -50,6 +53,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private void UpdateTarget()
         {
             _inGamePanel.SetMoveCount(_moveCount);
+            _inGamePanel.UpdateTarget(_targetCount, _maxTarget);
         }
 
         private void DecreaseMove()
@@ -58,19 +62,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckTarget();
         }
 
+        private void DecreaseTarget()
+        {
+            _targetCount = _targetCount + 1;
+            CheckTarget();
+        }
+
         private void CheckTarget()
         {
             if (_moveCount <= 0)
             {
-                if (_targetCount > 0)
+                if (_targetCount < _maxTarget)
                     OnEndGame?.Invoke(false);
             }
 
             else if(_moveCount >= 0)
             {
-                _targetCount = _targetCount - 1;
-
-                if (_targetCount <= 0)
+                if (_targetCount >= _maxTarget)
                 {
                     OnEndGame?.Invoke(true);
                 }

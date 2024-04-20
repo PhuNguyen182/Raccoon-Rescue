@@ -40,12 +40,12 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             if (_canActive)
             {
+                // When free booster counter, it means use that booster
                 _powerupPublisher.Publish(new PowerupMessage
                 {
                     PowerupColor = powerUpType,
                     Command = ReactiveValueCommand.Reset
                 });
-                // To do: fire a booster ball relative to powerup type
             }
         }
 

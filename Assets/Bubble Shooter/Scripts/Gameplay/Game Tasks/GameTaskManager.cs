@@ -36,7 +36,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _inputProcessor.AddTo(ref builder);
 
             _mainScreenManager = mainScreenManager;
-            _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel);
+            _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel, ballShooter);
             _powerupControlTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);

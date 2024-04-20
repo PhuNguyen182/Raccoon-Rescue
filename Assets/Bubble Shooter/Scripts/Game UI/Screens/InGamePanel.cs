@@ -12,11 +12,16 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private ScorePanel scorePanel;
         [SerializeField] private TargetHolder targetHolder;
 
-        public TargetHolder TargetHolder => targetHolder; 
+        public Transform TargetPoint => targetHolder.TargetPoint; 
 
         public void SetMoveCount(int move)
         {
             moveText.text = $"{move}";
+        }
+
+        public void UpdateTarget(int target, int requiredTargets)
+        {
+            targetHolder.UpdateTarget(target, requiredTargets);
         }
 
         public void SetScoreStreak(int tier1, int tier2, int tier3)

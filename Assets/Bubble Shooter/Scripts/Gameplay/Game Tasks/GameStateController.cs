@@ -113,7 +113,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void ContinuePlay()
         {
-
+            _checkTargetTask.AddMove(5);
         }
 
         private void QuitGame()
