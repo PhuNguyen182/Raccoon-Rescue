@@ -21,6 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
         public bool IsCeilAttached { get; set; }
 
         public int Score { get; }
+        public bool IsFallen { get; set; }
 
         public UniTask Blast()
         {

@@ -1,7 +1,7 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.GameUI.Screens
 {

@@ -19,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
+        private readonly IPublisher<AddScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
         private IDisposable _disposable;
@@ -32,6 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             var builder = DisposableBag.CreateBuilder();
 
             _powerupPublisher = GlobalMessagePipe.GetPublisher<PowerupMessage>();
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchSubscriber = GlobalMessagePipe.GetSubscriber<CheckMatchMessage>();
             _checkMatchSubscriber.Subscribe(Match).AddTo(builder);
 
@@ -131,6 +133,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
+                int totalScore = 0;
                 _powerupPublisher.Publish(new PowerupMessage
                 {
                     Amount = cluster.Count,
@@ -140,8 +143,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 for (int i = 0; i < cluster.Count; i++)
                 {
+                    totalScore += cluster[i].BallEntity.Score; 
                     breakTask.Add(_breakGridTask.Break(cluster[i]));
                 }
+
+                _addScorePublisher.Publish(new AddScoreMessage { Score = totalScore });
 
                 await UniTask.WhenAll(breakTask);
             }

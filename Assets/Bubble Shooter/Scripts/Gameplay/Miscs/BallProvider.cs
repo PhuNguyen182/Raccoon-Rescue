@@ -55,12 +55,12 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         {
             EntityType currentColor = ballShooter.BallModel.BallColor;
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType nextColor = _colors[randomIndex];
+            EntityType nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
 
             while (currentColor == nextColor)
             {
                 randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-                nextColor = _colors[randomIndex];
+                nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
             }
 
             var ballModel = new BallShootModel
@@ -89,7 +89,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private BallShootModel GetRandomColorBall()
         {
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType color = _colors[randomIndex];
+            EntityType color = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
 
             BallShootModel newModel = new BallShootModel
             {

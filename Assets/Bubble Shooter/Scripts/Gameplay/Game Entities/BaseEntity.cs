@@ -20,6 +20,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public int Score => 10;
 
+        public bool IsFallen { get; set; }
+        
         public abstract bool IsMatchable { get; }
 
         public abstract bool IsFixedOnStart { get; set; }
@@ -55,6 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public virtual void ResetBall() 
         {
+            IsFallen = false;
             ChangeLayer(BallConstants.NormalLayer);
             ballMovement.MovementState = BallMovementState.Fixed;
         }

@@ -10,6 +10,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     {
         public int Score { get; }
         public bool IsMatchable { get; }
+        public bool IsFallen { get; set; }
         public bool IsFixedOnStart { get; set; }
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }

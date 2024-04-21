@@ -65,7 +65,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void DestroyEntity()
         {
-            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
+            if (IsFallen)
+                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 

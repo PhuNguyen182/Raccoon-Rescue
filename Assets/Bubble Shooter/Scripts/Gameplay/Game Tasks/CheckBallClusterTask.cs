@@ -107,6 +107,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 IBallEntity ball = clusterModel.Cluster[i].BallEntity;
 
+                ball.IsFallen = true;
                 if(ball is ITargetBall target)
                 {
                     target.FreeTarget();

@@ -57,12 +57,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                              .Permit(_endGameTrigger.Trigger, State.EndGame);
 
             _gameStateMachine.Configure(State.EndGame)
-                             .OnEntryFrom(_endGameTrigger, value => OnEndGame(value).Forget())
+                             .OnEntryFrom(_endGameTrigger, isWin => OnEndGame(isWin).Forget())
                              .Permit(Trigger.BuyMove, State.Playing)
                              .Permit(Trigger.Quit, State.Quit);
 
             _gameStateMachine.Configure(State.Quit)
-                             .OnEntry(QuitGame);
+                             .OnEntry(OnQuitGame);
 
             _gameStateMachine.Activate();
         }
@@ -98,6 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             else
             {
                 bool canContinue = await _endGameScreen.ShowLosePanel();
+
                 if (canContinue)
                 {
                     // Add 5 move to continue play game
@@ -116,9 +117,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _checkTargetTask.AddMove(5);
         }
 
-        private void QuitGame()
+        private void OnQuitGame()
         {
 
+        }
+
+        private void QuitGame()
+        {
+            if (_gameStateMachine.CanFire(Trigger.Quit))
+            {
+                _gameStateMachine.Fire(Trigger.Quit);
+            }
         }
 
         public void Dispose()

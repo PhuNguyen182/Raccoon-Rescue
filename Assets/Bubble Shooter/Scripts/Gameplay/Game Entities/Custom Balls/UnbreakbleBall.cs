@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.Messages;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -27,6 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        private IPublisher<AddScoreMessage> _addScorePublisher;
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -34,12 +38,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
+            if (IsFallen)
+                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
+
             SimplePool.Despawn(this.gameObject);
         }
 
         public override void InitMessages()
         {
-            
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
         }
 
         public UniTask MoveTo(Vector3 position)

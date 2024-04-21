@@ -65,6 +65,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 // Create a new random ball data
                 int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(probabilities);
+                randomIndex = Mathf.Abs(randomIndex) % probabilities.Count;
+
                 EntityMapPosition ballMapPosition = new EntityMapPosition
                 {
                     Position = randomEntityFill[i].Position,
