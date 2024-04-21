@@ -53,7 +53,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _gameStateMachine.Configure(State.Playing)
                              .OnEntryFrom(Trigger.Play, PlayGame)
-                             .OnEntryFrom(Trigger.BuyMove, ContinuePlay)
+                             .OnEntryFrom(Trigger.BuyMove, PlayGame)
                              .Permit(_endGameTrigger.Trigger, State.EndGame);
 
             _gameStateMachine.Configure(State.EndGame)
@@ -102,7 +102,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (canContinue)
                 {
                     // Add 5 move to continue play game
-                    ContinuePlay();
+                    BuyMove();
                 }
 
                 else
@@ -112,14 +112,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void ContinuePlay()
+        private void BuyMove()
         {
             _checkTargetTask.AddMove(5);
+
+            if (_gameStateMachine.CanFire(Trigger.BuyMove))
+            {
+                _gameStateMachine.Fire(Trigger.BuyMove);
+            }
         }
 
         private void OnQuitGame()
         {
-
+            Debug.Log("Quit game");
         }
 
         private void QuitGame()

@@ -54,7 +54,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         private void OnAddMove()
         {
-            //AddMove();
+            AddMove();
         }
 
         private void Skip()
