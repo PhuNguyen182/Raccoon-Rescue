@@ -5,15 +5,17 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.GameUI.Screens;
+using BubbleShooter.Scripts.Common.PlayDatas;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class CheckTargetTask : IDisposable
     {
-        private readonly IDisposable _disposable;
         private readonly InGamePanel _inGamePanel;
-        private readonly ISubscriber<CheckTargetMessage> _checkTargetSubscriber;
+        private readonly IDisposable _disposable;
+        private readonly ISubscriber<MoveToTargetMessage> _moveTargetSubscriber;
+        private readonly ISubscriber<AddTargetMessage> _checkTargetSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
         private int _moveCount;
@@ -27,9 +29,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _inGamePanel = inGamePanel;
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
 
-            _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<CheckTargetMessage>();
+            _moveTargetSubscriber = GlobalMessagePipe.GetSubscriber<MoveToTargetMessage>();
+            _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<AddTargetMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
 
+            _moveTargetSubscriber.Subscribe(SetTargetInfo).AddTo(builder);
             _checkTargetSubscriber.Subscribe(message => DecreaseTarget()).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
 
@@ -48,6 +52,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             _moveCount = _moveCount + move;
             CheckTarget();
+        }
+
+        private void SetTargetInfo(MoveToTargetMessage message)
+        {
+            Vector3 position = _inGamePanel.TargetPoint.position;
+            position.z = 0;
+
+            message.Source.TrySetResult(new MoveTargetData
+            {
+                Destination = position
+            });
         }
 
         private void UpdateTarget()

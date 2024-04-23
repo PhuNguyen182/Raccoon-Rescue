@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Common.Constants;
+using BubbleShooter.Scripts.Common.PlayDatas;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
-using BubbleShooter.Scripts.Common.Messages;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
@@ -20,6 +22,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [SerializeField] private EntityType entityColor;
         [SerializeField] private TargetType targetColor;
         [SerializeField] private Animator targetAnimator;
+        [SerializeField] private FlyToTargetObject flyObject;
 
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -37,8 +40,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
+        private IPublisher<MoveToTargetMessage> _moveTargetPublisher;
         private IPublisher<AddScoreMessage> _addScorePublisher;
-        private IPublisher<CheckTargetMessage> _checkTargetPublisher;
+        private IPublisher<AddTargetMessage> _checkTargetPublisher;
 
         public override bool IsMatchable => true;
 
@@ -76,10 +80,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            _checkTargetPublisher.Publish(new CheckTargetMessage());
+            FreeTargetAsync().Forget();
             _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
-            SimplePool.Spawn(freedTarget, EffectContainer.Transform, transform.position, Quaternion.identity);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -90,8 +92,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
+            _moveTargetPublisher = GlobalMessagePipe.GetPublisher<MoveToTargetMessage>();
             _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
-            _checkTargetPublisher = GlobalMessagePipe.GetPublisher<CheckTargetMessage>();
+            _checkTargetPublisher = GlobalMessagePipe.GetPublisher<AddTargetMessage>();
         }
 
         public UniTask MoveTo(Vector3 position)
@@ -171,5 +174,34 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             }
         }
 
+        private async UniTask FreeTargetAsync()
+        {
+            SimplePool.Spawn(freedTarget, EffectContainer.Transform, transform.position, Quaternion.identity);
+
+            MoveTargetData targetInfo = await SendMoveToTargetMessage();
+            FlyToTargetObject flyTarget = SimplePool.Spawn(flyObject, EffectContainer.Transform,
+                                                           transform.position, Quaternion.identity);
+
+            float duration = Vector3.Distance(targetInfo.Destination, transform.position) / EntityConstants.MoveToTargetSpeed;
+            UniTask moveTask = flyTarget.MoveToTarget(targetInfo.Destination, duration);
+            await CheckTargetAsync(new AddTargetMessage(), moveTask);
+        }
+
+        private async UniTask CheckTargetAsync(AddTargetMessage message, UniTask moveTask)
+        {
+            await moveTask; ;
+            _checkTargetPublisher.Publish(message);
+        }
+
+        private UniTask<MoveTargetData> SendMoveToTargetMessage()
+        {
+            MoveToTargetMessage message = new MoveToTargetMessage
+            {
+                Source = new UniTaskCompletionSource<MoveTargetData>()
+            };
+
+            _moveTargetPublisher.Publish(message);
+            return message.Source.Task;
+        }
     }
 }
