@@ -199,8 +199,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private async UniTask CheckTargetAsync(AddTargetMessage message, UniTask moveTask)
         {
-            await moveTask; ;
-            _checkTargetPublisher.Publish(message);
+            await moveTask.ContinueWith(() => _checkTargetPublisher.Publish(message));
         }
 
         private UniTask<MoveTargetData> SendMoveToTargetMessage()
