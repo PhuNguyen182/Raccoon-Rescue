@@ -24,7 +24,6 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             _moveToTargetSequence = moveAnimation.CreateMoveToTargetTween(toPosition, 1.1f, 0.75f, duration, upEase, easeX, easeY, easeScale);
 
             await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.Complete);
-            SimplePool.Despawn(this.gameObject);
         }
 
         private void OnDestroy()

@@ -194,6 +194,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             
             UniTask moveTask = flyTarget.MoveToTarget(targetInfo.Destination, duration);
             await CheckTargetAsync(new AddTargetMessage(), moveTask);
+            SimplePool.Despawn(flyTarget.gameObject);
         }
 
         private async UniTask CheckTargetAsync(AddTargetMessage message, UniTask moveTask)
