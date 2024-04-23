@@ -176,13 +176,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private async UniTask FreeTargetAsync()
         {
-            SimplePool.Spawn(freedTarget, EffectContainer.Transform, transform.position, Quaternion.identity);
+            SimplePool.Spawn(freedTarget, EffectContainer.Transform
+                             , transform.position, Quaternion.identity);
 
             MoveTargetData targetInfo = await SendMoveToTargetMessage();
             FlyToTargetObject flyTarget = SimplePool.Spawn(flyObject, EffectContainer.Transform,
                                                            transform.position, Quaternion.identity);
-
-            float duration = Vector3.Distance(targetInfo.Destination, transform.position) / EntityConstants.MoveToTargetSpeed;
+            
+            flyTarget.transform.localScale = Vector3.one;
+            float distance = Vector3.Distance(targetInfo.Destination, transform.position);
+            
+            float speed = Mathf.Lerp(EntityConstants.MoveToNearTargetSpeed, 
+                                     EntityConstants.MoveToFarTargetSpeed, 
+                                     distance / EntityConstants.MaxMoveDistance);
+            
+            float duration = Vector3.Distance(targetInfo.Destination, transform.position) / speed;
+            
             UniTask moveTask = flyTarget.MoveToTarget(targetInfo.Destination, duration);
             await CheckTargetAsync(new AddTargetMessage(), moveTask);
         }

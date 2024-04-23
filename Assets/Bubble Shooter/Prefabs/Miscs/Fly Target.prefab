@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveAnimation: {fileID: 272502846684354869}
+  upEase: 6
   easeX: 1
   easeY: 4
   easeScale: 4

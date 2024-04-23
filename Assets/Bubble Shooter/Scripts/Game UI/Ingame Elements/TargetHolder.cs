@@ -11,6 +11,9 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
     {
         [SerializeField] private Image targetImage;
         [SerializeField] private TMP_Text targetAmount;
+        [SerializeField] private Animator animator;
+
+        private static readonly int _bouncingHash = Animator.StringToHash("Bounce");
 
         public Transform TargetPoint => targetImage.transform;
 
@@ -21,10 +24,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
 
         public void PlayTargetAnimation()
         {
-            targetImage.DOKill();
-            targetImage.transform
-                       .DOPunchScale(Vector3.one * 0.3f, 0.15f, 1, 1)
-                       .SetEase(Ease.InOutSine);
+            animator.SetTrigger(_bouncingHash);
         }
     }
 }

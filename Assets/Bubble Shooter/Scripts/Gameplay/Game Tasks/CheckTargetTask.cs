@@ -34,7 +34,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
 
             _moveTargetSubscriber.Subscribe(SetTargetInfo).AddTo(builder);
-            _checkTargetSubscriber.Subscribe(message => DecreaseTarget()).AddTo(builder);
+            _checkTargetSubscriber.Subscribe(message => AddTarget()).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
 
             _disposable = builder.Build();
@@ -77,9 +77,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckTarget();
         }
 
-        private void DecreaseTarget()
+        private void AddTarget()
         {
             _targetCount = _targetCount + 1;
+            _inGamePanel.TargetHolder.PlayTargetAnimation();
             CheckTarget();
         }
 

@@ -11,6 +11,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private MoveAnimationUtils moveAnimation;
 
         [Header("Move To Target")]
+        [SerializeField] private Ease upEase;
         [SerializeField] private Ease easeX;
         [SerializeField] private Ease easeY;
         [SerializeField] private Ease easeScale;
@@ -20,9 +21,10 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         public async UniTask MoveToTarget(Vector3 targetPosition, float duration)
         {
             Vector3 toPosition = targetPosition;
-            _moveToTargetSequence ??= moveAnimation.CreateMoveToTargetTween(toPosition, 0.75f, duration, easeX, easeY, easeScale);
+            _moveToTargetSequence = moveAnimation.CreateMoveToTargetTween(toPosition, 1.1f, 0.75f, duration, upEase, easeX, easeY, easeScale);
 
-            await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.KillWithCompleteCallbackAndCancelAwait);
+            await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.Complete);
+            SimplePool.Despawn(this.gameObject);
         }
 
         private void OnDestroy()
