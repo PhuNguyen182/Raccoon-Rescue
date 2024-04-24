@@ -128,8 +128,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             });
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

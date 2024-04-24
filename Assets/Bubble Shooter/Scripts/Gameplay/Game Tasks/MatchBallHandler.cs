@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,18 +18,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
+        private readonly CheckTargetTask _checkTargetTask;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
         private readonly IPublisher<AddScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _tokenSource;
         private IDisposable _disposable;
 
-        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask, CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor)
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask
+            , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
+            , CheckTargetTask checkTargetTask)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
+            _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
+
+            _tokenSource = new();
+            _token = _tokenSource.Token;
 
             var builder = DisposableBag.CreateBuilder();
 
@@ -54,12 +64,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 CheckMatch(position, matchCluster);
 
                 _gridCellManager.ClearVisitedPositions();
-                bool isClusterMatched = await ExecuteCluster(matchCluster);
+                (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
+                
+                bool isMatched = clusterResult.Item1;
+                bool containTarget = clusterResult.Item2;
 
-                if (isClusterMatched)
+                if (isMatched)
+                {
                     _checkBallClusterTask.CheckFreeCluster();
+                    
+                    if (!containTarget)
+                    {
+                        await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
+                        _checkTargetTask.CheckTarget();
+                    }
+                }
                 else
+                {
                     await _checkBallClusterTask.CheckNeighborCluster(position);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
+                    _checkTargetTask.CheckTarget();
+                }
 
                 _inputProcessor.IsActive = true;
             }
@@ -126,14 +151,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private async UniTask<bool> ExecuteCluster(List<IGridCell> cluster)
+        private async UniTask<(bool, bool)> ExecuteCluster(List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
-                return false;
+                return (false, false);
 
+            int totalScore = 0;
+            bool containTarget = false;
+            
             using (var listPool = ListPool<UniTask>.Get(out var breakTask))
             {
-                int totalScore = 0;
                 _powerupPublisher.Publish(new PowerupMessage
                 {
                     Amount = cluster.Count,
@@ -143,6 +170,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 for (int i = 0; i < cluster.Count; i++)
                 {
+                    if (cluster[i].BallEntity is ITargetBall)
+                        containTarget = true;
+
                     totalScore += cluster[i].BallEntity.Score; 
                     breakTask.Add(_breakGridTask.Break(cluster[i]));
                 }
@@ -152,11 +182,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 await UniTask.WhenAll(breakTask);
             }
 
-            return true;
+            return (true, containTarget);
         }
 
         public void Dispose()
         {
+            _tokenSource.Dispose();
             _disposable.Dispose();
         }
     }

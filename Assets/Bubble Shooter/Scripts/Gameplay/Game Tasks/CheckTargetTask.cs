@@ -14,8 +14,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     {
         private readonly InGamePanel _inGamePanel;
         private readonly IDisposable _disposable;
+        private readonly ISubscriber<AddTargetMessage> _addTargetSubscriber;
         private readonly ISubscriber<MoveToTargetMessage> _moveTargetSubscriber;
-        private readonly ISubscriber<AddTargetMessage> _checkTargetSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
         private int _moveCount;
@@ -30,11 +30,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
 
             _moveTargetSubscriber = GlobalMessagePipe.GetSubscriber<MoveToTargetMessage>();
-            _checkTargetSubscriber = GlobalMessagePipe.GetSubscriber<AddTargetMessage>();
+            _addTargetSubscriber = GlobalMessagePipe.GetSubscriber<AddTargetMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
 
             _moveTargetSubscriber.Subscribe(SetTargetInfo).AddTo(builder);
-            _checkTargetSubscriber.Subscribe(message => AddTarget()).AddTo(builder);
+            _addTargetSubscriber.Subscribe(message => AddTarget()).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
 
             _disposable = builder.Build();
@@ -45,7 +45,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _moveCount = levelModel.MoveCount;
             _maxTarget = levelModel.TargetCount;
             _targetCount = 0;
-            CheckTarget();
         }
 
         public void AddMove(int move)
@@ -65,42 +64,46 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             });
         }
 
-        private void UpdateTarget()
+        private void UpdateMove()
         {
             _inGamePanel.SetMoveCount(_moveCount);
+        }
+
+        private void UpdateTarget()
+        {
             _inGamePanel.UpdateTarget(_targetCount, _maxTarget);
         }
 
         private void DecreaseMove()
         {
             _moveCount = _moveCount - 1;
-            CheckTarget();
+            UpdateMove();
         }
 
         private void AddTarget()
         {
             _targetCount = _targetCount + 1;
             _inGamePanel.TargetHolder.PlayTargetAnimation();
+
+            UpdateTarget();
             CheckTarget();
         }
 
-        private void CheckTarget()
+        public void CheckTarget()
         {
-            if (_moveCount <= 0)
+            if (_moveCount == 0)
             {
-                if (_targetCount < _maxTarget)
-                    OnEndGame?.Invoke(false);
+                bool allTargetCollected = _targetCount >= _maxTarget;
+                OnEndGame?.Invoke(allTargetCollected);
             }
 
-            else if(_moveCount >= 0)
+            else
             {
                 if (_targetCount >= _maxTarget)
                 {
                     OnEndGame?.Invoke(true);
                 }
             }
-
-            UpdateTarget();
         }
 
         public void Dispose()

@@ -47,7 +47,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);
             _boosterHandleTask.AddTo(ref builder);
 
-            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor);
+            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor, checkTargetTask);
             _matchBallHandler.AddTo(ref builder);
 
             _gameStateController = new(_mainScreenManager.EndGameScreen, checkTargetTask);

@@ -173,8 +173,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

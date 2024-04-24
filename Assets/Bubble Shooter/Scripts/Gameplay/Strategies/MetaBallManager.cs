@@ -92,6 +92,14 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             }
         }
 
+        public IEnumerable<IBallEntity> GetEntities()
+        {
+            foreach (Vector3Int position in _metaBalls.Keys)
+            {
+                yield return _metaBalls[position];
+            }
+        }
+
         public void Clear()
         {
             _metaBalls.Clear();

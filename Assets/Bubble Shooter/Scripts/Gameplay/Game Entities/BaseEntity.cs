@@ -79,5 +79,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 DestroyEntity();
             }
         }
+
+        protected virtual void OnDisable()
+        {
+            
+        }
     }
 }
