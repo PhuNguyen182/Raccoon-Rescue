@@ -55,7 +55,8 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
 
         private void StarFill(float fillAmount)
         {
-            starFill.fillAmount = fillAmount;
+            float fill = Mathf.Clamp(fillAmount, 0f, 1f);
+            starFill.fillAmount = fill;
         }
     }
 }

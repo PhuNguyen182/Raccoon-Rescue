@@ -45,6 +45,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _moveCount = levelModel.MoveCount;
             _maxTarget = levelModel.TargetCount;
             _targetCount = 0;
+            
+            UpdateMove();
+            UpdateTarget();
         }
 
         public void AddMove(int move)

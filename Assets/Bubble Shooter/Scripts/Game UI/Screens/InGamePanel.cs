@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.GameUI.IngameElements;
 using TMPro;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.GameUI.Screens
 {
@@ -18,6 +19,8 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         public void SetMoveCount(int move)
         {
             moveText.text = $"{move}";
+            moveText.transform.DOPunchScale(Vector3.one * 0.3f, 0.15f, 1, 1)
+                    .SetEase(Ease.InOutSine);
         }
 
         public void UpdateTarget(int target, int requiredTargets)
