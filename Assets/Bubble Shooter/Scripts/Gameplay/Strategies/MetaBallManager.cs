@@ -100,6 +100,15 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             }
         }
 
+        public IEnumerable<IBallEntity> GetFixedEntities()
+        {
+            foreach (Vector3Int position in _metaBalls.Keys)
+            {
+                if (!_metaBalls[position].IsFallen)
+                    yield return _metaBalls[position];
+            }
+        }
+
         public void Clear()
         {
             _metaBalls.Clear();

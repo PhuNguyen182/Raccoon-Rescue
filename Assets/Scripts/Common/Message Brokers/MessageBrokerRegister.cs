@@ -31,6 +31,7 @@ namespace Scripts.Common.MessageBrokers
             _builder.AddMessageBroker<AddTargetMessage>();
             _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<AddScoreMessage>();
+            _builder.AddMessageBroker<BallDestroyMessage>();
         }
     }
 }

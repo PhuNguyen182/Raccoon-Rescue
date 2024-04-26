@@ -20,6 +20,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public int Score => 10;
 
+        public bool IsEndOfGame { get; set; }
+
         public bool IsFallen { get; set; }
         
         public abstract bool IsMatchable { get; }

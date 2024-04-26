@@ -28,6 +28,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly EndGameTask _endGameTask;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
