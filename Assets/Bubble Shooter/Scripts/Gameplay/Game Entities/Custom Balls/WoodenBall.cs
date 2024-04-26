@@ -18,8 +18,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         private int _hp = 0;
         private int _maxHp = 0;
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
-
         public bool CanMove { get => false; set { } }
         public override EntityType EntityType => EntityType.WoodenBall;
 
@@ -43,7 +41,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+            
         }
 
         public override UniTask Blast()
@@ -67,9 +65,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 

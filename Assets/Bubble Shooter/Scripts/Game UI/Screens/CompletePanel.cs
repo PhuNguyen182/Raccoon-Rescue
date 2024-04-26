@@ -66,7 +66,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         private async UniTask ShowNextStage()
         {
             background.SetActive(true);
-            await UniTask.Delay(TimeSpan.FromSeconds(appearClip.length + 0.5f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(appearClip.length), cancellationToken: _token);
             panelAnimator.SetInteger(_tierHash, _tier);
             _reactiveScore.Value = _score;
         }

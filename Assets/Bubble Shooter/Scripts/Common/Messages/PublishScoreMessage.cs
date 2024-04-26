@@ -1,6 +1,6 @@
 namespace BubbleShooter.Scripts.Common.Messages
 {
-    public struct AddScoreMessage
+    public struct PublishScoreMessage
     {
         public int Score;
     }

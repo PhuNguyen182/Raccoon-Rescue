@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.GameUI.Screens;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Stateless;
 
@@ -26,20 +27,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             Quit
         }
 
+        private readonly EndGameTask _endGameTask;
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly CheckScoreTask _checkScoreTask;
+        private readonly GameDecorator _gameDecorator;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameScreen endGameScreen, CheckTargetTask checkTargetTask)
+        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask
+            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
         {
-            CreateGameStateMachine();
-
+            _endGameTask = endGameTask;
             _endGameScreen = endGameScreen;
             _checkTargetTask = checkTargetTask;
+            _checkScoreTask = checkScoreTask;
+            _gameDecorator = gameDecorator;
 
             _checkTargetTask.OnEndGame = EndGame;
+            CreateGameStateMachine();
         }
 
         private void CreateGameStateMachine()
@@ -77,7 +84,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
-
+            _gameDecorator.Character.ResetCryState();
+            _gameDecorator.Character.Continue();
         }
 
         private void EndGame(bool isWin)
@@ -92,11 +100,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (isWin)
             {
+                await _endGameTask.OnWinGame();
+                _endGameScreen.SetGameResult(_checkScoreTask.Tier, _checkScoreTask.Score);
                 _endGameScreen.ShowWinPanel();
             }
 
             else
             {
+                _gameDecorator.Character.ResetPlayState();
+                _gameDecorator.Character.Cry();
+
+                await _endGameTask.OnLoseGame();
                 bool canContinue = await _endGameScreen.ShowLosePanel();
 
                 if (canContinue)

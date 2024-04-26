@@ -6,6 +6,8 @@ using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
+using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
@@ -18,7 +20,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected CancellationToken onDestroyToken;
 
+        #region Common primary messages
+        protected IPublisher<PublishScoreMessage> _addScorePublisher;
+        protected IPublisher<BallDestroyMessage> _ballDestroyMessage;
+        #endregion
+
         public int Score => 10;
+
+        public int ScoreMultiplier { get; set; }
+
+        public bool IsEndOfGame { get; set; }
 
         public bool IsFallen { get; set; }
         
@@ -58,7 +69,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public virtual void ResetBall() 
         {
             IsFallen = false;
+            ScoreMultiplier = 1;
+
             ChangeLayer(BallConstants.NormalLayer);
+            InitPrimaryMessages();
+            
             ballMovement.MovementState = BallMovementState.Fixed;
         }
 
@@ -72,11 +87,40 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             entityGraphics.ChangeLayer(layerName);
         }
 
+        protected void InitPrimaryMessages()
+        {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<PublishScoreMessage>();
+            _ballDestroyMessage = GlobalMessagePipe.GetPublisher<BallDestroyMessage>();
+        }
+
+        public void PublishScore()
+        {
+            _addScorePublisher.Publish(new PublishScoreMessage { Score = Score * ScoreMultiplier });
+        }
+
+        public void OnFallenDestroy()
+        {
+            _ballDestroyMessage.Publish(new BallDestroyMessage
+            {
+                IsEndOfGame = IsEndOfGame
+            });
+        }
+
+        protected void DestroyOnFallen()
+        {
+            ScoreMultiplier = 1;
+
+            OnFallenDestroy();
+            PublishScore();
+            DestroyEntity();
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
             {
-                DestroyEntity();
+                if(IsFallen)
+                    DestroyOnFallen();
             }
         }
 

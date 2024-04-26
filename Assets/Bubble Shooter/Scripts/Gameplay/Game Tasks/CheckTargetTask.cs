@@ -53,6 +53,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public void AddMove(int move)
         {
             _moveCount = _moveCount + move;
+
+            UpdateMove();
             CheckTarget();
         }
 

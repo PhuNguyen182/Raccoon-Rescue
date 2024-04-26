@@ -21,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckTargetTask _checkTargetTask;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
-        private readonly IPublisher<AddScoreMessage> _addScorePublisher;
+        private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
         private CancellationToken _token;
@@ -43,7 +43,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             var builder = DisposableBag.CreateBuilder();
 
             _powerupPublisher = GlobalMessagePipe.GetPublisher<PowerupMessage>();
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<PublishScoreMessage>();
             _checkMatchSubscriber = GlobalMessagePipe.GetSubscriber<CheckMatchMessage>();
             _checkMatchSubscriber.Subscribe(Match).AddTo(builder);
 
@@ -177,7 +177,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     breakTask.Add(_breakGridTask.Break(cluster[i]));
                 }
 
-                _addScorePublisher.Publish(new AddScoreMessage { Score = totalScore });
+                _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
                 await UniTask.WhenAll(breakTask);
             }
