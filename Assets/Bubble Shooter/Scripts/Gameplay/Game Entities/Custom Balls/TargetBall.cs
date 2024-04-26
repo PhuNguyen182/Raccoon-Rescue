@@ -91,7 +91,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void InitMessages()
         {
             _moveTargetPublisher = GlobalMessagePipe.GetPublisher<MoveToTargetMessage>();
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<PublishScoreMessage>();
+            _checkTargetPublisher = GlobalMessagePipe.GetPublisher<AddTargetMessage>();
         }
 
         public UniTask MoveTo(Vector3 position)

@@ -23,6 +23,15 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             _randomEntityFill = new();
         }
 
+        public void AddEntity(IBallEntity ballEntity)
+        {
+            if (!_metaBalls.ContainsKey(ballEntity.GridPosition))
+                _metaBalls.Add(ballEntity.GridPosition, ballEntity);
+
+            else 
+                _metaBalls[ballEntity.GridPosition] = ballEntity;
+        }
+
         public IBallEntity AddEntity(EntityMapPosition mapPosition)
         {
             IBallEntity ballEntity = _entityManager.SpawnEntity(mapPosition);
@@ -56,6 +65,14 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             _randomEntityFill.Add(mapPosition);
         }
 
+        public void RemoveEntity(Vector3Int position)
+        {
+            if (_metaBalls.ContainsKey(position))
+            {
+                _metaBalls.Remove(position);
+            }
+        }
+
         public void SetColorStrategy(List<ColorMapData> colors)
         {
             _colorStrategy = colors;
@@ -76,14 +93,6 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             return _metaBalls.TryGetValue(position, out var ballEntity) ? ballEntity : null;
         }
 
-        public void RemoveEntity(IBallEntity ballEntity)
-        {
-            if (_metaBalls.ContainsKey(ballEntity.GridPosition))
-            {
-                _metaBalls.Remove(ballEntity.GridPosition);
-            }
-        }
-
         public IEnumerable<Vector3Int> Iterator()
         {
             foreach (Vector3Int position in _metaBalls.Keys)
@@ -100,13 +109,17 @@ namespace BubbleShooter.Scripts.Gameplay.Strategies
             }
         }
 
-        public IEnumerable<IBallEntity> GetFixedEntities()
+        public List<IBallEntity> GetFixedEntities()
         {
-            foreach (Vector3Int position in _metaBalls.Keys)
+            List<IBallEntity> ballEntities = new();
+
+            foreach (var item in _metaBalls)
             {
-                if (!_metaBalls[position].IsFallen)
-                    yield return _metaBalls[position];
+                if (item.Value != null && !item.Value.IsFallen)
+                    ballEntities.Add(item.Value);
             }
+
+            return ballEntities;
         }
 
         public void Clear()

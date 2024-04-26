@@ -46,7 +46,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public async UniTask OnWinGame()
         {
             var fixedBalls = _metaBallManager.GetFixedEntities();
-            _fallBallCount = fixedBalls.Count();
+            _fallBallCount = fixedBalls.Count;
 
             foreach (IBallEntity fixedBall in fixedBalls)
             {

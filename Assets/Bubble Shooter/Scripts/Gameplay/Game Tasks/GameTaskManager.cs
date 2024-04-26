@@ -3,9 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks;
 using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
-using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.GameUI.Screens;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
@@ -22,10 +23,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly InGamePowerupControlTask _powerupControlTask;
         private readonly IngameBoosterHandler _ingameBoosterHandler;
         private readonly GameStateController _gameStateController;
+        private readonly EndGameTask _endGameTask;
         private readonly IDisposable _disposable;
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager,
-            CheckTargetTask checkTargetTask, BallShooter ballShooter)
+            CheckTargetTask checkTargetTask, BallShooter ballShooter, MetaBallManager metaBallManager)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -50,7 +52,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor, checkTargetTask);
             _matchBallHandler.AddTo(ref builder);
 
-            _gameStateController = new(_mainScreenManager.EndGameScreen, checkTargetTask);
+            _endGameTask = new(_gridCellManager, metaBallManager);
+            _gameStateController = new(_mainScreenManager.EndGameScreen, _endGameTask, checkTargetTask);
             _gameStateController.AddTo(ref builder);
 
             _disposable = builder.Build();

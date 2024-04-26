@@ -222,6 +222,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private void SetItemToGrid(IGridCell gridCell)
         {
             gridCell.SetBall(_currentBall);
+            GameController.Instance.AddEntity(_currentBall);
         }
 
         public void ChangeLayerMask(bool isFixed)

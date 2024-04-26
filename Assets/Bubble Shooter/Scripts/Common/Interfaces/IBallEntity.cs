@@ -21,8 +21,10 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public EntityType EntityType { get; }
 
         public UniTask Blast();
-        public void DestroyEntity();
         public void OnSnapped();
+        public void DestroyEntity();
+        public void PublishScore();
+        public void OnFallenDestroy();
         public void SetWorldPosition(Vector3 position);
     }
 }

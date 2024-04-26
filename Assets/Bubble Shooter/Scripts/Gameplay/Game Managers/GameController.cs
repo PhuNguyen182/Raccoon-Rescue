@@ -76,9 +76,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
             
-            _gridCellManager = new(ConvertGridPositionToWolrdPosition, ConvertWorldPositionToGridPosition);
-            _gridCellManager.AddTo(ref builder);
-
             _entityFactory = new(entityDatabase, entityContainer);
             _targetFactory = new(entityDatabase, entityContainer);
             ballShooter.SetBallFactory(_entityFactory);
@@ -87,7 +84,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _metaBallManager = new(_entityManager);
             _metaBallManager.AddTo(ref builder);
 
-            _fillBoardTask = new(_gridCellManager, _metaBallManager);
             
             _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
@@ -95,7 +91,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask = new(mainScreen.InGamePanel);
             _checkScoreTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, ballShooter);
+            _gridCellManager = new(ConvertGridPositionToWolrdPosition, ConvertWorldPositionToGridPosition, _metaBallManager);
+            _gridCellManager.AddTo(ref builder);
+
+            _fillBoardTask = new(_gridCellManager, _metaBallManager);
+
+            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen
+                                   , _checkTargetTask, ballShooter, _metaBallManager);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -169,6 +171,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         public IGridCell GetCell(Vector3Int position)
         {
             return _gridCellManager.Get(position);
+        }
+
+        public void AddEntity(IBallEntity ballEntity)
+        {
+            _metaBallManager.AddEntity(ballEntity);
         }
 
         private void SetShootSequence(LevelModel levelModel)

@@ -26,19 +26,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             Quit
         }
 
+        private readonly EndGameTask _endGameTask;
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
-        private readonly EndGameTask _endGameTask;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameScreen endGameScreen, CheckTargetTask checkTargetTask)
+        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask, CheckTargetTask checkTargetTask)
         {
             CreateGameStateMachine();
 
             _endGameScreen = endGameScreen;
             _checkTargetTask = checkTargetTask;
+            _endGameTask = endGameTask;
 
             _checkTargetTask.OnEndGame = EndGame;
         }
@@ -93,11 +94,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (isWin)
             {
+                await _endGameTask.OnWinGame();
                 _endGameScreen.ShowWinPanel();
             }
 
             else
             {
+                await _endGameTask.OnLoseGame();
                 bool canContinue = await _endGameScreen.ShowLosePanel();
 
                 if (canContinue)

@@ -4,6 +4,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Constants;
+using BubbleShooter.Scripts.Gameplay.Strategies;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -121,6 +122,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                     ballPhysics.SetBodyActive(true);
                     BallAddForce(ballPhysics);
+
                     _gridCellManager.Remove(clusterModel.Cluster[i].GridPosition);
                 }
             }

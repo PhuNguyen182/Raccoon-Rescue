@@ -69,9 +69,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public virtual void ResetBall() 
         {
             IsFallen = false;
+            ScoreMultiplier = 1;
+
             ChangeLayer(BallConstants.NormalLayer);
-            ballMovement.MovementState = BallMovementState.Fixed;
             InitPrimaryMessages();
+            
+            ballMovement.MovementState = BallMovementState.Fixed;
         }
 
         public void SetWorldPosition(Vector3 position)
@@ -90,17 +93,33 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             _ballDestroyMessage = GlobalMessagePipe.GetPublisher<BallDestroyMessage>();
         }
 
-        protected void PublishScore()
+        public void PublishScore()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new PublishScoreMessage { Score = Score });
+            _addScorePublisher.Publish(new PublishScoreMessage { Score = Score * ScoreMultiplier });
+        }
+
+        public void OnFallenDestroy()
+        {
+            _ballDestroyMessage.Publish(new BallDestroyMessage
+            {
+                IsEndOfGame = IsEndOfGame
+            });
+        }
+
+        protected void DestroyOnFallen()
+        {
+            ScoreMultiplier = 1;
+
+            OnFallenDestroy();
+            PublishScore();
+            DestroyEntity();
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
             {
-                DestroyEntity();
+                DestroyOnFallen();
             }
         }
 
