@@ -9,7 +9,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
 {
     public class StarBar : MonoBehaviour
     {
-        [SerializeField] private Image starFill;
+        [SerializeField] private Slider starFill;
         [SerializeField] private StarStreak[] starStreaks;
         [SerializeField] private TweenValueEffect starTween;
 
@@ -56,7 +56,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
         private void StarFill(float fillAmount)
         {
             float fill = Mathf.Clamp(fillAmount, 0f, 1f);
-            starFill.fillAmount = fill;
+            starFill.value = fill;
         }
     }
 }
