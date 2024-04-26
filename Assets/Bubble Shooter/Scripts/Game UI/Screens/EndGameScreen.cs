@@ -10,6 +10,11 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private CompletePanel completePanel;
         [SerializeField] private FailurePanel failurePanel;
 
+        public void SetGameResult(int tier, int score)
+        {
+            completePanel.SetScore(tier, score);
+        }
+
         public void ShowWinPanel()
         {
             completePanel.gameObject.SetActive(true);

@@ -9,7 +9,9 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private Transform topCeil;
         [SerializeField] private Transform groundPointContainer;
         [SerializeField] private BoxCollider2D groundingArea;
+        [SerializeField] private MainCharacter mainCharacter;
 
+        public MainCharacter Character => mainCharacter;
         public Transform GroundPointContainer => groundPointContainer;
 
         public void SetTopCeilPosition(Vector3 position)

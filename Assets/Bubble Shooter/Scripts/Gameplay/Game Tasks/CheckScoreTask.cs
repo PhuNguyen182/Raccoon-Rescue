@@ -22,16 +22,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _maxScore = 0;
         private int _score = 0;
 
+        public int Tier => _tier;
+        public int Score => _score;
+
         public CheckScoreTask(InGamePanel inGamePanel)
         {
             _score = 0;
             _inGamePanel = inGamePanel;
 
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
+
             _addScoreSubscriber = GlobalMessagePipe.GetSubscriber<PublishScoreMessage>();
             _addScoreSubscriber.Subscribe(message => AddScore(message.Score)).AddTo(builder);
+
             _disposable = builder.Build();
-            
             UpdateScore();
         }
 

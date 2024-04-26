@@ -17,7 +17,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     public class EndGameTask : IDisposable
     {
         private readonly MetaBallManager _metaBallManager;
-        private readonly GridCellManager _gridCellManager;
 
         private readonly ISubscriber<BallDestroyMessage> _ballDestroySubscriber;
 
@@ -27,9 +26,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private int _fallBallCount = 0;
 
-        public EndGameTask(GridCellManager gridCellManager, MetaBallManager metaBallManager)
+        public EndGameTask(MetaBallManager metaBallManager)
         {
-            _gridCellManager = gridCellManager;
             _metaBallManager = metaBallManager;
 
             _tokenSource = new();
@@ -45,6 +43,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public async UniTask OnWinGame()
         {
+            await UniTask.NextFrame(_cancellationToken);
+            
             var fixedBalls = _metaBallManager.GetFixedEntities();
             _fallBallCount = fixedBalls.Count;
 
@@ -60,7 +60,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                     ballPhysics.SetBodyActive(true);
                     BallAddForce(ballPhysics);
-                    _gridCellManager.Remove(fixedBall.GridPosition);
                 }
             }
 
@@ -70,6 +69,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public async UniTask OnLoseGame()
         {
+            // To do: show some effect when lose game
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _cancellationToken);
         }
 

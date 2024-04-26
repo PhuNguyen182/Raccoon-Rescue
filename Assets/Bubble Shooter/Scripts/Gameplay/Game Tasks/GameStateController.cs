@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.GameUI.Screens;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Stateless;
 
@@ -29,17 +30,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly EndGameTask _endGameTask;
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly CheckScoreTask _checkScoreTask;
+        private readonly GameDecorator _gameDecorator;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask, CheckTargetTask checkTargetTask)
+        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask
+            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
         {
             CreateGameStateMachine();
 
             _endGameScreen = endGameScreen;
             _checkTargetTask = checkTargetTask;
             _endGameTask = endGameTask;
+            _gameDecorator = gameDecorator;
+            _checkScoreTask = checkScoreTask;
 
             _checkTargetTask.OnEndGame = EndGame;
         }
@@ -94,6 +100,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (isWin)
             {
+                _endGameScreen.SetGameResult(_checkScoreTask.Tier, _checkScoreTask.Score);
+
                 await _endGameTask.OnWinGame();
                 _endGameScreen.ShowWinPanel();
             }

@@ -2281,6 +2281,7 @@ MonoBehaviour:
   topCeil: {fileID: 1323791888}
   groundPointContainer: {fileID: 1986946919}
   groundingArea: {fileID: 922017564}
+  mainCharacter: {fileID: 1801469538}
 --- !u!4 &1176530405
 Transform:
   m_ObjectHideFlags: 0
@@ -4797,6 +4798,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4527925427455375142, guid: 210161fdc5db19c4dbe35c2852138852, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6042149726191109269, guid: 210161fdc5db19c4dbe35c2852138852, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8781437553607942600, guid: 210161fdc5db19c4dbe35c2852138852, type: 3}

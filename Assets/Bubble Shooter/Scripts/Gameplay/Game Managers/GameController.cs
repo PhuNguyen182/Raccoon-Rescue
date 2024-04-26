@@ -97,7 +97,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
 
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen
-                                   , _checkTargetTask, ballShooter, _metaBallManager);
+                                   , _checkTargetTask, _checkScoreTask, ballShooter
+                                   ,_metaBallManager, gameDecorator);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
