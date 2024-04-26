@@ -39,15 +39,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask
             , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
         {
-            CreateGameStateMachine();
-
+            _endGameTask = endGameTask;
             _endGameScreen = endGameScreen;
             _checkTargetTask = checkTargetTask;
-            _endGameTask = endGameTask;
-            _gameDecorator = gameDecorator;
             _checkScoreTask = checkScoreTask;
+            _gameDecorator = gameDecorator;
 
             _checkTargetTask.OnEndGame = EndGame;
+            CreateGameStateMachine();
         }
 
         private void CreateGameStateMachine()
@@ -85,7 +84,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
-
+            _gameDecorator.Character.ResetCryState();
+            _gameDecorator.Character.Continue();
         }
 
         private void EndGame(bool isWin)
@@ -100,14 +100,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (isWin)
             {
-                _endGameScreen.SetGameResult(_checkScoreTask.Tier, _checkScoreTask.Score);
-
                 await _endGameTask.OnWinGame();
+                _endGameScreen.SetGameResult(_checkScoreTask.Tier, _checkScoreTask.Score);
                 _endGameScreen.ShowWinPanel();
             }
 
             else
             {
+                _gameDecorator.Character.ResetPlayState();
+                _gameDecorator.Character.Cry();
+
                 await _endGameTask.OnLoseGame();
                 bool canContinue = await _endGameScreen.ShowLosePanel();
 

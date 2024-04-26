@@ -27,7 +27,9 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
         {
             _maxScore = maxScore;
             _reactiveScore.Value = score;
-            starBar.ShowScoreFill((float)score / maxScore);
+            
+            if(_maxScore > 0)
+                starBar.ShowScoreFill((float)score / maxScore);
         }
 
         // This function is called second
