@@ -22,8 +22,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override Vector3Int GridPosition { get; set; }
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
-
         public bool CanMove 
         {
             get => ballMovement.CanMove;
@@ -65,9 +63,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -78,7 +74,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _boosterPublisher = GlobalMessagePipe.GetPublisher<ActiveBoosterMessage>();
         }
 

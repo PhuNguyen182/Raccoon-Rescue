@@ -6,6 +6,8 @@ using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
+using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
@@ -18,7 +20,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         protected CancellationToken onDestroyToken;
 
+        #region Common primary messages
+        protected IPublisher<PublishScoreMessage> _addScorePublisher;
+        protected IPublisher<BallDestroyMessage> _ballDestroyMessage;
+        #endregion
+
         public int Score => 10;
+
+        public int ScoreMultiplier { get; set; }
 
         public bool IsEndOfGame { get; set; }
 
@@ -62,6 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             IsFallen = false;
             ChangeLayer(BallConstants.NormalLayer);
             ballMovement.MovementState = BallMovementState.Fixed;
+            InitPrimaryMessages();
         }
 
         public void SetWorldPosition(Vector3 position)
@@ -72,6 +82,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void ChangeLayer(string layerName)
         {
             entityGraphics.ChangeLayer(layerName);
+        }
+
+        protected void InitPrimaryMessages()
+        {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<PublishScoreMessage>();
+            _ballDestroyMessage = GlobalMessagePipe.GetPublisher<BallDestroyMessage>();
+        }
+
+        protected void PublishScore()
+        {
+            if (IsFallen)
+                _addScorePublisher.Publish(new PublishScoreMessage { Score = Score });
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

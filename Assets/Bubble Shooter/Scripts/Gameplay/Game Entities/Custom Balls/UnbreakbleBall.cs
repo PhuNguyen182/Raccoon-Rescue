@@ -29,8 +29,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
-
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -38,15 +36,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+            
         }
 
         public UniTask MoveTo(Vector3 position)

@@ -41,7 +41,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
         private IPublisher<MoveToTargetMessage> _moveTargetPublisher;
-        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<AddTargetMessage> _checkTargetPublisher;
 
         public override bool IsMatchable => true;
@@ -81,7 +80,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void DestroyEntity()
         {
             FreeTargetAsync().Forget();
-            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -93,8 +91,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void InitMessages()
         {
             _moveTargetPublisher = GlobalMessagePipe.GetPublisher<MoveToTargetMessage>();
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
-            _checkTargetPublisher = GlobalMessagePipe.GetPublisher<AddTargetMessage>();
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<PublishScoreMessage>();
         }
 
         public UniTask MoveTo(Vector3 position)

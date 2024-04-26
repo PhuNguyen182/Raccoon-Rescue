@@ -9,10 +9,13 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     public interface IBallEntity
     {
         public int Score { get; }
+        public int ScoreMultiplier { get; set; }
+
         public bool IsMatchable { get; }
         public bool IsFallen { get; set; }
         public bool IsEndOfGame { get; set; }
         public bool IsFixedOnStart { get; set; }
+
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }
         public EntityType EntityType { get; }

@@ -27,7 +27,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite orange;
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove
@@ -61,7 +60,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
@@ -77,9 +75,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 

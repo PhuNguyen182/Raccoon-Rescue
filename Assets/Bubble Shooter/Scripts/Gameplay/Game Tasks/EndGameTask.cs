@@ -65,6 +65,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
 
             await UniTask.WaitUntil(IsOutOfBall, cancellationToken: _cancellationToken);
+            if (_cancellationToken.IsCancellationRequested) return;
         }
 
         public async UniTask OnLoseGame()
