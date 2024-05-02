@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6efecf8209ea8c94ba62300d0c3529c4, type: 3}
-  m_Name: Board Tile
+  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Hexagon Pointed-Top Bottom
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -2135585597343286014, guid: 6a7b121cb1e04f547a1fdc70633c48e8, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
+  m_Sprite: {fileID: -2135585597343286014, guid: 2d4cd955d76673f45a428024b7337875, type: 3}
+  m_Color: {r: 1, g: 0.25, b: 0.25, a: 0.6}
   m_Transform:
     e00: 1
     e01: 0

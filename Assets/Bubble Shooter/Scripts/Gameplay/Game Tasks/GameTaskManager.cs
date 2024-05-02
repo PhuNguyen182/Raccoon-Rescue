@@ -29,7 +29,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager
             , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, BallShooter ballShooter, MetaBallManager metaBallManager
-            , GameDecorator gameDecorator)
+            , GameDecorator gameDecorator, ScanThresholdLineTask scanThresholdLineTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -48,16 +48,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
 
             _ingameBoosterHandler = new(ballShooter);
+            _ingameBoosterHandler.AddTo(ref builder);
+
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);
             _boosterHandleTask.AddTo(ref builder);
 
-            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor, checkTargetTask);
+            _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor
+                                    , checkTargetTask, scanThresholdLineTask);
             _matchBallHandler.AddTo(ref builder);
 
             _endGameTask = new(metaBallManager);
             _endGameTask.AddTo(ref builder);
 
-            _gameStateController = new(_mainScreenManager.EndGameScreen, _endGameTask, checkTargetTask, checkScoreTask, gameDecorator);
+            _gameStateController = new(_mainScreenManager.EndGameScreen, _endGameTask
+                                       , checkTargetTask, checkScoreTask, gameDecorator);
             _gameStateController.AddTo(ref builder);
 
             _disposable = builder.Build();

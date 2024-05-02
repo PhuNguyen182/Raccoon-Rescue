@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.PlayDatas;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.Strategies;
@@ -50,8 +51,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private FillBoardTask _fillBoardTask;
         private CheckTargetTask _checkTargetTask;
         private CheckScoreTask _checkScoreTask;
+        private ScanThresholdLineTask _scanThreasholdLineTask;
         private GameTaskManager _gameTaskManager;
-        
+
         public GameDecorator GameDecorator => gameDecorator;
         public static GameController Instance { get; private set; }
 
@@ -91,14 +93,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask = new(mainScreen.InGamePanel);
             _checkScoreTask.AddTo(ref builder);
 
-            _gridCellManager = new(ConvertGridPositionToWolrdPosition, ConvertWorldPositionToGridPosition, _metaBallManager);
+            _gridCellManager = new(ConvertGridPositionToWolrdPosition
+                                   , ConvertWorldPositionToGridPosition
+                                   , _metaBallManager);
             _gridCellManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
+            _scanThreasholdLineTask = new(_gridCellManager);
+            _scanThreasholdLineTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen
-                                   , _checkTargetTask, _checkScoreTask, ballShooter
-                                   ,_metaBallManager, gameDecorator);
+            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask
+                                   , ballShooter,_metaBallManager, gameDecorator, _scanThreasholdLineTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -113,6 +118,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GenerateLevel(LevelModel levelModel)
         {
+            GenerateGridCell(levelModel);
+            GenerateEntities(levelModel);
+
+            _checkScoreTask.SetScores(levelModel);
+            _checkTargetTask.SetTargetCount(levelModel);
+
+            CalculateThreashold(levelModel);
+            SetShootSequence(levelModel);
+            _fillBoardTask.Fill();
+        }
+
+        private void GenerateGridCell(LevelModel levelModel)
+        {
             for (int i = 0; i < levelModel.BoardMapPositions.Count; i++)
             {
                 GridCell gridCell;
@@ -126,7 +144,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 gridCell.GridPosition = gridPosition;
                 _gridCellManager.Add(gridCell);
             }
+        }
 
+        private void GenerateEntities(LevelModel levelModel)
+        {
             SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {
@@ -138,7 +159,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             for (int i = 0; i < levelModel.StartingEntityMap.Count; i++)
             {
                 var data = levelModel.StartingEntityMap[i].MapData;
-                if(data.EntityType == EntityType.Random)
+                if (data.EntityType == EntityType.Random)
                 {
                     _metaBallManager.AddRandomMapPosition(levelModel.StartingEntityMap[i]);
                     continue;
@@ -151,12 +172,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             {
                 _metaBallManager.AddTarget(levelModel.TargetMapPositions[i]);
             }
+        }
 
-            _checkScoreTask.SetScores(levelModel);
-            _checkTargetTask.SetTargetCount(levelModel);
+        private void CalculateThreashold(LevelModel levelModel)
+        {
+            for (int i = 0; i < levelModel.BoardThresholdMapPositions.Count; i++)
+            {
+                Vector3Int position = levelModel.BoardThresholdMapPositions[i].Position;
+                _scanThreasholdLineTask.AddThreshold(new ThresholdData
+                {
+                    IsEmptyChecked = false,
+                    Position = position
+                });
+            }
 
-            SetShootSequence(levelModel);
-            _fillBoardTask.Fill();
+            _scanThreasholdLineTask.Sort();
+            _scanThreasholdLineTask.ScanLines();
         }
 
         public Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)

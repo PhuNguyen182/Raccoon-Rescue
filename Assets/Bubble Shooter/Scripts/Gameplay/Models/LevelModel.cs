@@ -18,8 +18,8 @@ namespace BubbleShooter.Scripts.Gameplay.Models
 
         public List<BoardMapPosition> BoardMapPositions = new();
         public List<CeilMapPosition> CeilMapPositions = new();
-        public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new(); // To be tested
-        public List<ColorMapData> ColorMapDatas = new(); // To be tested
+        public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new();
+        public List<ColorMapData> ColorMapDatas = new();
         public List<EntityMapPosition> StartingEntityMap = new();
         public List<TargetMapPosition> TargetMapPositions = new();
 

@@ -19,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly ScanThresholdLineTask _scanThresholdLineTask;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
@@ -30,12 +31,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask
             , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
-            , CheckTargetTask checkTargetTask)
+            , CheckTargetTask checkTargetTask, ScanThresholdLineTask scanThreasholdLineTask)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
             _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
+            _scanThresholdLineTask = scanThreasholdLineTask;
 
             _tokenSource = new();
             _token = _tokenSource.Token;
@@ -86,6 +88,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _checkTargetTask.CheckTarget();
                 }
 
+                _scanThresholdLineTask.ScanLines();
                 _inputProcessor.IsActive = true;
             }
         }
