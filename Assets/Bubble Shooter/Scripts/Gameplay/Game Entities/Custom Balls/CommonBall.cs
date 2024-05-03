@@ -11,7 +11,7 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallAnimation, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -138,11 +138,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public bool Break()
         {
             return true;
-        }
-
-        public void PlayBounceAnimation()
-        {
-            
         }
 
         public void PlayBlastEffect()

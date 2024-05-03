@@ -1,56 +1,79 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
-using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
-using BubbleShooter.Scripts.Utils.Comparers;
-using BubbleShooter.Scripts.Common.PlayDatas;
+using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Gameplay.Strategies;
+using System.Linq;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class ScanThresholdLineTask : IDisposable
+    public class ScanThresholdLineTask
     {
         private readonly GridCellManager _gridCellManager;
-        private readonly ThresholdComparer _thresholdComparer;
+        private readonly MetaBallManager _metaBallManager;
+        private readonly CameraController _cameraController;
+        private readonly BoundsInt _levelBounds;
 
-        private List<ThresholdData> _thresholdDatas;
+        private const float StopHeight = 5.465f;
+        private const float UnitHeight = 0.5625f;
 
-        public ScanThresholdLineTask(GridCellManager gridCellManager)
+        private float _toCeilHeight = 0;
+        private Vector3Int _sampleCeilPosition;
+
+        public ScanThresholdLineTask(GridCellManager gridCellManager, MetaBallManager metaBallManager, CameraController cameraController)
         {
             _gridCellManager = gridCellManager;
+            _metaBallManager = metaBallManager;
+            _cameraController = cameraController;
+            _levelBounds = _gridCellManager.LevelBounds;
 
-            _thresholdDatas = new();
-            _thresholdComparer = new();
+            _toCeilHeight = CalculateBottomItemDistanceOnStart();
         }
 
         public void ScanLines()
         {
-            for (int i = _thresholdDatas.Count - 1; i >= 0; i--)
-            {
-                bool isEmptyChecked = _thresholdDatas[i].IsEmptyChecked;
-                bool isLineEmpty = CheckEmptyLine(_thresholdDatas[i].Position);
-                
-                if (!isEmptyChecked && isLineEmpty)
-                {
-                    // To do: execute move up/down logic
-                    var threshold = _thresholdDatas[i];
-                    threshold.IsEmptyChecked = true;
-                    _thresholdDatas[i] = threshold;
+            bool isLineEmpty;
+            Vector3Int bottomPosition = new Vector3Int(0, _levelBounds.yMin);
+            isLineEmpty = CheckEmptyLine(bottomPosition);
 
-                    // To do: Calculate offset between center and the current threashold
+            while(!isLineEmpty)
+            {
+                bottomPosition = bottomPosition + new Vector3Int(0, 1);
+                isLineEmpty = CheckEmptyLine(bottomPosition);
+            }
+
+            float distance = GetBottomItemDistance(bottomPosition);
+
+            if (distance != _toCeilHeight)
+            {
+                float offset = Mathf.Abs(distance - _toCeilHeight);
+                // This will ensure the accuracy in calculation in order to prevent floating problem
+                int rowCount = Mathf.RoundToInt(offset / UnitHeight);
+
+                _toCeilHeight = distance;
+                float cameraHeight = GetCameraHeighDistance();
+                float moveDistance = rowCount * UnitHeight;
+
+                // If the ceil is higher than the top of screen, move it
+                if (Mathf.Abs(cameraHeight - StopHeight) > 0.01f)
+                {
+                    Vector3 toPosition = Vector3.zero;
+
+                    if (distance > _toCeilHeight) // Move up
+                        toPosition = _cameraController.transform.position + moveDistance * Vector3.up;
+
+                    else if (distance < _toCeilHeight) // Move down
+                        toPosition = _cameraController.transform.position + moveDistance * Vector3.down;
+
+                    _cameraController.MoveTo(toPosition);
                 }
             }
         }
 
-        public void AddThreshold(ThresholdData data)
+        public void SetCeilHeight(Vector3Int position)
         {
-            _thresholdDatas.Add(data);
-        }
-
-        public void Sort()
-        {
-            _thresholdDatas.Sort(_thresholdComparer);
+            _sampleCeilPosition = position;
         }
 
         private bool CheckEmptyLine(Vector3Int pointInLine)
@@ -60,16 +83,35 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < line.Count; i++)
             {
-                if (line[i].ContainsBall)
+                if (line[i] != null && line[i].ContainsBall)
                     return false;
             }
 
             return true;
         }
 
-        public void Dispose()
+        private float GetCameraHeighDistance()
         {
-            _thresholdDatas.Clear();
+            Vector3 sampleCeilPosition = _gridCellManager.ConvertGridToWorldFunction.Invoke(_sampleCeilPosition);
+            float height = sampleCeilPosition.y - _cameraController.transform.position.y;
+            return height;
+        }
+
+        // This function take any point in the line to calculate only height
+        private float GetBottomItemDistance(Vector3Int position)
+        {
+            Vector3 bottomItemPosition = _gridCellManager.ConvertGridToWorldFunction.Invoke(position);
+            Vector3 sampleCeilPosition = _gridCellManager.ConvertGridToWorldFunction.Invoke(_sampleCeilPosition);
+            float height = sampleCeilPosition.y - _cameraController.transform.position.y;
+            return height;
+        }
+
+        private float CalculateBottomItemDistanceOnStart()
+        {
+            var itemPositions = _metaBallManager.Iterator();
+            Vector3Int sampleBottomPos = itemPositions.First();
+            float height = GetBottomItemDistance(sampleBottomPos);
+            return height;
         }
     }
 }

@@ -42,6 +42,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
+        [SerializeField] private CameraController cameraController;
 
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
@@ -99,8 +100,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _gridCellManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
-            _scanThreasholdLineTask = new(_gridCellManager);
-            _scanThreasholdLineTask.AddTo(ref builder);
+            _scanThreasholdLineTask = new(_gridCellManager, _metaBallManager, cameraController);
 
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask
                                    , ballShooter,_metaBallManager, gameDecorator, _scanThreasholdLineTask);
@@ -124,7 +124,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask.SetScores(levelModel);
             _checkTargetTask.SetTargetCount(levelModel);
 
-            CalculateThreashold(levelModel);
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();
         }
@@ -149,6 +148,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void GenerateEntities(LevelModel levelModel)
         {
             SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
+            _scanThreasholdLineTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
+
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {
                 var gridCell = _gridCellManager.Get(levelModel.CeilMapPositions[i].Position);
@@ -176,18 +177,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void CalculateThreashold(LevelModel levelModel)
         {
-            for (int i = 0; i < levelModel.BoardThresholdMapPositions.Count; i++)
-            {
-                Vector3Int position = levelModel.BoardThresholdMapPositions[i].Position;
-                _scanThreasholdLineTask.AddThreshold(new ThresholdData
-                {
-                    IsEmptyChecked = false,
-                    Position = position
-                });
-            }
-
-            _scanThreasholdLineTask.Sort();
-            _scanThreasholdLineTask.ScanLines();
+            
         }
 
         public Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)

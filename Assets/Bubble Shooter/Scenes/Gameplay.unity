@@ -367,6 +367,7 @@ MonoBehaviour:
   boardTilemap: {fileID: 33062164}
   mainScreen: {fileID: 1256284871}
   gameDecorator: {fileID: 1176530404}
+  cameraController: {fileID: 1885966889}
 --- !u!4 &96579289
 Transform:
   m_ObjectHideFlags: 0
