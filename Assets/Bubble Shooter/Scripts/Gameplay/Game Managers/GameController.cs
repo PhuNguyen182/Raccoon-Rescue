@@ -52,7 +52,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private FillBoardTask _fillBoardTask;
         private CheckTargetTask _checkTargetTask;
         private CheckScoreTask _checkScoreTask;
-        private ScanThresholdLineTask _scanThreasholdLineTask;
+        private BoardThresholdCheckTask _boardThresholdCheckTask;
         private GameTaskManager _gameTaskManager;
 
         public GameDecorator GameDecorator => gameDecorator;
@@ -100,10 +100,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _gridCellManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
-            _scanThreasholdLineTask = new(_gridCellManager, _metaBallManager, cameraController);
+            _boardThresholdCheckTask = new(_gridCellManager, _metaBallManager, cameraController);
 
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask
-                                   , ballShooter,_metaBallManager, gameDecorator, _scanThreasholdLineTask);
+                                   , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -148,7 +148,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void GenerateEntities(LevelModel levelModel)
         {
             SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
-            _scanThreasholdLineTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
+            _boardThresholdCheckTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
 
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {

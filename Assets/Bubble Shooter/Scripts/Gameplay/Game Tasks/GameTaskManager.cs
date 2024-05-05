@@ -29,7 +29,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager
             , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, BallShooter ballShooter, MetaBallManager metaBallManager
-            , GameDecorator gameDecorator, ScanThresholdLineTask scanThresholdLineTask)
+            , GameDecorator gameDecorator, BoardThresholdCheckTask scanThresholdLineTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 

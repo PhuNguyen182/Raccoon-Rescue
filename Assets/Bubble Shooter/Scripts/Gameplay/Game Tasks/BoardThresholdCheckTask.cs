@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class ScanThresholdLineTask
+    public class BoardThresholdCheckTask
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MetaBallManager _metaBallManager;
@@ -21,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private float _toCeilHeight = 0;
         private Vector3Int _sampleCeilPosition;
 
-        public ScanThresholdLineTask(GridCellManager gridCellManager, MetaBallManager metaBallManager, CameraController cameraController)
+        public BoardThresholdCheckTask(GridCellManager gridCellManager, MetaBallManager metaBallManager, CameraController cameraController)
         {
             _gridCellManager = gridCellManager;
             _metaBallManager = metaBallManager;
@@ -31,7 +31,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _toCeilHeight = CalculateBottomItemDistanceOnStart();
         }
 
-        public void ScanLines()
+        public void Check()
         {
             bool isLineEmpty;
             Vector3Int bottomPosition = new Vector3Int(0, _levelBounds.yMin);
