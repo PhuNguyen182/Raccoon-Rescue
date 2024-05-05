@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using MessagePipe;
 using TMPro;
 
 namespace BubbleShooter.Scripts.GameUI.IngameBooster
@@ -17,6 +19,9 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         private int _count;
         private bool _isActive;
         private bool _isLocked;
+
+        private IPublisher<IngameBoosterMessage> _boosterPublisher;
+
         public IngameBoosterType Booster => booster;
 
         public Observable<bool> OnClickObserver
@@ -29,12 +34,21 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
             boosterButton.onClick.AddListener(ActivateBooster);
         }
 
+        private void Start()
+        {
+            _boosterPublisher = GlobalMessagePipe.GetPublisher<IngameBoosterMessage>();
+        }
+
         private void ActivateBooster()
         {
-            if(_count > 0)
+            if(_count >= 0)
             {
-
+                _boosterPublisher.Publish(new IngameBoosterMessage
+                {
+                    BoosterType = booster
+                });
             }
+
             else
             {
 

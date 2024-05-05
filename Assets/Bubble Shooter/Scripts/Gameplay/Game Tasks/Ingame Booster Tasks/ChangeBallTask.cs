@@ -16,8 +16,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
         private readonly BallShooter _ballShooter;
         private readonly InputProcessor _inputProcessor;
 
+        private bool _canExecute;
+
         public ChangeBallTask(BoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
         {
+            _canExecute = true;
             _boosterPanel = boosterPanel;
             _ballProvider = ballProvider;
             _ballShooter = ballShooter;
@@ -26,12 +29,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         public async UniTask Execute()
         {
+            if (!_canExecute)
+                return;
+
+            _canExecute = false;
             _inputProcessor.IsActive = false;
             BallShootModel ballModel = _ballProvider.GetRandomHelperBall();
+            _ballShooter.SetColorModel(new BallShootModel(), false);
 
             await _boosterPanel.SpawnColorBall(ballModel.BallColor, _ballShooter.ShotPoint.position);
             _ballShooter.SetColorModel(ballModel, true);
             _inputProcessor.IsActive = true;
+            _canExecute = true;
         }
     }
 }

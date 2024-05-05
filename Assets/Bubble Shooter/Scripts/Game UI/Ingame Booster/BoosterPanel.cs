@@ -23,6 +23,9 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         [SerializeField] private BoosterButton aimingBooster;
         [SerializeField] private BoosterButton changeBallBooster;
 
+        private const string UIObjectsLayer = "UIObjects";
+        private const string ObjectsLayer = "Objects";
+
         public BoosterButton Colorful => colorfulBooster;
         public BoosterButton Aiming => aimingBooster;
         public BoosterButton ChangeBall => changeBallBooster;
@@ -30,14 +33,18 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         public async UniTask SpawnColorful(Vector3 toPosition)
         {
             var ball = SpawnBall(EntityType.ColorfulBall, colorfulBooster.transform);
-            await ball.SwapTo(toPosition);
+            ball.ChangeLayer(UIObjectsLayer);
+            await ball.MoveTo(toPosition);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
 
         public async UniTask SpawnColorBall(EntityType color, Vector3 toPosition)
         {
-            var ball = SpawnBall(color, colorfulBooster.transform);
-            await ball.SwapTo(toPosition);
+            var ball = SpawnBall(color, changeBallBooster.transform);
+            ball.ChangeLayer(UIObjectsLayer);
+            await ball.MoveTo(toPosition);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
 

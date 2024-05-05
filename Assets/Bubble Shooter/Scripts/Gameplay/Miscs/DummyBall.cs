@@ -10,9 +10,16 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class DummyBall : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer ballRenderer;
+
         [Header("Swap Move")]
         [SerializeField] private float swapDuration = 0.35f;
         [SerializeField] private Ease swapEase = Ease.OutQuad;
+
+        [Header("Booster Move")]
+        [SerializeField] private float moveDuration = 0.35f;
+        [SerializeField] private Ease moveEaseX = Ease.Linear;
+        [SerializeField] private Ease moveEaseY = Ease.OutQuad;
 
         private Tweener _swapTween;
 
@@ -32,6 +39,20 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             _swapTween.Play();
 
             return UniTask.Delay(TimeSpan.FromSeconds(_swapTween.Duration()), cancellationToken: _token);
+        }
+
+        public UniTask MoveTo(Vector3 toPosition)
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.Insert(0, transform.DOMoveX(toPosition.x, moveDuration).SetEase(moveEaseX));
+            sequence.Insert(0, transform.DOMoveY(toPosition.y, moveDuration).SetEase(moveEaseY));
+            sequence.SetAutoKill(true);
+            return sequence.AwaitForComplete(TweenCancelBehaviour.Complete);
+        }
+
+        public void ChangeLayer(string layerName)
+        {
+            ballRenderer.sortingLayerID = SortingLayer.NameToID(layerName);
         }
 
         private Tweener CreateSwapTween(Vector3 toPosition)

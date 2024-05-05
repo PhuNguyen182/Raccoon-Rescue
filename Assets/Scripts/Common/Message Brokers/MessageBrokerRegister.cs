@@ -32,6 +32,7 @@ namespace Scripts.Common.MessageBrokers
             _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<PublishScoreMessage>();
             _builder.AddMessageBroker<BallDestroyMessage>();
+            _builder.AddMessageBroker<IngameBoosterMessage>();
         }
     }
 }

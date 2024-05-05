@@ -24,6 +24,9 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         [SerializeField] private PowerupButton sunballButton;
         [SerializeField] private PowerupButton waterballButton;
 
+        private const string UIObjectsLayer = "UIObjects";
+        private const string ObjectsLayer = "Objects";
+
         public void ControlPowerupButtons(float fillAmount, EntityType powerupType)
         {
             switch (powerupType)
@@ -66,7 +69,9 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(fireBall, DummyBallContainer.Transform
                                               , fireballButton.transform.position, Quaternion.identity);
+            ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -74,7 +79,9 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(leafBall, DummyBallContainer.Transform
                                               , leafballButton.transform.position, Quaternion.identity);
+            ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -82,7 +89,9 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(sunBall, DummyBallContainer.Transform
                                               , sunballButton.transform.position, Quaternion.identity);
+            ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -90,7 +99,9 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(waterBall, DummyBallContainer.Transform
                                               , waterballButton.transform.position, Quaternion.identity);
+            ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
+            ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
         }
     }
