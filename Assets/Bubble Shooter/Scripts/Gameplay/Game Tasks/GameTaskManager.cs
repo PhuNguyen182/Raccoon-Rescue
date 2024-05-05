@@ -9,6 +9,7 @@ using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using static Dreamteck.Splines.Editor.PointModule;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
 {
@@ -65,6 +66,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _gameStateController.AddTo(ref builder);
 
             _disposable = builder.Build();
+        }
+
+        public void SetInputActive(bool active)
+        {
+            _inputProcessor.IsActive = active;
         }
 
         public void Dispose()

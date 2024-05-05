@@ -16,11 +16,11 @@ namespace BubbleShooter.Scripts.Gameplay.Models
         public int TierThreeScore = 0;
         public int MaxScore = 0;
 
-        public List<BoardMapPosition> BoardMapPositions = new();
-        public List<CeilMapPosition> CeilMapPositions = new();
         public List<ColorMapData> ColorMapDatas = new();
-        public List<EntityMapPosition> StartingEntityMap = new();
+        public List<BoardMapPosition> BoardMapPositions = new();
         public List<TargetMapPosition> TargetMapPositions = new();
+        public List<EntityMapPosition> StartingEntityMap = new();
+        public List<CeilMapPosition> CeilMapPositions = new();
 
         public void ClearData()
         {
@@ -31,11 +31,11 @@ namespace BubbleShooter.Scripts.Gameplay.Models
             TierThreeScore = 0;
             MaxScore = 0;
 
-            BoardMapPositions.Clear();
-            CeilMapPositions.Clear();
             ColorMapDatas.Clear();
-            StartingEntityMap.Clear();
+            BoardMapPositions.Clear();
             TargetMapPositions.Clear();
+            StartingEntityMap.Clear();
+            CeilMapPositions.Clear();
         }
     }
 }

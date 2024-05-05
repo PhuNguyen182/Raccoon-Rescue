@@ -8,6 +8,9 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using Sirenix.OdinInspector;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
+using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Gameplay.GameManagers;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
@@ -35,6 +38,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private Button potButton;
         [SerializeField] private Button arrowButton;
 
+        private bool _canClick;
         private BallShootModel _firstModel;
         private BallShootModel _secondModel;
         public DummyBall DummyBall;
@@ -48,6 +52,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private void Awake()
         {
+            _canClick = true;
             potButton.onClick.AddListener(SwitchBall);
             arrowButton.onClick.AddListener(SwitchBall);
         }
@@ -59,12 +64,14 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             CreateBallOnStartGame();
         }
 
-        public void PopSequence()
+        public async UniTask PopSequence()
         {
             _firstModel = _secondModel;
-            ballShooter.SetColorModel(_firstModel, true);
             _secondModel = GetRandomColorBall();
-            SetBallColor(true, _secondModel.BallColor);
+            await DummyBall.SwapTo(ballShooter.ShotPoint.position);
+
+            ballShooter.SetColorModel(_firstModel, true);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Create);
         }
 
         public void SwitchRandomBall()
@@ -89,7 +96,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             ballShooter.SetColorModel(ballModel, true);
         }
 
-        public void SetBallColor(bool isActive, EntityType color)
+        public void SetBallColor(bool isActive, EntityType color, DummyBallState ballState)
         {
             if (DummyBall != null)
                 SimplePool.Despawn(DummyBall.gameObject);
@@ -108,9 +115,10 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
                 _ => null
             };
 
-            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
-                                         , spawnPoint.position
-                                         , Quaternion.identity);
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+
+            if (ballState == DummyBallState.Create)
+                DummyBall.transform.DOScale(0, 0.2f).SetEase(Ease.OutQuad).From();
         }
 
         private void CreateBallOnStartGame()
@@ -118,7 +126,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             _firstModel = GetRandomColorBall();
             ballShooter.SetColorModel(_firstModel, true);
             _secondModel = GetRandomColorBall();
-            SetBallColor(true, _secondModel.BallColor);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.New);
         }
 
         private BallShootModel GetRandomColorBall()
@@ -153,12 +161,30 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private void SwitchBall()
         {
+            SwitchBallAsync().Forget();
+        }
+
+        private async UniTask SwitchBallAsync()
+        {
+            if (!_canClick)
+                return;
+
+            _canClick = false;
+            GameController.Instance.SetInputActive(false);
+
             if (arrowButton.gameObject.activeInHierarchy)
                 arrowButton.gameObject.SetActive(false);
 
+            UniTask swapBall1 = DummyBall.SwapTo(ballShooter.DummyBall.transform.position);
+            UniTask swapBall2 = ballShooter.DummyBall.SwapTo(DummyBall.transform.position);
+            await UniTask.WhenAll(swapBall1, swapBall2);
+
             (_firstModel, _secondModel) = (_secondModel, _firstModel);
-            SetBallColor(true, _secondModel.BallColor);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Swap);
             ballShooter.SetColorModel(_firstModel, true);
+
+            GameController.Instance.SetInputActive(true);
+            _canClick = true;
         }
     }
 }

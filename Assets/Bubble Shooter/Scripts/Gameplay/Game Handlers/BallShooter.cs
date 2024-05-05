@@ -77,6 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public Action OnOutOfMove;
         public DummyBall DummyBall;
         public BallShootModel BallModel => _ballModel;
+        public Transform ShotPoint => spawnPoint;
 
         private void Awake()
         {
@@ -209,7 +210,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             SetBallColor(false, EntityType.None);
             await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
-            ballProvider.PopSequence();
+            ballProvider.PopSequence().Forget();
             _decreaseMovePublisher.Publish(new DecreaseMoveMessage
             {
                 CanDecreaseMove = !shootModel.IsPowerup

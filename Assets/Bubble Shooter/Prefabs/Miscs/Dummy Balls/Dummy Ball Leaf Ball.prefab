@@ -97,15 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPreview: {fileID: 1441149359374469186}
-  blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
-  green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
-  orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
-  red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
-  violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
-  yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
-  fireBall: {fileID: 21300000, guid: 7ebb3d57607c143359383cacdcd5a99c, type: 3}
-  leafBall: {fileID: 21300000, guid: 842887145adb74a8a975633d6692ee8b, type: 3}
-  sunBall: {fileID: 21300000, guid: 8fb73f25af656470a9f32447fceb9bc3, type: 3}
-  waterBall: {fileID: 21300000, guid: 2243ce394125044e6b5f5e1cb18c4e98, type: 3}
-  colorful: {fileID: 21300000, guid: 0bd6b1c19d09b451290b11d7047859f6, type: 3}
+  swapDuration: 0.3
+  swapEase: 6

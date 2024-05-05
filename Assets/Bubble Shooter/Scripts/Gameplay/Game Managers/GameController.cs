@@ -176,9 +176,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             }
         }
 
-        private void CalculateThreashold(LevelModel levelModel)
+        public void SetInputActive(bool active)
         {
-            
+            _gameTaskManager.SetInputActive(active);
         }
 
         public Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)
