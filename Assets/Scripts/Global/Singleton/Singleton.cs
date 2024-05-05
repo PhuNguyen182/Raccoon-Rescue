@@ -25,7 +25,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 if (_instance == null)
                 {
                     GameObject obj = new GameObject();
-                    //obj.hideFlags = HideFlags.HideAndDontSave;
+                    obj.hideFlags = HideFlags.None;
                     _instance = obj.AddComponent<T>();
                 }
             }
@@ -38,8 +38,6 @@ public class Singleton<T> : MonoBehaviour where T : Component
     /// </summary>
     protected virtual void Awake()
     {
-
-
         if (_instance == null)
         {
             //If I am the first instance, make me the Singleton

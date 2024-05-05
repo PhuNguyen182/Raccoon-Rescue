@@ -6,15 +6,30 @@ using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
+using Sirenix.OdinInspector;
+using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class BallProvider : MonoBehaviour
     {
         [SerializeField] private Transform toPoint;
-        [SerializeField] private SpriteRenderer nextBall;
+        [SerializeField] private Transform spawnPoint;
         [SerializeField] private BallShooter ballShooter;
-        [SerializeField] private DummyBall dummyBall;
+
+        [Header("Dummy Balls")]
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall blue;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall green;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall orange;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall red;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall violet;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall yellow;
 
         [Header("Buttons")]
         [SerializeField] private Button potButton;
@@ -22,6 +37,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private BallShootModel _firstModel;
         private BallShootModel _secondModel;
+        public DummyBall DummyBall;
 
         #region Random color calculating
         private List<int> _colorDensities = new();
@@ -75,7 +91,26 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         public void SetBallColor(bool isActive, EntityType color)
         {
-            dummyBall.SetBallColor(isActive, color);
+            if (DummyBall != null)
+                SimplePool.Despawn(DummyBall.gameObject);
+
+            if (!isActive)
+                return;
+
+            DummyBall ballPrefab = color switch
+            {
+                EntityType.Red => red,
+                EntityType.Yellow => yellow,
+                EntityType.Green => green,
+                EntityType.Blue => blue,
+                EntityType.Violet => violet,
+                EntityType.Orange => orange,
+                _ => null
+            };
+
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
+                                         , spawnPoint.position
+                                         , Quaternion.identity);
         }
 
         private void CreateBallOnStartGame()

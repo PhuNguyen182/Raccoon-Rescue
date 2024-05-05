@@ -17,8 +17,8 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         [SerializeField] private Button button;
         [SerializeField] private EntityType powerUpType;
         [SerializeField] private TweenValueEffect tweenValueEffect;
+        [SerializeField] private bool canActive = false;
 
-        private bool _canActive = false;
         private IPublisher<PowerupMessage> _powerupPublisher;
         private ReactiveProperty<float> _reactiveFillAmount = new();
 
@@ -38,7 +38,7 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
 
         private void ActivePowerup()
         {
-            if (_canActive)
+            if (canActive)
             {
                 // When free booster counter, it means use that booster
                 _powerupPublisher.Publish(new PowerupMessage
@@ -58,7 +58,7 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             _reactiveFillAmount.Value = fillAmount;
             SetGlowActive(fillAmount >= 1);
-            _canActive = fillAmount >= 1;
+            canActive = fillAmount >= 1;
         }
 
         private void ShowFillAmount(float fillAmount)

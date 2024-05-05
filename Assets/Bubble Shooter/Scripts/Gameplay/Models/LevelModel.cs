@@ -18,7 +18,6 @@ namespace BubbleShooter.Scripts.Gameplay.Models
 
         public List<BoardMapPosition> BoardMapPositions = new();
         public List<CeilMapPosition> CeilMapPositions = new();
-        public List<BoardThresholdMapPosition> BoardThresholdMapPositions = new();
         public List<ColorMapData> ColorMapDatas = new();
         public List<EntityMapPosition> StartingEntityMap = new();
         public List<TargetMapPosition> TargetMapPositions = new();
@@ -34,7 +33,6 @@ namespace BubbleShooter.Scripts.Gameplay.Models
 
             BoardMapPositions.Clear();
             CeilMapPositions.Clear();
-            BoardThresholdMapPositions.Clear();
             ColorMapDatas.Clear();
             StartingEntityMap.Clear();
             TargetMapPositions.Clear();

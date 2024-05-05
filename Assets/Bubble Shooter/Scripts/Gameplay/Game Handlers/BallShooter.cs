@@ -15,6 +15,7 @@ using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using Sirenix.OdinInspector;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -22,7 +23,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private CommonBall prefab;
         [SerializeField] private BallProvider ballProvider;
-        [SerializeField] private DummyBall dummyBall;
+
+        [Header("Dummy Balls")]
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall blue;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall green;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall orange;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall red;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall violet;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall yellow;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall colorful;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall fireball;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall leafBall;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall sunBall;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall waterBall;
 
         [Space(10)]
         [SerializeField] private Transform spawnPoint;
@@ -51,6 +75,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
 
         public Action OnOutOfMove;
+        public DummyBall DummyBall;
         public BallShootModel BallModel => _ballModel;
 
         private void Awake()
@@ -71,7 +96,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (inputHandler.IsReleased && _limitAngleSine > 0.15f)
             {
                 ShootBall(_ballModel);
-                _decreaseMovePublisher.Publish(new DecreaseMoveMessage());
             }
         }
 
@@ -95,7 +119,31 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         public void SetBallColor(bool isActive, EntityType color)
         {
-            dummyBall.SetBallColor(isActive, color);
+            if (DummyBall != null)
+                SimplePool.Despawn(DummyBall.gameObject);
+
+            if (!isActive)
+                return;
+
+            DummyBall ballPrefab = color switch
+            {
+                EntityType.Red => red,
+                EntityType.Yellow => yellow,
+                EntityType.Green => green,
+                EntityType.Blue => blue,
+                EntityType.Violet => violet,
+                EntityType.Orange => orange,
+                EntityType.FireBall => fireball,
+                EntityType.LeafBall => leafBall,
+                EntityType.WaterBall => waterBall,
+                EntityType.SunBall => sunBall,
+                EntityType.ColorfulBall => colorful,
+                _ => null
+            };
+
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
+                                          , spawnPoint.position
+                                          , Quaternion.identity);
         }
 
         public bool IsIngamePowerupHolding()
@@ -161,8 +209,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             SetBallColor(false, EntityType.None);
             await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
-            if (!shootModel.IsPowerup)
-                ballProvider.PopSequence();
+            ballProvider.PopSequence();
+            _decreaseMovePublisher.Publish(new DecreaseMoveMessage
+            {
+                CanDecreaseMove = !shootModel.IsPowerup
+            });
 
             _canFire = true;
         }

@@ -1,47 +1,47 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Common.Enums;
-using Sirenix.OdinInspector;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class DummyBall : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer ballPreview;
+        [Header("Swap Move")]
+        [SerializeField] private float swapDuration = 0.35f;
+        [SerializeField] private Ease swapEase = Ease.OutQuad;
 
-        [Header("Ball Colors")]
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite blue;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite green;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite orange;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite red;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite violet;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite yellow;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite colorful;
+        private Tweener _swapTween;
 
-        public void SetBallColor(bool isActive, EntityType ballColor)
+        private CancellationToken _token;
+
+        private void Awake()
         {
-            Sprite color = ballColor switch
-            {
-                EntityType.Blue => blue,
-                EntityType.Green => green,
-                EntityType.Orange => orange,
-                EntityType.Red => red,
-                EntityType.Violet => violet,
-                EntityType.Yellow => yellow,
-                EntityType.ColorfulBall => colorful,
-                _ => null
-            };
+            _token = this.GetCancellationTokenOnDestroy();
+        }
 
-            ballPreview.sprite = color;
-            ballPreview.gameObject.SetActive(isActive);
+        public UniTask SwapTo(Vector3 toPosition)
+        {
+            _swapTween ??= CreateSwapTween(toPosition);
+            _swapTween.ChangeStartValue(transform.position);
+            _swapTween.ChangeEndValue(toPosition);
+            _swapTween.Rewind();
+            _swapTween.Play();
+
+            return UniTask.Delay(TimeSpan.FromSeconds(_swapTween.Duration()), cancellationToken: _token);
+        }
+
+        private Tweener CreateSwapTween(Vector3 toPosition)
+        {
+            return transform.DOMove(toPosition, swapDuration).SetEase(swapEase).SetAutoKill(false);
+        }
+
+        private void OnDestroy()
+        {
+            _swapTween?.Kill();
         }
     }
 }

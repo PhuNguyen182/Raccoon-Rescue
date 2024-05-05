@@ -1038,10 +1038,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 618712353}
-  - component: {fileID: 618712354}
-  - component: {fileID: 618712355}
   m_Layer: 0
-  m_Name: Ball
+  m_Name: Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1062,78 +1060,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2085312155}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &618712354
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 618712352}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1592121711
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.67368424, y: 0.67368424}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!114 &618712355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 618712352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballPreview: {fileID: 618712354}
-  blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
-  green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
-  orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
-  red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
-  violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
-  yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
-  colorful: {fileID: 21300000, guid: 0bd6b1c19d09b451290b11d7047859f6, type: 3}
 --- !u!1 &652786088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,7 +1972,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
   ballProvider: {fileID: 2085312156}
-  dummyBall: {fileID: 1531688913}
+  blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
+  green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
+  orange: {fileID: 958189355520590498, guid: c5027cbc52a0ffe4f8c7358d0b4903b7, type: 3}
+  red: {fileID: 2560456168503870940, guid: 1c45711eef2c7404ca7f5bcf079080d1, type: 3}
+  violet: {fileID: 5151644725785665251, guid: acedd7442b133df469ca5d636d323c2a, type: 3}
+  yellow: {fileID: 4506252906683986654, guid: 437f8d33cc0b25b4fbbfa26e083c0c6e, type: 3}
+  colorful: {fileID: 5172783510078656710, guid: 892dc95b4a2f7084c9f66e1e3017a83e, type: 3}
+  fireball: {fileID: 4351324906395011264, guid: 781f3fcc712857e469cc04d0465c834f, type: 3}
+  leafBall: {fileID: 1963609293033873895, guid: d5c80b9e105aa3f49a1a687ca38076f0, type: 3}
+  sunBall: {fileID: 3912135275219718628, guid: 516ded5fe19bb3840802e4d6ae880d72, type: 3}
+  waterBall: {fileID: 621999245880040463, guid: fb208d82f64d2f24ca890d139a10285e, type: 3}
   spawnPoint: {fileID: 150979047}
   ballContainer: {fileID: 698839922}
   lineDrawer: {fileID: 1108513991}
@@ -2940,14 +2876,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPreview: {fileID: 1531688912}
-  blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
-  green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
-  orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
-  red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
-  violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
-  yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
-  colorful: {fileID: 21300000, guid: 0bd6b1c19d09b451290b11d7047859f6, type: 3}
 --- !u!1001 &1581173044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3627,7 +3555,7 @@ GameObject:
   - component: {fileID: 1773433298}
   - component: {fileID: 1773433297}
   m_Layer: 5
-  m_Name: Ball UI
+  m_Name: Ball Pot UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4393,9 +4321,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toPoint: {fileID: 150979047}
-  nextBall: {fileID: 618712354}
+  spawnPoint: {fileID: 618712353}
   ballShooter: {fileID: 1108513992}
-  dummyBall: {fileID: 618712355}
+  blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
+  green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
+  orange: {fileID: 958189355520590498, guid: c5027cbc52a0ffe4f8c7358d0b4903b7, type: 3}
+  red: {fileID: 2560456168503870940, guid: 1c45711eef2c7404ca7f5bcf079080d1, type: 3}
+  violet: {fileID: 5151644725785665251, guid: acedd7442b133df469ca5d636d323c2a, type: 3}
+  yellow: {fileID: 4506252906683986654, guid: 437f8d33cc0b25b4fbbfa26e083c0c6e, type: 3}
   potButton: {fileID: 1683866973}
   arrowButton: {fileID: 652786093}
 --- !u!1001 &1538568340934597978

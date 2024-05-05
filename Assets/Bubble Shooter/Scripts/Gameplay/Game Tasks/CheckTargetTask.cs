@@ -35,7 +35,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _moveTargetSubscriber.Subscribe(SetTargetInfo).AddTo(builder);
             _addTargetSubscriber.Subscribe(message => AddTarget()).AddTo(builder);
-            _decreaseMoveSubscriber.Subscribe(message => DecreaseMove()).AddTo(builder);
+            _decreaseMoveSubscriber.Subscribe(DecreaseMove).AddTo(builder);
 
             _disposable = builder.Build();
         }
@@ -79,10 +79,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _inGamePanel.UpdateTarget(_targetCount, _maxTarget);
         }
 
-        private void DecreaseMove()
+        private void DecreaseMove(DecreaseMoveMessage message)
         {
-            _moveCount = _moveCount - 1;
-            UpdateMove();
+            if (message.CanDecreaseMove)
+            {
+                _moveCount = _moveCount - 1;
+                UpdateMove();
+            }
         }
 
         private void AddTarget()

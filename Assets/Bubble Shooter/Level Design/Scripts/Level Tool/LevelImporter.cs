@@ -60,20 +60,6 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelImporter BuildBoardThresholdMap(Tilemap tilemap, List<BoardThresholdMapPosition> mapPositions)
-        {
-            tilemap.ClearAllTiles();
-
-            for (int i = 0; i < mapPositions.Count; i++)
-            {
-                var mapPosition = mapPositions[i];
-                var tile = _tileDatabase.GetBoardThresholdTile();
-                tilemap.SetTile(mapPosition.Position, tile);
-            }
-
-            return this;
-        }
-
         public LevelImporter BuildMoveSequence(int moveCount, out int moveCounts)
         {
             moveCounts = moveCount;

@@ -67,16 +67,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             switch (message.PowerupColor)
             {
-                case EntityType.Red:
+                case EntityType.FireBall:
                     AddRedBall(message.Amount);
                     break;
-                case EntityType.Yellow:
+                case EntityType.SunBall:
                     AddYellowBall(message.Amount);
                     break;
-                case EntityType.Green:
+                case EntityType.LeafBall:
                     AddGreenBall(message.Amount);
                     break;
-                case EntityType.Blue:
+                case EntityType.WaterBall:
                     AddBlueBall(message.Amount);
                     break;
             }
@@ -86,16 +86,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             switch (message.PowerupColor)
             {
-                case EntityType.Red:
+                case EntityType.FireBall:
                     FreeRedBall();
                     break;
-                case EntityType.Yellow:
+                case EntityType.SunBall:
                     FreeYellowBall();
                     break;
-                case EntityType.Green:
+                case EntityType.LeafBall:
                     FreeGreenBall();
                     break;
-                case EntityType.Blue:
+                case EntityType.WaterBall:
                     FreeBlueBall();
                     break;
             }
