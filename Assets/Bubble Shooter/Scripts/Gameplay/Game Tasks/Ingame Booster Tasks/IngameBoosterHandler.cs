@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.GameUI.IngameBooster;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Gameplay.Miscs;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {
@@ -13,25 +16,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
         private readonly AimBoosterTask _aimBoosterTask;
         private readonly ChangeBallTask _changeBallTask;
 
-        public IngameBoosterHandler(BallShooter ballShooter)
+        public IngameBoosterHandler(BoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
         {
-            _colorfullBoosterTask = new(ballShooter);
             _aimBoosterTask = new(ballShooter);
-            _changeBallTask = new(ballShooter);
+            _colorfullBoosterTask = new(boosterPanel, ballShooter, inputProcessor);
+            _changeBallTask = new(boosterPanel, ballProvider, ballShooter, inputProcessor);
         }
 
-        public void ExecuteBooster(IngameBoosterType booster)
+        public async UniTask ExecuteBooster(IngameBoosterType booster)
         {
             switch (booster)
             {
                 case IngameBoosterType.Colorful:
-                    _colorfullBoosterTask.Execute();
+                    await _colorfullBoosterTask.Execute();
                     break;
                 case IngameBoosterType.Aim:
                     _aimBoosterTask.Execute();
                     break;
                 case IngameBoosterType.ChangeBall:
-                    _changeBallTask.Execute();
+                    await _changeBallTask.Execute();
                     break;
             }
         }

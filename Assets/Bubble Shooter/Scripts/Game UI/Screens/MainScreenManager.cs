@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.GameUI.IngamePowerup;
 using BubbleShooter.Scripts.GameUI.Notifications;
+using BubbleShooter.Scripts.GameUI.IngameBooster;
 
 namespace BubbleShooter.Scripts.GameUI.Screens
 {
@@ -12,10 +13,12 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private IngamePowerupPanel powerupPanel;
         [SerializeField] private NotificationPanel notificationPanel;
         [SerializeField] private EndGameScreen endGameScreen;
+        [SerializeField] private BoosterPanel boosterPanel;
 
         public InGamePanel InGamePanel => inGamePanel;
         public IngamePowerupPanel IngamePowerupPanel => powerupPanel;
         public NotificationPanel NotificationPanel => notificationPanel;
         public EndGameScreen EndGameScreen => endGameScreen;
+        public BoosterPanel BoosterPanel => boosterPanel;
     }
 }

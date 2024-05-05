@@ -1069,6 +1069,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81bfeac85f1379a4fadc9c1bbc9beaa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
+  green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
+  orange: {fileID: 958189355520590498, guid: c5027cbc52a0ffe4f8c7358d0b4903b7, type: 3}
+  red: {fileID: 2560456168503870940, guid: 1c45711eef2c7404ca7f5bcf079080d1, type: 3}
+  violet: {fileID: 5151644725785665251, guid: acedd7442b133df469ca5d636d323c2a, type: 3}
+  yellow: {fileID: 4506252906683986654, guid: 437f8d33cc0b25b4fbbfa26e083c0c6e, type: 3}
+  colorfulBall: {fileID: 5172783510078656710, guid: 892dc95b4a2f7084c9f66e1e3017a83e, type: 3}
   colorfulBooster: {fileID: 3102477346623285305}
   aimingBooster: {fileID: 2140075391354338555}
   changeBallBooster: {fileID: 2699086283041767348}

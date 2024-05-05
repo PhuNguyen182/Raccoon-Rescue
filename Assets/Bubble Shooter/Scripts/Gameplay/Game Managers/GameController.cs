@@ -102,7 +102,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
             _boardThresholdCheckTask = new(_gridCellManager, cameraController);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask
+            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask, ballProvider
                                    , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask);
             _gameTaskManager.AddTo(ref builder);
 

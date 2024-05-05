@@ -29,8 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly IDisposable _disposable;
 
         public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager
-            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, BallShooter ballShooter, MetaBallManager metaBallManager
-            , GameDecorator gameDecorator, BoardThresholdCheckTask scanThresholdLineTask)
+            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, BallProvider ballProvider, BallShooter ballShooter
+            , MetaBallManager metaBallManager, GameDecorator gameDecorator, BoardThresholdCheckTask scanThresholdLineTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -48,7 +48,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _checkBallClusterTask = new(_gridCellManager, _breakGridTask, _inputProcessor);
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
 
-            _ingameBoosterHandler = new(ballShooter);
+            _ingameBoosterHandler = new(mainScreenManager.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
             _ingameBoosterHandler.AddTo(ref builder);
 
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);

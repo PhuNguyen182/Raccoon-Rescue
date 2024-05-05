@@ -66,33 +66,11 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         public async UniTask PopSequence()
         {
             _firstModel = _secondModel;
-            _secondModel = GetRandomColorBall();
+            _secondModel = GetRandomColorBallInPot();
             await DummyBall.SwapTo(ballShooter.ShotPoint.position);
 
             ballShooter.SetColorModel(_firstModel, true);
             SetBallColor(true, _secondModel.BallColor, DummyBallState.Create);
-        }
-
-        public void SwitchRandomBall()
-        {
-            EntityType currentColor = ballShooter.BallModel.BallColor;
-            int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
-
-            while (currentColor == nextColor)
-            {
-                randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-                nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
-            }
-
-            var ballModel = new BallShootModel
-            {
-                BallColor = nextColor,
-                BallCount = ballShooter.BallModel.BallCount,
-                IsPowerup = ballShooter.BallModel.IsPowerup
-            };
-
-            ballShooter.SetColorModel(ballModel, true);
         }
 
         public void SetBallColor(bool isActive, EntityType color, DummyBallState ballState)
@@ -122,13 +100,35 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private void CreateBallOnStartGame()
         {
-            _firstModel = GetRandomColorBall();
+            _firstModel = GetRandomColorBallInPot();
             ballShooter.SetColorModel(_firstModel, true);
-            _secondModel = GetRandomColorBall();
+            _secondModel = GetRandomColorBallInPot();
             SetBallColor(true, _secondModel.BallColor, DummyBallState.New);
         }
 
-        private BallShootModel GetRandomColorBall()
+        public BallShootModel GetRandomHelperBall()
+        {
+            EntityType currentColor = ballShooter.BallModel.BallColor;
+            int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
+            EntityType nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
+
+            while (currentColor == nextColor)
+            {
+                randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
+                nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
+            }
+
+            BallShootModel ballModel = new BallShootModel
+            {
+                BallColor = nextColor,
+                BallCount = ballShooter.BallModel.BallCount,
+                IsPowerup = ballShooter.BallModel.IsPowerup
+            };
+
+            return ballModel;
+        }
+
+        private BallShootModel GetRandomColorBallInPot()
         {
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
             EntityType color = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];

@@ -152,11 +152,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             return _ballModel.IsPowerup;
         }
 
-        public void SwitchRandomBall()
-        {
-            ballProvider.SwitchRandomBall();
-        }
-
         public void SwitchBallInPot()
         {
             // To do: do along with switching ball animation
