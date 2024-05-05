@@ -88,7 +88,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _checkTargetTask.CheckTarget();
                 }
 
-                _boardThresholdCheckTask.Check();
+                await _boardThresholdCheckTask.Check();
                 _inputProcessor.IsActive = true;
             }
         }

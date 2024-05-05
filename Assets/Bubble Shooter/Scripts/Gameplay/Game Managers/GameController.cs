@@ -100,7 +100,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _gridCellManager.AddTo(ref builder);
 
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
-            _boardThresholdCheckTask = new(_gridCellManager, _metaBallManager, cameraController);
+            _boardThresholdCheckTask = new(_gridCellManager, cameraController);
 
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask
                                    , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask);
@@ -111,7 +111,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_1").text;
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
         }
@@ -126,6 +126,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();
+            _boardThresholdCheckTask.CalculateFirstItemHeight();
         }
 
         private void GenerateGridCell(LevelModel levelModel)

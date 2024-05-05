@@ -55,8 +55,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool EasyBreak => false;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -164,9 +165,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        protected override void OnDisable()
+        private void OnDestroy()
         {
-            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

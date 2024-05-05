@@ -232,6 +232,8 @@ MonoBehaviour:
     Color: 4
   - Coefficient: 1000
     Color: 5
+  - Coefficient: 1000
+    Color: 2
 --- !u!1 &375386102
 GameObject:
   m_ObjectHideFlags: 0

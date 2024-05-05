@@ -38,8 +38,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -124,9 +125,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             });
         }
 
-        protected override void OnDisable()
+        private void OnDestroy()
         {
-            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
