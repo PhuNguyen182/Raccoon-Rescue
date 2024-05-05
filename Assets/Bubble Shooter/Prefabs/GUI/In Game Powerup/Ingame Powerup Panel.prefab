@@ -488,6 +488,7 @@ MonoBehaviour:
   button: {fileID: 6520867899222973867}
   powerUpType: 12
   tweenValueEffect: {fileID: 392648953359463158}
+  canActive: 0
 --- !u!114 &392648953359463158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,6 +555,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb482433d437ac41b164e17241442c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballShooter: {fileID: 0}
+  fireBall: {fileID: 4351324906395011264, guid: 781f3fcc712857e469cc04d0465c834f, type: 3}
+  leafBall: {fileID: 1963609293033873895, guid: d5c80b9e105aa3f49a1a687ca38076f0, type: 3}
+  sunBall: {fileID: 3912135275219718628, guid: 516ded5fe19bb3840802e4d6ae880d72, type: 3}
+  waterBall: {fileID: 621999245880040463, guid: fb208d82f64d2f24ca890d139a10285e, type: 3}
   fireballButton: {fileID: 1268724601314251759}
   leafballButton: {fileID: 2308006282794392748}
   sunballButton: {fileID: 1016516449569117467}
@@ -812,6 +818,7 @@ MonoBehaviour:
   button: {fileID: 7895450835170922476}
   powerUpType: 11
   tweenValueEffect: {fileID: 1402152476966373845}
+  canActive: 0
 --- !u!114 &1402152476966373845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1464,6 +1471,7 @@ MonoBehaviour:
   button: {fileID: 4959124488538776326}
   powerUpType: 8
   tweenValueEffect: {fileID: 4174731091824064422}
+  canActive: 0
 --- !u!114 &4174731091824064422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1732,6 +1740,7 @@ MonoBehaviour:
   button: {fileID: 5408984287034170506}
   powerUpType: 9
   tweenValueEffect: {fileID: 3796580540916843173}
+  canActive: 0
 --- !u!114 &3796580540916843173
 MonoBehaviour:
   m_ObjectHideFlags: 0

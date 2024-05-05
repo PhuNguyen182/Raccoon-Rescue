@@ -1990,6 +1990,7 @@ MonoBehaviour:
   mainCharacter: {fileID: 1801469538}
   mainCamera: {fileID: 1885966887}
   normalizePosition: {x: 0.5, y: 0.175}
+  DummyBall: {fileID: 0}
 --- !u!4 &1108513993
 Transform:
   m_ObjectHideFlags: 0
@@ -2876,6 +2877,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swapDuration: 0.35
+  swapEase: 6
 --- !u!1001 &1581173044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4331,6 +4334,7 @@ MonoBehaviour:
   yellow: {fileID: 4506252906683986654, guid: 437f8d33cc0b25b4fbbfa26e083c0c6e, type: 3}
   potButton: {fileID: 1683866973}
   arrowButton: {fileID: 652786093}
+  DummyBall: {fileID: 0}
 --- !u!1001 &1538568340934597978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4423,6 +4427,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8585152600037671607, guid: 0f71561e438d0b84bb03cae9511c8c46, type: 3}
+      propertyPath: ballShooter
+      value: 
+      objectReference: {fileID: 1108513992}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

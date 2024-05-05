@@ -7,14 +7,16 @@ using BubbleShooter.Scripts.GameUI.IngamePowerup;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Enums;
-using MessagePipe;
 using BubbleShooter.Scripts.Gameplay.Models;
+using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
     public class InGamePowerupControlTask : IDisposable
     {
         private readonly BallShooter _ballShooter;
+        private readonly InputProcessor _inputProcessor;
         private readonly IDisposable _messageDisposable;
         private readonly IngamePowerupPanel _ingamePowerupPanel;
         private readonly ISubscriber<PowerupMessage> _powerupSubscriber;
@@ -24,8 +26,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _yellowBallCount;
         private int _blueBallCount;
 
-        public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel, BallShooter ballShooter)
+        public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel, BallShooter ballShooter, InputProcessor inputProcessor)
         {
+            _inputProcessor = inputProcessor;
             _ingamePowerupPanel = ingamePowerupPanel;
             _redBallCount = _greenBallCount = _yellowBallCount = _blueBallCount = 0;
             _ballShooter = ballShooter;
@@ -58,7 +61,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 case ReactiveValueCommand.Remaining:
                     break;
                 case ReactiveValueCommand.Reset:
-                    FreePowerup(message);
+                    FreePowerup(message).Forget();
                     break;
             }
         }
@@ -82,23 +85,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void FreePowerup(PowerupMessage message)
+        private async UniTask FreePowerup(PowerupMessage message)
         {
+            _inputProcessor.IsActive = false;
+            _ballShooter.SetColorModel(default, false);
+
             switch (message.PowerupColor)
             {
                 case EntityType.FireBall:
-                    FreeRedBall();
+                    await FreeRedBall();
                     break;
                 case EntityType.SunBall:
-                    FreeYellowBall();
+                    await FreeYellowBall();
                     break;
                 case EntityType.LeafBall:
-                    FreeGreenBall();
+                    await FreeGreenBall();
                     break;
                 case EntityType.WaterBall:
-                    FreeBlueBall();
+                    await FreeBlueBall();
                     break;
             }
+
+            _inputProcessor.IsActive = true;
         }
 
         private void AddRedBall(int amount)
@@ -129,10 +137,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckWaterball();
         }
 
-        private void FreeRedBall()
+        private async UniTask FreeRedBall()
         {
             _redBallCount = 0;
             CheckFireball();
+            await _ingamePowerupPanel.SpawnPowerup(EntityType.FireBall);
 
             // If free ball, use this power up
             _ballShooter.SetColorModel(new BallShootModel
@@ -143,10 +152,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }, true);
         }
 
-        private void FreeYellowBall()
+        private async UniTask FreeYellowBall()
         {
             _yellowBallCount = 0;
             CheckSunball();
+            await _ingamePowerupPanel.SpawnPowerup(EntityType.SunBall);
 
             // If free ball, use this power up
             _ballShooter.SetColorModel(new BallShootModel
@@ -157,10 +167,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }, true);
         }
 
-        private void FreeGreenBall()
+        private async UniTask FreeGreenBall()
         {
             _greenBallCount = 0;
             CheckLeafball();
+            await _ingamePowerupPanel.SpawnPowerup(EntityType.LeafBall);
 
             // If free ball, use this power up
             _ballShooter.SetColorModel(new BallShootModel
@@ -171,10 +182,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }, true);
         }
 
-        private void FreeBlueBall()
+        private async UniTask FreeBlueBall()
         {
             _blueBallCount = 0;
             CheckWaterball();
+            await _ingamePowerupPanel.SpawnPowerup(EntityType.WaterBall);
 
             // If free ball, use this power up
             _ballShooter.SetColorModel(new BallShootModel

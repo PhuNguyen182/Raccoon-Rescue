@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4351324906395011264}
   - component: {fileID: 4806518258258636214}
   m_Layer: 0
-  m_Name: Dummy Ball Fireball
+  m_Name: Dummy Ball Fire Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
