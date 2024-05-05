@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843dad231d6833048bc2eef029b795d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  booster: 0
+  booster: 3
   boosterButton: {fileID: 5627308855812230883}
   boosterCount: {fileID: 1483507795863392649}
 --- !u!1 &4662717492592896791
@@ -631,7 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843dad231d6833048bc2eef029b795d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  booster: 0
+  booster: 1
   boosterButton: {fileID: 8414814871412686509}
   boosterCount: {fileID: 560842237197714500}
 --- !u!1 &6370650597849577737
@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843dad231d6833048bc2eef029b795d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  booster: 0
+  booster: 2
   boosterButton: {fileID: 4172041883082666494}
   boosterCount: {fileID: 3799060437154869035}
 --- !u!1 &8355524567093237592
