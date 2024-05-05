@@ -15,6 +15,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
         private readonly ColorfullBoosterTask _colorfullBoosterTask;
         private readonly AimBoosterTask _aimBoosterTask;
         private readonly ChangeBallTask _changeBallTask;
+        private readonly BoosterPanel _boosterPanel;
 
         public IngameBoosterHandler(BoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
         {
@@ -37,6 +38,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
                     await _changeBallTask.Execute();
                     break;
             }
+        }
+
+        private void UpdateBooster()
+        {
+            _boosterPanel.Colorful.SetBoosterCount(GameData.Instance.InGameBoosterData.ColorfulCount);
+            _boosterPanel.Aiming.SetBoosterCount(GameData.Instance.InGameBoosterData.TargetAimCount);
+            _boosterPanel.ChangeBall.SetBoosterCount(GameData.Instance.InGameBoosterData.RandomBallCount);
         }
 
         public void Dispose()

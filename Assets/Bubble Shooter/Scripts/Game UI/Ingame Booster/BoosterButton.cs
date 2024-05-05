@@ -1,3 +1,4 @@
+using R3;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,15 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         [SerializeField] private Button boosterButton;
         [SerializeField] private TMP_Text boosterCount;
 
+        private int _count;
+        private bool _isActive;
+        private bool _isLocked;
         public IngameBoosterType Booster => booster;
+
+        public Observable<bool> OnClickObserver
+        {
+            get => boosterButton.OnClickAsObservable().Where(_ => !_isLocked).Select(_ => !_isActive);
+        }
 
         private void Awake()
         {
@@ -22,11 +31,19 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
 
         private void ActivateBooster()
         {
+            if(_count > 0)
+            {
 
+            }
+            else
+            {
+
+            }
         }
 
         public void SetBoosterCount(int count)
         {
+            _count = count;
             boosterCount.text = $"{count}";
         }
     }

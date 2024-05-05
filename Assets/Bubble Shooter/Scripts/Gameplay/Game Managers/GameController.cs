@@ -43,6 +43,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
         [SerializeField] private CameraController cameraController;
+        [SerializeField] private Material ballMaterial;
 
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
@@ -105,6 +106,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask, ballProvider
                                    , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask);
             _gameTaskManager.AddTo(ref builder);
+
+            _gameTaskManager.SetBallMaterialEndGame(ballMaterial);
 
             builder.RegisterTo(this.destroyCancellationToken);
         }

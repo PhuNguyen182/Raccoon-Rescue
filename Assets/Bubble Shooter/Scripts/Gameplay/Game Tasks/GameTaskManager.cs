@@ -58,7 +58,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                                     , checkTargetTask, scanThresholdLineTask);
             _matchBallHandler.AddTo(ref builder);
 
-            _endGameTask = new(metaBallManager);
+            _endGameTask = new(metaBallManager, ballShooter, ballProvider);
             _endGameTask.AddTo(ref builder);
 
             _gameStateController = new(_mainScreenManager.EndGameScreen, _endGameTask
@@ -68,6 +68,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _disposable = builder.Build();
         }
 
+        public void SetBallMaterialEndGame(Material material)
+        {
+            _endGameTask.SetMaterial(material);
+            _endGameTask.ResetBallColor();
+        }
+
         public void SetInputActive(bool active)
         {
             _inputProcessor.IsActive = active;
@@ -75,6 +81,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            _endGameTask.ResetBallColor();
             _disposable.Dispose();
         }
     } 

@@ -60,7 +60,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _gameStateMachine.Configure(State.Playing)
                              .OnEntryFrom(Trigger.Play, PlayGame)
-                             .OnEntryFrom(Trigger.BuyMove, PlayGame)
+                             .OnEntryFrom(Trigger.BuyMove, Continue)
                              .Permit(_endGameTrigger.Trigger, State.EndGame);
 
             _gameStateMachine.Configure(State.EndGame)
@@ -84,8 +84,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
+            _endGameTask.ResetBallColor();
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
+        }
+
+        private void Continue()
+        {
+            _endGameTask.ResetBallColor();
+            _gameDecorator.Character.ResetCryState();
+            _gameDecorator.Character.Continue();
+            _endGameTask.ContinueSpawnBall();
         }
 
         private void EndGame(bool isWin)

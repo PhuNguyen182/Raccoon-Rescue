@@ -23,6 +23,10 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         [SerializeField] private BoosterButton aimingBooster;
         [SerializeField] private BoosterButton changeBallBooster;
 
+        public BoosterButton Colorful => colorfulBooster;
+        public BoosterButton Aiming => aimingBooster;
+        public BoosterButton ChangeBall => changeBallBooster;
+
         public async UniTask SpawnColorful(Vector3 toPosition)
         {
             var ball = SpawnBall(EntityType.ColorfulBall, colorfulBooster.transform);
