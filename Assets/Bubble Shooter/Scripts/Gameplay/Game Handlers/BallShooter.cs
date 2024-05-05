@@ -14,8 +14,8 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
-using MessagePipe;
 using Sirenix.OdinInspector;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -145,16 +145,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
                                           , spawnPoint.position
                                           , Quaternion.identity);
-        }
-
-        public bool IsIngamePowerupHolding()
-        {
-            return _ballModel.IsPowerup;
-        }
-
-        public void SwitchBallInPot()
-        {
-            // To do: do along with switching ball animation
         }
 
         private void GetInputDirection()
