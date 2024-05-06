@@ -1,3 +1,5 @@
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameBoard;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +18,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private LayerMask gridMask;
         [SerializeField] private LayerMask reflectMask;
 
+        private RaycastHit2D _ceilHit;
+        private RaycastHit2D _ballHit;
+        private RaycastHit2D _reflectHit;
+
         private Vector2 _direction;
         private Vector3[] _linePoints = new Vector3[3];
+
+        private const float CheckGridOffset = 0.35f;
 
         public void DrawAimingLine(bool isDraw)
         {
@@ -28,17 +36,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             }
 
             _direction = inputHandler.InputPosition - spawnPoint.position;
-            RaycastHit2D ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, ceilMask);
+            _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, ceilMask);
 
-            if (ceilHit)
-                _linePoints = new Vector3[] { spawnPoint.position, ceilHit.point };
+            if (_ceilHit)
+                _linePoints = new Vector3[] { spawnPoint.position, _ceilHit.point };
 
             else
             {
-                RaycastHit2D ballHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, ballMask);
+                _ballHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, ballMask);
 
-                if (ballHit)
-                    _linePoints = new Vector3[] { spawnPoint.position, ballHit.point };
+                if (_ballHit)
+                    _linePoints = new Vector3[] { spawnPoint.position, _ballHit.point };
 
                 else DrawReflectLine();
             }
@@ -48,28 +56,36 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void DrawReflectLine()
         {
-            RaycastHit2D reflectHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, reflectMask);
+            _reflectHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, reflectMask);
 
-            if (reflectHit)
+            if (_reflectHit)
             {
-                Vector3 hitPoint = reflectHit.point;
-                Vector2 reflectDir = Vector2.Reflect(hitPoint - spawnPoint.position, reflectHit.normal);
-                Ray2D reflectRay = new(hitPoint, reflectDir);
-                RaycastHit2D ceilHit = Physics2D.Raycast(hitPoint, reflectDir, 25, ceilMask);
+                Vector3 hitPoint = _reflectHit.point;
+                Vector2 reflectDir = Vector2.Reflect(hitPoint - spawnPoint.position, _reflectHit.normal);
 
-                if (ceilHit)
+                Ray2D reflectRay = new(hitPoint, reflectDir);
+                _ceilHit = Physics2D.Raycast(hitPoint, reflectDir, 25, ceilMask);
+
+                if (_ceilHit)
                 {
-                    _linePoints = new Vector3[] { spawnPoint.position, reflectHit.point, ceilHit.point };
+                    _linePoints = new Vector3[] { spawnPoint.position, _reflectHit.point, _ceilHit.point };
                 }
 
                 else
                 {
-                    RaycastHit2D ballHit = Physics2D.Raycast(hitPoint, reflectDir, 25, ballMask);
+                    _ballHit = Physics2D.Raycast(hitPoint, reflectDir, 25, ballMask);
 
-                    _linePoints = ballHit ? new Vector3[] { spawnPoint.position, reflectHit.point, ballHit.point }
-                                          : new Vector3[] { spawnPoint.position, reflectHit.point, reflectRay.GetPoint(25f) };
+                    _linePoints = _ballHit ? new Vector3[] { spawnPoint.position, _reflectHit.point, _ballHit.point }
+                                          : new Vector3[] { spawnPoint.position, _reflectHit.point, reflectRay.GetPoint(25f) };
                 }
             }
+        }
+
+        public GridCellHolder ReportGridCell(Vector3 position, Vector3 dir)
+        {
+            Vector3 checkPosition = position - CheckGridOffset * dir.normalized;
+            Collider2D cellCollider = Physics2D.OverlapPoint(checkPosition, gridMask);
+            return cellCollider.TryGetComponent(out GridCellHolder holder) ? holder : null;
         }
     }
 }
