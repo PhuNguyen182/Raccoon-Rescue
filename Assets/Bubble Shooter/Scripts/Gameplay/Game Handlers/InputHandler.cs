@@ -1,4 +1,3 @@
-using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,19 +18,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public bool IsActive { get; set; }
 
         private Touch _touch;
-        private IDisposable _disposable;
 
         private void Awake()
         {
-            var d = Disposable.CreateBuilder();
-            
-            Observable.EveryUpdate()
-                      .Index()
-                      .Subscribe(_ => ProcessInput())
-                      .AddTo(ref d);
-            
-            _disposable = d.Build();
             IsActive = true;
+        }
+
+        private void Update()
+        {
+            ProcessInput();
         }
 
         private void ProcessInput()
@@ -122,11 +117,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
-        }
-
-        private void OnDestroy()
-        {
-            _disposable.Dispose();
         }
     }
 }

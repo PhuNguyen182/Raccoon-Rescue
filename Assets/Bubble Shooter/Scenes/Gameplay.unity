@@ -2066,7 +2066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1108513993}
   - component: {fileID: 1108513992}
-  - component: {fileID: 1108513991}
   m_Layer: 0
   m_Name: Ball Shooter
   m_TagString: Untagged
@@ -2074,27 +2073,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1108513991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108513990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71c4c9168386ef34f83cf7fe522d2a1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPoint: {fileID: 150979047}
-  inputHandler: {fileID: 1278411868}
-  trajactoryLine: {fileID: 1252867398}
-  leftReflect:
-    serializedVersion: 2
-    m_Bits: 512
-  rightReflect:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!114 &1108513992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2122,7 +2100,7 @@ MonoBehaviour:
   waterBall: {fileID: 621999245880040463, guid: fb208d82f64d2f24ca890d139a10285e, type: 3}
   spawnPoint: {fileID: 150979047}
   ballContainer: {fileID: 698839922}
-  lineDrawer: {fileID: 1108513991}
+  aimingLine: {fileID: 1252867401}
   inputHandler: {fileID: 1278411868}
   mainCharacter: {fileID: 1801469538}
   mainCamera: {fileID: 1885966887}
@@ -2464,15 +2442,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1252867400}
-  - component: {fileID: 1252867398}
   - component: {fileID: 1252867399}
+  - component: {fileID: 1252867398}
+  - component: {fileID: 1252867401}
   m_Layer: 0
   m_Name: Aiming Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1252867398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2603,6 +2582,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1108513993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1252867401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252867397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c4c9168386ef34f83cf7fe522d2a1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoint: {fileID: 150979047}
+  inputHandler: {fileID: 1278411868}
+  lineDrawer: {fileID: 1252867398}
+  ceilMask:
+    serializedVersion: 2
+    m_Bits: 64
+  ballMask:
+    serializedVersion: 2
+    m_Bits: 8
+  gridMask:
+    serializedVersion: 2
+    m_Bits: 128
+  reflectMask:
+    serializedVersion: 2
+    m_Bits: 512
+  leftReflect:
+    serializedVersion: 2
+    m_Bits: 512
+  rightReflect:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1256284866
 GameObject:
   m_ObjectHideFlags: 0
@@ -3015,8 +3027,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballRenderer: {fileID: 0}
   swapDuration: 0.35
   swapEase: 6
+  moveDuration: 0.35
+  moveEaseX: 1
+  moveEaseY: 6
 --- !u!1001 &1581173044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3071,7 +3087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4617393845331134515, guid: 1303e18148701644ab9c14e13eece323, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5197353762974485562, guid: 1303e18148701644ab9c14e13eece323, type: 3}
       propertyPath: mainCamera

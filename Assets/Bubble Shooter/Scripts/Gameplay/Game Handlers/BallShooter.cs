@@ -53,7 +53,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private Transform ballContainer;
 
         [Space(10)]
-        [SerializeField] private LineDrawer lineDrawer;
+        [SerializeField] private AimingLine aimingLine;
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private MainCharacter mainCharacter;
         
@@ -94,8 +94,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             GetInputDirection();
             RotatePointer();
 
+            if (inputHandler.IsHolden)
+            {
+                aimingLine.DrawAimingLine(true);
+            }
+
             if (inputHandler.IsReleased && _limitAngleSine > 0.15f)
             {
+                aimingLine.DrawAimingLine(false);
                 ShootBall(_ballModel);
             }
         }
