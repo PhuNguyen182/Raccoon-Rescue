@@ -238,7 +238,7 @@ MonoBehaviour:
   snapDuration: 0.2
   snapEase: 4
   delayFrame: 3
-  ballRadius: 0.3
+  ballRadius: 0.35
   ballDistance: 1
   ceilMask:
     serializedVersion: 2
@@ -251,7 +251,7 @@ MonoBehaviour:
     m_Bits: 128
   reflectMask:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
 --- !u!114 &-2116160113263954195
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -257,7 +257,7 @@ MonoBehaviour:
     m_Bits: 128
   reflectMask:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
 --- !u!114 &5751660295790079609
 MonoBehaviour:
   m_ObjectHideFlags: 0

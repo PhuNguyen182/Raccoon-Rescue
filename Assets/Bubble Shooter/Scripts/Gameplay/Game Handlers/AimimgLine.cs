@@ -10,13 +10,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private InputHandler inputHandler;
-        [SerializeField] private LineDrawer lineDrawer;
+        [SerializeField] private LineDrawer mainLineDrawer;
+        [SerializeField] private LineDrawer[] lineDrawers;
 
-        [Header("Hit Layers")]
-        [SerializeField] private LayerMask ceilMask;
-        [SerializeField] private LayerMask ballMask;
-        [SerializeField] private LayerMask gridMask;
-        [SerializeField] private LayerMask reflectMask;
+        private LayerMask ceilMask;
+        private LayerMask ballMask;
+        private LayerMask gridMask;
+        private LayerMask reflectMask;
 
         private RaycastHit2D _ceilHit;
         private RaycastHit2D _ballHit;
@@ -26,15 +26,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private Vector3[] _linePoints = new Vector3[3];
 
         private const float CheckGridOffset = 0.35f;
+        private const string CeilLayerName = "Ceil";
+        private const string BallLayerName = "Ball";
+        private const string GridLayerName = "Grid";
+        private const string ReflectLayerName = "ReflectLine";
 
-        public void DrawAimingLine(bool isDraw)
+        private void Awake()
+        {
+            ceilMask = LayerMask.GetMask(CeilLayerName);
+            ballMask = LayerMask.GetMask(BallLayerName);
+            gridMask = LayerMask.GetMask(GridLayerName);
+            reflectMask = LayerMask.GetMask(ReflectLayerName);
+        }
+
+        public void DrawAimingLine(bool isDraw, Color lineColor)
         {
             if(!isDraw)
             {
-                lineDrawer.HidePath();
+                mainLineDrawer.HidePath();
                 return;
             }
 
+            mainLineDrawer.SetColor(lineColor);
             _direction = inputHandler.InputPosition - spawnPoint.position;
             _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, ceilMask);
 
@@ -51,7 +64,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 else DrawReflectLine();
             }
 
-            lineDrawer.ShowPath(_linePoints);
+            mainLineDrawer.ShowPath(_linePoints);
         }
 
         private void DrawReflectLine()

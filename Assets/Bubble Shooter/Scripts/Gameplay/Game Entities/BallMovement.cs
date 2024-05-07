@@ -129,7 +129,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private async UniTaskVoid CheckSnapToCeilAsync()
         {
-            _ceilCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 1.5f, cellMask);
+            _ceilCollider = Physics2D.OverlapCircle(transform.position, ballRadius, cellMask);
 
             if (_ceilCollider == null)
                 return;
@@ -151,7 +151,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private void CheckNeighborBallToSnap()
         {
-            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 0.8f, ballMask);
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius, ballMask);
 
             if (_neighborBallCollider == null)
                 return;

@@ -108,7 +108,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             return height;
         }
 
-        // This function take any point in the line to calculate only height
+        // This function take any point in the primaryLine to calculate only height
         private float GetBottomItemDistance(Vector3Int position)
         {
             Vector3 bottomItemPosition = _gridCellManager.ConvertGridToWorldFunction.Invoke(position);

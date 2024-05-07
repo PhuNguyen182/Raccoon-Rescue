@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class LineDrawer : MonoBehaviour
 {
-    [SerializeField] private LineRenderer line;
+    [SerializeField] private LineRenderer primaryLine;
+    [SerializeField] private LineRenderer secondaryLine;
+    [SerializeField] private Material lineMaterial;
+
+    private static readonly int _lineColorProperty = Shader.PropertyToID("_LineColor");
+
+    public void SetColor(Color color)
+    {
+        lineMaterial.SetColor(_lineColorProperty, color);
+    }
 
     public void ShowPath(Vector3[] pathNodes)
     {
@@ -14,12 +23,27 @@ public class LineDrawer : MonoBehaviour
             return;
         }
 
-        line.positionCount = pathNodes.Length;
-        line.SetPositions(pathNodes);
+        else if (pathNodes.Length == 2)
+        {
+            primaryLine.positionCount = 2;
+            secondaryLine.positionCount = 0;
+            primaryLine.SetPositions(pathNodes);
+        }
+
+        else if (pathNodes.Length == 3)
+        {
+            primaryLine.positionCount = 2;
+            secondaryLine.positionCount = 2;
+
+            primaryLine.SetPositions(new Vector3[] { pathNodes[0], pathNodes[1] });
+            secondaryLine.SetPositions(new Vector3[] { pathNodes[1], pathNodes[2] });
+        }
     }
 
     public void HidePath()
     {
-        line.positionCount = 0;
+        primaryLine.positionCount = 0;
+        secondaryLine.positionCount = 0;
+        SetColor(Color.white);
     }
 }

@@ -48,6 +48,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private DummyBall waterBall;
 
+        [Header("Line Colors")]
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color blueColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color greenColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color orangeColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color redColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color violetColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color yellowColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color colorfulColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color fireballColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color leafBallColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color sunBallColor;
+        [FoldoutGroup("Line Colors")]
+        [SerializeField] private Color waterBallColor;
+
         [Space(10)]
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private Transform ballContainer;
@@ -71,6 +95,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
+        private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
 
@@ -96,12 +121,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsHolden)
             {
-                aimingLine.DrawAimingLine(true);
+                _lineColor = GetLineColor(_ballModel.BallColor);
+                aimingLine.DrawAimingLine(true, _lineColor);
             }
 
             if (inputHandler.IsReleased && _limitAngleSine > 0.15f)
             {
-                aimingLine.DrawAimingLine(false);
+                _lineColor = GetLineColor(_ballModel.BallColor);
+                aimingLine.DrawAimingLine(false, _lineColor);
                 ShootBall(_ballModel);
             }
         }
@@ -151,6 +178,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
                                           , spawnPoint.position
                                           , Quaternion.identity);
+        }
+
+        private Color GetLineColor(EntityType ballColor)
+        {
+            Color color = ballColor switch
+            {
+                EntityType.Blue => blueColor,
+                EntityType.Green => greenColor,
+                EntityType.Orange => orangeColor,
+                EntityType.Red => redColor,
+                EntityType.Violet => violetColor,
+                EntityType.Yellow => yellowColor,
+                EntityType.ColorfulBall => colorfulColor,
+                EntityType.FireBall => fireballColor,
+                EntityType.LeafBall => leafBallColor,
+                EntityType.SunBall => sunBallColor,
+                EntityType.WaterBall => waterBallColor,
+                _ => default
+            };
+
+            return color;
         }
 
         private void GetInputDirection()
