@@ -14,6 +14,7 @@ namespace BubbleShooter.Scripts.Common.Constants
         public const string BallLayerName = "Ball";
         public const string GridLayerName = "Grid";
         public const string ReflectLayerName = "ReflectLine";
-
+        public const string BallLayer = "Ball";
+        public const string DefaultLayer = "Default";
     }
 }

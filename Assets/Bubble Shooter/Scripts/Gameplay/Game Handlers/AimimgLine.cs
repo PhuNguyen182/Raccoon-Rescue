@@ -11,7 +11,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private LineDrawer mainLineDrawer;
-        [SerializeField] private LineDrawer[] lineDrawers;
+
+        private float _angle = 0;
 
         private LayerMask _ceilMask;
         private LayerMask _ballMask;
@@ -22,7 +23,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private RaycastHit2D _ballHit;
         private RaycastHit2D _reflectHit;
 
-        private Vector2 _direction;
+        private Vector2 _direction, _originalDir;
         private Vector3[] _linePoints = new Vector3[3];
 
         private void Awake()
@@ -33,16 +34,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _reflectMask = LayerMask.GetMask(BallConstants.ReflectLayerName);
         }
 
+        public void SetAngle(float angle)
+        {
+            _angle = angle;
+        }
+
         public void DrawAimingLine(bool isDraw, Color lineColor)
         {
             if(!isDraw)
             {
+                _angle = 0;
                 mainLineDrawer.HidePath();
                 return;
             }
 
             mainLineDrawer.SetColor(lineColor);
-            _direction = inputHandler.InputPosition - spawnPoint.position;
+            _originalDir = inputHandler.InputPosition - spawnPoint.position;
+            _direction = Quaternion.AngleAxis(_angle, Vector3.forward) * _originalDir;
             _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, _ceilMask);
 
             if (_ceilHit)

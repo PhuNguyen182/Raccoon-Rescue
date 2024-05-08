@@ -13,10 +13,10 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
+using BubbleShooter.Scripts.Gameplay.GameBoard;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using BubbleShooter.Scripts.Gameplay.GameBoard;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -78,7 +78,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private Transform ballContainer;
 
         [Space(10)]
-        [SerializeField] private AimingLine aimingLine;
+        [SerializeField] private AimingLine[] aimingLines;
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private MainCharacter mainCharacter;
         
@@ -101,7 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
 
         public Action OnOutOfMove;
-        public DummyBall DummyBall;
+        public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
         public Transform ShotPoint => spawnPoint;
 
@@ -124,12 +124,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             {
                 if (!inputHandler.IsPointerOverlapUI())
                 {
+                    SetLineAngles();
                     _lineColor = GetLineColor(_ballModel.BallColor);
-                    aimingLine.DrawAimingLine(true, _lineColor);
+                    DrawLineColors(true, _lineColor);
                 }
             }
 
-            else aimingLine.DrawAimingLine(false, new Color(0, 0, 0, 0));
+            else DrawLineColors(false, new Color(0, 0, 0, 0));
 
             if (inputHandler.IsReleased)
             {
@@ -185,6 +186,40 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
                                           , spawnPoint.position
                                           , Quaternion.identity);
+        }
+
+        private void SetLineAngles()
+        {
+            if (_ballModel.BallCount > 1)
+            {
+                int _haftBallCount = _ballModel.BallCount / 2;
+                for (int i = -_haftBallCount; i <= _haftBallCount; i++)
+                {
+                    aimingLines[i + _haftBallCount].gameObject.SetActive(true);
+                    aimingLines[i + _haftBallCount].SetAngle(i * BallConstants.SpreadShootAngle);
+                }
+            }
+
+            else
+            {
+                int _haftBallCount = aimingLines.Length / 2;
+                for (int i = -_haftBallCount; i <= _haftBallCount; i++)
+                {
+                    if (i != 0)
+                        aimingLines[i + _haftBallCount].gameObject.SetActive(false);
+                }
+
+                aimingLines[_haftBallCount].gameObject.SetActive(true);
+                aimingLines[_haftBallCount].SetAngle(0);
+            }
+        }
+
+        private void DrawLineColors(bool isDraw, Color color)
+        {
+            for (int i = 0; i < aimingLines.Length; i++)
+            {
+                aimingLines[i].DrawAimingLine(isDraw, color);
+            }
         }
 
         private Color GetLineColor(EntityType ballColor)
@@ -249,7 +284,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 {
                     BaseEntity newBall = _entityFactory.Create(ballData);
                     Vector3 direction = Quaternion.AngleAxis(i * BallConstants.SpreadShootAngle, Vector3.forward) * _direction;
-                    ShootABall(newBall, direction);
+                    ShootABall(newBall, direction, i + _haftBallCount);
                 }
             }
 
@@ -265,11 +300,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _canFire = true;
         }
 
-        private void ShootABall(BaseEntity ball, Vector3 direction)
+        private void ShootABall(BaseEntity ball, Vector3 direction, int index = 1)
         {
             ball.IsFixedOnStart = false;
             ball.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
-            GridCellHolder gridCell = aimingLine.ReportGridCell();
+            GridCellHolder gridCell = aimingLines[index].ReportGridCell();
 
             if (ball.TryGetComponent(out BallMovement ballMovement) && ball.TryGetComponent(out IBallPhysics ballPhysics))
             {

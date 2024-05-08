@@ -42,7 +42,8 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private BallShootModel _firstModel;
         private BallShootModel _secondModel;
         private CancellationToken _token;
-        public DummyBall DummyBall;
+
+        public DummyBall DummyBall { get; set; }
 
         #region Random color calculating
         private List<int> _colorDensities = new();

@@ -47,9 +47,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask reflectMask;
 
-        private const string BallLayer = "Ball";
-        private const string DefaultLayer = "Default";
-
         private int _ballLayer;
         private int _defaultLayer;
 
@@ -85,8 +82,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private void Awake()
         {
             _currentBall = GetComponent<IBallEntity>();
-            _ballLayer = LayerMask.NameToLayer(BallLayer);
-            _defaultLayer = LayerMask.NameToLayer(DefaultLayer);
+            _ballLayer = LayerMask.NameToLayer(BallConstants.BallLayer);
+            _defaultLayer = LayerMask.NameToLayer(BallConstants.DefaultLayer);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
@@ -132,6 +129,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
                 CanMove = false;
                 ChangeLayerMask(true);
+
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
                 SnapToCell(checkCell).Forget();
             }
@@ -174,6 +172,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 CanMove = false;
                 ChangeLayerMask(true);
+
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
                 SnapToCell(checkCell).Forget();
             }
@@ -203,12 +202,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
-        private async UniTaskVoid SnapToCell(IGridCell ceilCell)
+        private async UniTaskVoid SnapToCell(IGridCell cell)
         {
             MovementState = BallMovementState.Fixed;
 
-            SetItemToGrid(ceilCell);
-            SnapTo(ceilCell.WorldPosition).Forget();
+            SetItemToGrid(cell);
+            SnapTo(cell.WorldPosition).Forget();
+
             await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             _currentBall.OnSnapped();
         }
@@ -216,17 +216,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private async UniTask CheckNearestGrid()
         {
             float nearestGridDistance = Mathf.Infinity;
-            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius, transform.up, ballDistance, cellMask);
+            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
+                                                          , transform.up, ballDistance, cellMask);
 
             IGridCell targetGridCell;
             RaycastHit2D targetCellInfo = _nearestGridHitInfos[0];
 
             for (int i = 0; i < _nearestGridHitInfos.Length; i++)
             {
-                if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder gridHolder))
+                if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder grid))
                     continue;
 
-                IGridCell gridCell = GameController.Instance.GetCell(gridHolder.GridPosition);
+                IGridCell gridCell = GameController.Instance.GetCell(grid.GridPosition);
                 if (gridCell == null || gridCell.ContainsBall)
                     continue;
 
@@ -239,12 +240,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 }
             }
 
-            var gridContainer = targetCellInfo.collider.GetComponent<GridCellHolder>();
-            targetGridCell = GameController.Instance.GetCell(gridContainer.GridPosition);
+            GridCellHolder gridHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
+            targetGridCell = GameController.Instance.GetCell(gridHolder.GridPosition);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);
             SnapTo(targetCellInfo.transform.position).Forget();
+
             await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             _currentBall.OnSnapped();
         }
