@@ -33,7 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             if (IsActive)
             {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
                 StandaloneInput();
 #elif UNITY_ANDROID || UNITY_IOS
                 MobileInput();
@@ -45,75 +45,57 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-            if (!IsUiOverlap(InputPosition))
-            {
-                IsPressed = Input.GetMouseButtonDown(0);
-                IsHolden = Input.GetMouseButton(0);
-                IsReleased = Input.GetMouseButtonUp(0);
-            }
-            else
-            {
-                IsPressed = false;
-                IsHolden = false;
-                IsReleased = false;
-            }
+            IsPressed = Input.GetMouseButtonDown(0);
+            IsHolden = Input.GetMouseButton(0);
+            IsReleased = Input.GetMouseButtonUp(0);
         }
 
         private void MobileInput()
         {
-            if(Input.touchCount > 0)
+            if (Input.touchCount > 0)
             {
                 _touch = Input.GetTouch(0);
                 InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
-                
-                if (!IsUiOverlap(InputPosition))
+
+                switch (_touch.phase)
                 {
-                    switch (_touch.phase)
-                    {
-                        case TouchPhase.Began:
-                            IsPressed = true;
-                            IsHolden = false;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Moved:
-                            IsPressed = false;
-                            IsHolden = true;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Stationary:
-                            IsPressed = false;
-                            IsHolden = true;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Ended:
-                            IsPressed = false;
-                            IsHolden = false;
-                            IsReleased = true;
-                            break;
-                    }
-                }
-                else
-                {
-                    IsPressed = false;
-                    IsHolden = false;
-                    IsReleased = false;
+                    case TouchPhase.Began:
+                        IsPressed = true;
+                        IsHolden = false;
+                        IsReleased = false;
+                        break;
+                    case TouchPhase.Moved:
+                        IsPressed = false;
+                        IsHolden = true;
+                        IsReleased = false;
+                        break;
+                    case TouchPhase.Stationary:
+                        IsPressed = false;
+                        IsHolden = true;
+                        IsReleased = false;
+                        break;
+                    case TouchPhase.Ended:
+                        IsPressed = false;
+                        IsHolden = false;
+                        IsReleased = true;
+                        break;
                 }
             }
         }
 
-        private bool IsUiOverlap(Vector3 position)
+        public bool IsPointerOverlapUI()
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
             return EventSystem.current.IsPointerOverGameObject();
 #elif UNITY_ANDROID || UNITY_IOS
-            return IsPointerOverUIObject(position);
+            return IsPointerOverUIObject();
 #endif
         }
 
-        private bool IsPointerOverUIObject(Vector3 position)
+        private bool IsPointerOverUIObject()
         {
             PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(position.x, position.y);
+            eventDataCurrentPosition.position = new Vector2(InputPosition.x, InputPosition.y);
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;

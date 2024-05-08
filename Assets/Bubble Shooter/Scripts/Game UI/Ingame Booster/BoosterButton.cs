@@ -1,12 +1,15 @@
 using R3;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
 using MessagePipe;
 using TMPro;
+using BubbleShooter.Scripts.Gameplay.GameManagers;
 
 namespace BubbleShooter.Scripts.GameUI.IngameBooster
 {
@@ -20,6 +23,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         private bool _isActive;
         private bool _isLocked;
 
+        private CancellationToken _token;
         private IPublisher<IngameBoosterMessage> _boosterPublisher;
 
         public IngameBoosterType Booster => booster;
@@ -31,6 +35,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
 
         private void Awake()
         {
+            _token = this.GetCancellationTokenOnDestroy();
             boosterButton.onClick.AddListener(ActivateBooster);
         }
 
@@ -47,12 +52,22 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
                 {
                     BoosterType = booster
                 });
+
+                ShowInvincible().Forget();
             }
 
             else
             {
 
             }
+        }
+
+        // This function is used to block input by UI to prevent unexpected aiming line being displayed
+        private async UniTask ShowInvincible()
+        {
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(true);
+            await UniTask.DelayFrame(75, PlayerLoopTiming.Update, _token);
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(false);
         }
 
         public void SetBoosterCount(int count)

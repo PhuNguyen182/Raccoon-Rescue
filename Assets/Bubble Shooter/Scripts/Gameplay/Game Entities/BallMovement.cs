@@ -68,6 +68,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private Collider2D _ceilCollider;
         private Collider2D _neighborBallCollider;
+        private GridCellHolder _gridCellHolder;
 
         public bool CanMove
         {
@@ -92,9 +93,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void Move()
         {
             MoveBall();
-            CheckSnapToCeil();
-            CheckNeighborBallToSnap();
+
+            if (_gridCellHolder == null)
+            {
+                CheckSnapToCeil();
+                CheckNeighborBallToSnap();
+            }
+
+            else SnapToReportedCell();
+
             CheckReflection();
+        }
+
+        private void SnapToReportedCell()
+        {
+            SnapToReportedCellAsync().Forget();
         }
 
         private void CheckReflection()
@@ -105,6 +118,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private void CheckSnapToCeil()
         {
             CheckSnapToCeilAsync().Forget();
+        }
+
+        private async UniTask SnapToReportedCellAsync()
+        {
+            if(Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= 0.3f)
+            {
+                Vector3Int position = _gridCellHolder.GridPosition;
+                IGridCell checkCell = GameController.Instance.GetCell(position);
+
+                if (checkCell == null)
+                    return;
+
+                CanMove = false;
+                ChangeLayerMask(true);
+                await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+                SnapToCell(checkCell).Forget();
+            }
         }
 
         private async UniTaskVoid CheckReflectionAsync()
@@ -145,7 +175,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 CanMove = false;
                 ChangeLayerMask(true);
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
-                SnapToCeilCell(checkCell).Forget();
+                SnapToCell(checkCell).Forget();
             }
         }
 
@@ -173,7 +203,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
-        private async UniTaskVoid SnapToCeilCell(IGridCell ceilCell)
+        private async UniTaskVoid SnapToCell(IGridCell ceilCell)
         {
             MovementState = BallMovementState.Fixed;
 
@@ -223,6 +253,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         {
             gridCell.SetBall(_currentBall);
             GameController.Instance.AddEntity(_currentBall);
+        }
+
+        public void SetGridCellHolder(GridCellHolder gridCellHolder)
+        {
+            _gridCellHolder = gridCellHolder;
         }
 
         public void ChangeLayerMask(bool isFixed)

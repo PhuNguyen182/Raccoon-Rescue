@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private bool _canClick;
         private BallShootModel _firstModel;
         private BallShootModel _secondModel;
+        private CancellationToken _token;
         public DummyBall DummyBall;
 
         #region Random color calculating
@@ -52,6 +54,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private void Awake()
         {
             _canClick = true;
+            _token = this.GetCancellationTokenOnDestroy();
             potButton.onClick.AddListener(SwitchBall);
             arrowButton.onClick.AddListener(SwitchBall);
         }
@@ -170,6 +173,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
             _canClick = false;
             GameController.Instance.SetInputActive(false);
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(true);
 
             if (arrowButton.gameObject.activeInHierarchy)
                 arrowButton.gameObject.SetActive(false);
@@ -183,6 +187,8 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             ballShooter.SetColorModel(_firstModel, true);
 
             GameController.Instance.SetInputActive(true);
+            await UniTask.DelayFrame(60, PlayerLoopTiming.Update, _token); ;
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(false);
             _canClick = true;
         }
     }

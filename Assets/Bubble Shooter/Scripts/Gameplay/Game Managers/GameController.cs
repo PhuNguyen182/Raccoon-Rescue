@@ -57,6 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private GameTaskManager _gameTaskManager;
 
         public GameDecorator GameDecorator => gameDecorator;
+        public MainScreenManager MainScreenManager => mainScreen;
         public static GameController Instance { get; private set; }
 
         private void Awake()

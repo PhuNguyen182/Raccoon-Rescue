@@ -16,6 +16,7 @@ using BubbleShooter.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using BubbleShooter.Scripts.Gameplay.GameBoard;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -121,15 +122,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             if (inputHandler.IsHolden)
             {
-                _lineColor = GetLineColor(_ballModel.BallColor);
-                aimingLine.DrawAimingLine(true, _lineColor);
+                if (!inputHandler.IsPointerOverlapUI())
+                {
+                    _lineColor = GetLineColor(_ballModel.BallColor);
+                    aimingLine.DrawAimingLine(true, _lineColor);
+                }
             }
 
-            if (inputHandler.IsReleased && _limitAngleSine > 0.15f)
+            else aimingLine.DrawAimingLine(false, new Color(0, 0, 0, 0));
+
+            if (inputHandler.IsReleased)
             {
-                _lineColor = GetLineColor(_ballModel.BallColor);
-                aimingLine.DrawAimingLine(false, _lineColor);
-                ShootBall(_ballModel);
+                if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
+                {
+                    ShootBall(_ballModel);
+                }
             }
         }
 
@@ -262,8 +269,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             ball.IsFixedOnStart = false;
             ball.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
+            GridCellHolder gridCell = aimingLine.ReportGridCell();
 
-            if (ball.TryGetComponent(out IBallMovement ballMovement) && ball.TryGetComponent(out IBallPhysics ballPhysics))
+            if (ball.TryGetComponent(out BallMovement ballMovement) && ball.TryGetComponent(out IBallPhysics ballPhysics))
             {
                 ballMovement.CanMove = false;
                 ballMovement.MovementState = BallMovementState.Ready;
@@ -271,6 +279,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
                 ballPhysics.SetBodyActive(false);
                 ballMovement.SetMoveDirection(direction);
+                ballMovement.SetGridCellHolder(gridCell);
+
                 ballMovement.MovementState = BallMovementState.Moving;
                 ballMovement.CanMove = true;
             }

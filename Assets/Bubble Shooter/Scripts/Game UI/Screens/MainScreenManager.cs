@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 {
     public class MainScreenManager : MonoBehaviour
     {
+        [SerializeField] private GameObject invincible;
         [SerializeField] private InGamePanel inGamePanel;
         [SerializeField] private IngamePowerupPanel powerupPanel;
         [SerializeField] private NotificationPanel notificationPanel;
@@ -20,5 +21,10 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         public NotificationPanel NotificationPanel => notificationPanel;
         public EndGameScreen EndGameScreen => endGameScreen;
         public BoosterPanel BoosterPanel => boosterPanel;
+
+        public void SetInvincibleObjectActive(bool isActive)
+        {
+            invincible.SetActive(isActive);
+        }
     }
 }

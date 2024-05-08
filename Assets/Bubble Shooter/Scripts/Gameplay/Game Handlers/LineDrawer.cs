@@ -46,4 +46,9 @@ public class LineDrawer : MonoBehaviour
         secondaryLine.positionCount = 0;
         SetColor(Color.white);
     }
+
+    private void OnDestroy()
+    {
+        SetColor(Color.white);
+    }
 }
