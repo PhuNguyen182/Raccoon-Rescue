@@ -12,6 +12,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private LineDrawer mainLineDrawer;
 
+        private const float RaycastLength = 25f;
+        private const float NormalAimLength = 1f;
+        private const float PremierAimLength = 25f;
+
         private float _angle = 0;
 
         private LayerMask _ceilMask;
@@ -25,6 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private Vector2 _direction, _originalDir;
         private Vector3[] _linePoints = new Vector3[3];
+
+        public bool IsPremier { get; set; }
 
         private void Awake()
         {
@@ -51,14 +57,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             mainLineDrawer.SetColor(lineColor);
             _originalDir = inputHandler.InputPosition - spawnPoint.position;
             _direction = Quaternion.AngleAxis(_angle, Vector3.forward) * _originalDir;
-            _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, _ceilMask);
+            _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ceilMask);
 
             if (_ceilHit)
                 _linePoints = new Vector3[] { spawnPoint.position, _ceilHit.point };
 
             else
             {
-                _ballHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, _ballMask);
+                _ballHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ballMask);
 
                 if (_ballHit)
                     _linePoints = new Vector3[] { spawnPoint.position, _ballHit.point };
@@ -71,7 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void DrawReflectLine()
         {
-            _reflectHit = Physics2D.Raycast(spawnPoint.position, _direction, 25, _reflectMask);
+            _reflectHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _reflectMask);
 
             if (_reflectHit)
             {
@@ -79,7 +85,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 Vector2 reflectDir = Vector2.Reflect(hitPoint - spawnPoint.position, _reflectHit.normal);
 
                 Ray2D reflectRay = new(hitPoint, reflectDir);
-                _ceilHit = Physics2D.Raycast(hitPoint, reflectDir, 25, _ceilMask);
+                _ceilHit = Physics2D.Raycast(hitPoint, reflectDir, RaycastLength, _ceilMask);
 
                 if (_ceilHit)
                 {
@@ -88,10 +94,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
                 else
                 {
-                    _ballHit = Physics2D.Raycast(hitPoint, reflectDir, 25, _ballMask);
+                    float extendLength = IsPremier ? PremierAimLength : NormalAimLength;
+                    _ballHit = Physics2D.Raycast(hitPoint, reflectDir, extendLength, _ballMask);
 
                     _linePoints = _ballHit ? new Vector3[] { spawnPoint.position, _reflectHit.point, _ballHit.point }
-                                          : new Vector3[] { spawnPoint.position, _reflectHit.point, reflectRay.GetPoint(25f) };
+                                          : new Vector3[] { spawnPoint.position, _reflectHit.point, reflectRay.GetPoint(extendLength) };
                 }
             }
         }
@@ -99,7 +106,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public GridCellHolder ReportGridCell()
         {
             Vector3 dir, position;
-            if (_linePoints.Length == 3)
+            if (_linePoints.Length == 3 && IsPremier)
             {
                 position = _linePoints[2];
                 dir = _linePoints[1] - _linePoints[2];

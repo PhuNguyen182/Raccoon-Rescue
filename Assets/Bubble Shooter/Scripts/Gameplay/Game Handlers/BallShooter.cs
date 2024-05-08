@@ -141,6 +141,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             }
         }
 
+        public void SetPremierState(bool isPremier)
+        {
+            for (int i = 0; i < aimingLines.Length; i++)
+            {
+                aimingLines[i].IsPremier = isPremier;
+            }
+        }
+
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
@@ -216,10 +224,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void DrawLineColors(bool isDraw, Color color)
         {
-            for (int i = 0; i < aimingLines.Length; i++)
+            if (_ballModel.BallCount > 1)
             {
-                aimingLines[i].DrawAimingLine(isDraw, color);
+                for (int i = 0; i < aimingLines.Length; i++)
+                {
+                    aimingLines[i].DrawAimingLine(isDraw, color);
+                }
             }
+
+            else aimingLines[aimingLines.Length / 2].DrawAimingLine(isDraw, color);
         }
 
         private Color GetLineColor(EntityType ballColor)

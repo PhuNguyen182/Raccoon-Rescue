@@ -16,7 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         public void Execute()
         {
-
+            _ballShooter.SetPremierState(true);
         }
     }
 }
