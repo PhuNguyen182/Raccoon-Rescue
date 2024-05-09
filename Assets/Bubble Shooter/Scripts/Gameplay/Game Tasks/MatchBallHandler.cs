@@ -86,7 +86,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 else
                 {
                     await _checkBallClusterTask.CheckNeighborCluster(position);
-                    await _ballRippleTask.RippleAt(position);
+                    await _ballRippleTask.RippleAt(position, 3);
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                     _checkTargetTask.CheckTarget();
                 }

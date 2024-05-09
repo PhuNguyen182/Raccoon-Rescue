@@ -236,9 +236,9 @@ MonoBehaviour:
   ballBody: {fileID: 4173159098274802609}
   ballCollider: {fileID: 3374717475890955613}
   moveState: 0
-  bounceDuration: 0.15
-  bounceEase: 4
-  snapDuration: 0.2
+  bounceDuration: 0.175
+  bounceEase: 7
+  snapDuration: 0.35
   snapEase: 4
   delayFrame: 3
   ballRadius: 0.3

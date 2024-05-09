@@ -20,6 +20,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private HashSet<Vector3Int> _level2 = new();
         private HashSet<Vector3Int> _level3 = new();
 
+        private const float RippleMagnitude = 0.075f;
+
         public BallRippleTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
@@ -28,8 +30,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
         }
 
-        public async UniTask RippleAt(Vector3Int position)
+        public async UniTask RippleAt(Vector3Int position, int level)
         {
+            if (level <= 0)
+                return;
+
             IGridCell currentCell = _gridCellManager.Get(position);
             IBallEntity currentBall = currentCell.BallEntity;
             List<Vector3Int> neighbour = GetNeighbourPositions(position);
@@ -50,9 +55,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     Vector3 dir = ballEntity.WorldPosition - currentBall.WorldPosition;
 
                     if (ballEntity is IBallMovement movement)
-                    {
-                        moveTasks.Add(movement.BounceMove(ballEntity.WorldPosition + dir.normalized * 0.15f));
-                    }
+                        moveTasks.Add(movement.BounceMove(ballEntity.WorldPosition + dir.normalized * RippleMagnitude * Mathf.Log(level + 1, 2)));
+
+                    RippleAt(neighbour[i], level - 1).Forget();
                 }
 
                 await UniTask.WhenAll(moveTasks);
