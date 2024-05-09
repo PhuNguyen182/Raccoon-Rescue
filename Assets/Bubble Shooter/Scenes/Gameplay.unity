@@ -2964,7 +2964,6 @@ MonoBehaviour:
   waterBallColor: {r: 0.33333334, g: 0.8235295, b: 0.8745099, a: 1}
   spawnPoint: {fileID: 150979047}
   ballContainer: {fileID: 698839922}
-  aimingLine: {fileID: 1252867401}
   aimingLines:
   - {fileID: 682405943}
   - {fileID: 1252867401}

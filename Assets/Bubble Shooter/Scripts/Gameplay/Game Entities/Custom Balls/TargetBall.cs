@@ -65,6 +65,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
         protected override void OnStart()
@@ -94,9 +96,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkTargetPublisher = GlobalMessagePipe.GetPublisher<AddTargetMessage>();
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void SetColor(EntityType color)

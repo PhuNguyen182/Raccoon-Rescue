@@ -29,6 +29,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public override UniTask Blast()
         {
             return UniTask.CompletedTask;
@@ -45,9 +47,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void SetBodyActive(bool active)

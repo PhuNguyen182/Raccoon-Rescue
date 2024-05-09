@@ -256,11 +256,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             return color;
         }
 
-        private void GetInputDirection()
-        {
-            _direction = inputHandler.InputPosition - spawnPoint.position;
-        }
-
         private void ShootBall(BallShootModel shootModel)
         {
             SpawnBallAsync(shootModel).Forget();
@@ -332,6 +327,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 ballMovement.MovementState = BallMovementState.Moving;
                 ballMovement.CanMove = true;
             }
+        }
+
+        private void GetInputDirection()
+        {
+            _direction = inputHandler.InputPosition - spawnPoint.position;
         }
 
         private void RotatePointer()

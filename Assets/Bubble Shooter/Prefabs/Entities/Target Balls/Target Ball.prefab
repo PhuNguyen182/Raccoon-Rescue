@@ -115,7 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   ballMovement: {fileID: 117439469235793562}
   entityGraphics: {fileID: 2321141897896256763}
   entityAudio: {fileID: 9025547474888883602}
@@ -162,8 +162,8 @@ MonoBehaviour:
   ballBody: {fileID: 7539416394719927547}
   ballCollider: {fileID: 626577872113275415}
   moveState: 0
-  moveDuration: 0.2
-  moveEase: 6
+  bounceDuration: 0.15
+  bounceEase: 4
   snapDuration: 0.2
   snapEase: 6
   delayFrame: 3

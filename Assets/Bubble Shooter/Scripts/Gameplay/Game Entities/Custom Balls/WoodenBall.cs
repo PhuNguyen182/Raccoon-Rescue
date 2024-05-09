@@ -37,6 +37,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
         public override void InitMessages()
@@ -102,9 +104,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return UniTask.CompletedTask;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         private void SetRenderer()

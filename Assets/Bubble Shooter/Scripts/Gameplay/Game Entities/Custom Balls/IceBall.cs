@@ -5,12 +5,10 @@ using Sirenix.OdinInspector;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class IceBall : BaseEntity, IBallHealth, IBallPhysics, IBreakable, IBallTransformation, IBallEffect
+    public class IceBall : BaseEntity, IBallHealth, IBallPhysics, IBreakable, IBallTransformation, IBallEffect, IBallMovement
     {
         [SerializeField] private EntityType entityType;
         [SerializeField] private Animator ballAnimator;
@@ -48,6 +46,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public int MaxHP => _maxHp;
 
         public bool EasyBreak => _isEasyBreak;
+
+        public bool CanMove 
+        { 
+            get => ballMovement.CanMove; 
+            set => ballMovement.CanMove = value; 
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
+        public BallMovementState MovementState { get; set; }
 
         public override UniTask Blast()
         {
@@ -144,6 +152,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void PlayBlastEffect()
         {
             
+        }
+
+        public void SetMoveDirection(Vector2 direction)
+        {
+            
+        }
+
+        public UniTask SnapTo(Vector3 position)
+        {
+            return ballMovement.SnapTo(position);
+        }
+
+        public UniTask BounceMove(Vector3 position)
+        {
+            return ballMovement.BounceMove(position);
         }
     }
 }

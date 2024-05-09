@@ -35,6 +35,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool IsIgnored { get; set; }
 
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
@@ -96,7 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             return UniTask.CompletedTask;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
             return UniTask.CompletedTask;
         }

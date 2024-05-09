@@ -22,13 +22,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         [Header("Moving")]
         [BoxGroup(GroupID = "Move")]
-        [SerializeField] private float moveDuration = 0.2f;
+        [SerializeField] private float bounceDuration = 0.25f;
         [BoxGroup(GroupID = "Move")]
-        [SerializeField] private Ease moveEase = Ease.OutQuad;
+        [SerializeField] private Ease bounceEase = Ease.InOutSine;
         
         [Header("Snapping")]
         [BoxGroup(GroupID = "Snap")]
-        [SerializeField] private float snapDuration = 0.2f;
+        [SerializeField] private float snapDuration = 0.25f;
         [BoxGroup(GroupID = "Snap")]
         [SerializeField] private Ease snapEase = Ease.OutQuad;
 
@@ -78,6 +78,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             get => moveState; 
             set => moveState = value; 
         }
+
+        public Vector2 MoveDirection => _moveDirection;
 
         private void Awake()
         {
@@ -267,16 +269,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             gameObject.layer = isFixed ? _ballLayer : _defaultLayer;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            _movingTween ??= CreateMoveTween(position);
+            _movingTween ??= CreateMoveBounceTween(position);
             _movingTween.ChangeStartValue(transform.position);
             _movingTween.ChangeEndValue(position);
 
             _movingTween.Rewind();
             _movingTween.Play();
 
-            return UniTask.Delay(TimeSpan.FromSeconds(_movingTween.Duration()), cancellationToken: _token);
+            float duration = _movingTween.Duration();
+            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
         }
 
         public UniTask SnapTo(Vector3 position)
@@ -288,7 +291,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             _snappingTween.Rewind();
             _snappingTween.Play();
 
-            return UniTask.Delay(TimeSpan.FromSeconds(_snappingTween.Duration()), cancellationToken: _token);
+            float duration = _snappingTween.Duration();
+            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
         }
 
         public void SetBodyActive(bool active)
@@ -316,12 +320,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private Tweener CreateSnapTween(Vector3 position)
         {
-            return transform.DOMove(position, snapDuration).SetEase(snapEase).SetAutoKill(false);
+            return transform.DOMove(position, snapDuration)
+                            .SetEase(snapEase).SetAutoKill(false);
         }
 
-        private Tweener CreateMoveTween(Vector3 position)
+        private Tweener CreateMoveBounceTween(Vector3 position)
         {
-            return transform.DOMove(position, moveDuration).SetEase(moveEase).SetAutoKill(false);
+            return transform.DOMove(position, bounceDuration)
+                            .SetEase(bounceEase).SetLoops(2, LoopType.Yoyo)
+                            .SetAutoKill(false);
         }
 
         private void OnDestroy()

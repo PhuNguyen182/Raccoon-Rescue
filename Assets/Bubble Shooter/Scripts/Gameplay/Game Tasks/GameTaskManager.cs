@@ -24,6 +24,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly InGamePowerupControlTask _powerupControlTask;
         private readonly IngameBoosterHandler _ingameBoosterHandler;
         private readonly GameStateController _gameStateController;
+        private readonly BallRippleTask _ballRippleTask;
         private readonly EndGameTask _endGameTask;
         private readonly IDisposable _disposable;
 
@@ -43,6 +44,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel, ballShooter, _inputProcessor);
             _powerupControlTask.AddTo(ref builder);
 
+            _ballRippleTask = new(_gridCellManager);
+            _ballRippleTask.AddTo(ref builder);
+
             _breakGridTask = new(_gridCellManager);
             _checkBallClusterTask = new(_gridCellManager, _breakGridTask, _inputProcessor);
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
@@ -54,7 +58,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _boosterHandleTask.AddTo(ref builder);
 
             _matchBallHandler = new(_gridCellManager, _breakGridTask, _checkBallClusterTask, _inputProcessor
-                                    , checkTargetTask, scanThresholdLineTask);
+                                    , checkTargetTask, scanThresholdLineTask, _ballRippleTask);
             _matchBallHandler.AddTo(ref builder);
 
             _endGameTask = new(metaBallManager, ballShooter, ballProvider);

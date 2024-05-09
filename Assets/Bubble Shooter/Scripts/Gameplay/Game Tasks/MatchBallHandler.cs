@@ -19,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly BallRippleTask _ballRippleTask;
         private readonly BoardThresholdCheckTask _boardThresholdCheckTask;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
@@ -29,9 +30,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private CancellationTokenSource _tokenSource;
         private IDisposable _disposable;
 
-        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
-            , CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask)
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
+            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask
+            , BallRippleTask ballRippleTask)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
@@ -51,6 +52,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _disposable = builder.Build();
             _inputProcessor = inputProcessor;
+            _ballRippleTask = ballRippleTask;
         }
 
         public void Match(CheckMatchMessage message)
@@ -84,6 +86,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 else
                 {
                     await _checkBallClusterTask.CheckNeighborCluster(position);
+                    await _ballRippleTask.RippleAt(position);
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                     _checkTargetTask.CheckTarget();
                 }
