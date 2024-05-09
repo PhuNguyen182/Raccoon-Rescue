@@ -44,10 +44,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel, ballShooter, _inputProcessor);
             _powerupControlTask.AddTo(ref builder);
 
-            _ballRippleTask = new(_gridCellManager);
-            _ballRippleTask.AddTo(ref builder);
-
             _breakGridTask = new(_gridCellManager);
+            _ballRippleTask = new(_gridCellManager);
             _checkBallClusterTask = new(_gridCellManager, _breakGridTask, _inputProcessor);
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
 

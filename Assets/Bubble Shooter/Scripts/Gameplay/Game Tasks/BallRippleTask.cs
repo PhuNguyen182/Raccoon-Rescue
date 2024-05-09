@@ -1,5 +1,3 @@
-using System;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,25 +7,15 @@ using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class BallRippleTask : IDisposable
+    public class BallRippleTask
     {
         private readonly GridCellManager _gridCellManager;
-
-        private readonly CancellationToken _token;
-        private readonly CancellationTokenSource _cts;
-
-        private HashSet<Vector3Int> _level1 = new();
-        private HashSet<Vector3Int> _level2 = new();
-        private HashSet<Vector3Int> _level3 = new();
 
         private const float RippleMagnitude = 0.075f;
 
         public BallRippleTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-
-            _cts = new();
-            _token = _cts.Token;
         }
 
         public async UniTask RippleAt(Vector3Int position, int level)
@@ -77,14 +65,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
 
             return chainPositions;
-        }
-
-        public void Dispose()
-        {
-            _level1.Clear();
-            _level2.Clear();
-            _level3.Clear();
-            _cts.Dispose();
         }
     }
 }
