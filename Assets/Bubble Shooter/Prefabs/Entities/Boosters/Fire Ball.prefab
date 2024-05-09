@@ -151,7 +151,7 @@ MonoBehaviour:
   moveState: 0
   moveDuration: 0.2
   moveEase: 6
-  snapDuration: 0.2
+  snapDuration: 0.35
   snapEase: 4
   delayFrame: 3
   ballRadius: 0.35
