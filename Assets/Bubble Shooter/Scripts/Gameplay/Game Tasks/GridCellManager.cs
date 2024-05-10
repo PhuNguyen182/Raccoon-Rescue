@@ -45,6 +45,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void GetRow(Vector3Int position, out List<IGridCell> row)
         {
+            if(Get(position) == null)
+            {
+                row = null;
+                return;
+            }
+
             int count = 1;
             IGridCell gridCell;
             List<IGridCell> gridCells = new();

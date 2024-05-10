@@ -88,7 +88,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 _ballMaterial.SetFloat(_greyScaleProperty, greyScale);
             }).SetEase(Ease.InOutSine);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _cancellationToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _cancellationToken);
         }
 
         public void SetMaterial(Material material)

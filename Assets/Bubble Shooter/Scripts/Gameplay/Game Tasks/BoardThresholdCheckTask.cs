@@ -28,15 +28,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public async UniTask Check()
         {
-            bool isLineEmpty;
             _levelBounds = _gridCellManager.LevelBounds;
             Vector3Int bottomPosition = new Vector3Int(0, _levelBounds.yMin);
-            isLineEmpty = CheckEmptyLine(bottomPosition);
+            (bool isLineEmpty, bool isLineValid) = CheckEmptyLine(bottomPosition);
 
-            while(isLineEmpty)
+            while(isLineEmpty && isLineValid)
             {
                 bottomPosition = bottomPosition + new Vector3Int(0, 1);
-                isLineEmpty = CheckEmptyLine(bottomPosition);
+                (isLineEmpty, isLineValid) = CheckEmptyLine(bottomPosition);
+
+                if (!isLineValid)
+                    return;
             }
 
             float distance = GetBottomItemDistance(bottomPosition);
@@ -87,18 +89,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _sampleCeilPosition = position;
         }
 
-        private bool CheckEmptyLine(Vector3Int pointInLine)
+        private (bool, bool) CheckEmptyLine(Vector3Int pointInLine)
         {
             List<IGridCell> line;
             _gridCellManager.GetRow(pointInLine, out line);
 
+            if (line == null)
+                return (false, false);
+
             for (int i = 0; i < line.Count; i++)
             {
                 if (line[i] != null && line[i].ContainsBall)
-                    return false;
+                    return (false, true);
             }
 
-            return true;
+            return (true, true);
         }
 
         private float GetCameraHeighDistance()
@@ -119,14 +124,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private float CalculateBottomItemDistanceOnStart()
         {
-            bool isLineEmpty;
             Vector3Int bottomPosition = new Vector3Int(0, _levelBounds.yMin);
-            isLineEmpty = CheckEmptyLine(bottomPosition);
+            (bool isLineEmpty, bool isLineValid) = CheckEmptyLine(bottomPosition);
 
-            while (isLineEmpty)
+            while (isLineEmpty && isLineValid)
             {
                 bottomPosition = bottomPosition + new Vector3Int(0, 1);
-                isLineEmpty = CheckEmptyLine(bottomPosition);
+                (isLineEmpty, isLineValid) = CheckEmptyLine(bottomPosition);
             }
 
             float height = GetBottomItemDistance(bottomPosition);

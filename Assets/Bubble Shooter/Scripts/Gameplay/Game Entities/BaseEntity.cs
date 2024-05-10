@@ -33,6 +33,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public bool IsFallen { get; set; }
         
+        public bool RippleIgnore { get; set; }
+        
         public abstract bool IsMatchable { get; }
 
         public abstract bool IsFixedOnStart { get; set; }

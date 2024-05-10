@@ -15,6 +15,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public bool IsFallen { get; set; }
         public bool IsEndOfGame { get; set; }
         public bool IsFixedOnStart { get; set; }
+        public bool RippleIgnore { get; set; }
 
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }

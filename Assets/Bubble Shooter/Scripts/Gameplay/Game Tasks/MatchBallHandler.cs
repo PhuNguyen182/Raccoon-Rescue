@@ -26,6 +26,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
+        private const int RippleSpreadLevel = 3;
+
         private CancellationToken _token;
         private CancellationTokenSource _tokenSource;
         private IDisposable _disposable;
@@ -83,11 +85,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                         _checkTargetTask.CheckTarget();
                     }
                 }
+
                 else
                 {
                     await _checkBallClusterTask.CheckNeighborCluster(position);
-                    await _ballRippleTask.RippleAt(position, 3);
+                    await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
+
+                    _ballRippleTask.ResetRippleIgnore();
                     _checkTargetTask.CheckTarget();
                 }
 
