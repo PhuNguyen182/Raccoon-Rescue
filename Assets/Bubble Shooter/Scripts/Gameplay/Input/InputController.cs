@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace BubbleShooter.Scripts.Gameplay.Input
+namespace BubbleShooter.Scripts.Gameplay.Inputs
 {
     public class InputController : MonoBehaviour
     {
