@@ -70,6 +70,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 CheckMatch(position, matchCluster);
 
                 _gridCellManager.ClearVisitedPositions();
+                await _checkBallClusterTask.CheckNeighborCluster(position);
+                await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
+                _ballRippleTask.ResetRippleIgnore();
+
                 (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
                 
                 bool isMatched = clusterResult.Item1;
@@ -88,11 +92,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 else
                 {
-                    await _checkBallClusterTask.CheckNeighborCluster(position);
-                    await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
-
-                    _ballRippleTask.ResetRippleIgnore();
                     _checkTargetTask.CheckTarget();
                 }
 

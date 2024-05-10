@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Gameplay.GameEntities;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
