@@ -1848,7 +1848,7 @@ MonoBehaviour:
   IsNotStack: 0
   isAnim: 1
   coinAmount: {fileID: 5161916972073230717}
-  boosterType: 2
+  boosterType: 1
   closeButton: {fileID: 825371784620557313}
   purchaseButton: {fileID: 9011588747577337479}
   boxAnimator: {fileID: 4666680205169225983}

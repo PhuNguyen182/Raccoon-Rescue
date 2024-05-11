@@ -6,7 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 using TMPro;
+using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.GameUI.Boxes
 {
@@ -14,6 +16,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
     {
         [SerializeField] private TMP_Text coinAmount;
         [SerializeField] private IngameBoosterType boosterType;
+
         [SerializeField] private Button closeButton;
         [SerializeField] private Button purchaseButton;
         [SerializeField] private Animator boxAnimator;
@@ -24,6 +27,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
 
         private int _stage = 0;
         private CancellationToken _token;
+        private IPublisher<AddIngameBoosterMessage> _boosterPublisher;
+
         private static readonly int _appearHash = Animator.StringToHash("Appear");
         private static readonly int _disappearHash = Animator.StringToHash("Disappear");
 
@@ -38,6 +43,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         {
             SetObjectsActive(stage1Objects, true);
             SetObjectsActive(stage2Objects, false);
+
+            _boosterPublisher = GlobalMessagePipe.GetPublisher<AddIngameBoosterMessage>();
         }
 
         private void Purchase()
@@ -45,6 +52,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             if(_stage == 0)
             {
                 DoNextStage().Forget();
+                BuyBooster();
                 // Do purchase
             }
 
@@ -68,6 +76,15 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         private void SetCoint(int coin)
         {
             coinAmount.text = $"{coin}";
+        }
+
+        private void BuyBooster()
+        {
+            _boosterPublisher.Publish(new AddIngameBoosterMessage
+            {
+                Amount = 1,
+                BoosterType = boosterType
+            });
         }
 
         protected override void DoClose()

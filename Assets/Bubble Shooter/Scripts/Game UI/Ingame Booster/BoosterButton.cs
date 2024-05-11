@@ -62,7 +62,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         public void SetFreeState(bool free)
         {
             _isFree = free;
-            boosterFree.gameObject.SetActive(free);
+            //boosterFree.gameObject.SetActive(free);
             boosterCount.gameObject.SetActive(!free);
         }
 
