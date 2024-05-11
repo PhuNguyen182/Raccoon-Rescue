@@ -15,6 +15,7 @@ using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.GameUI.Screens;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
@@ -26,7 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [Header("Game Handler")]
         [SerializeField] private BallShooter ballShooter;
         [SerializeField] private BallProvider ballProvider;
-        [SerializeField] private InputHandler inputHandler;
+        [SerializeField] private InputController inputHandler;
         [SerializeField] private GridCellHolder gridPrefab;
         [SerializeField] private EntityDatabase entityDatabase;
 

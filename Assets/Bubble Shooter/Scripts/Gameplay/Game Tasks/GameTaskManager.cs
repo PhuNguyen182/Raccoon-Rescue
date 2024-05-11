@@ -9,6 +9,7 @@ using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
 {
@@ -28,7 +29,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly EndGameTask _endGameTask;
         private readonly IDisposable _disposable;
 
-        public GameTaskManager(GridCellManager gridCellManager, InputHandler inputHandler, MainScreenManager mainScreenManager
+        public GameTaskManager(GridCellManager gridCellManager, InputController inputHandler, MainScreenManager mainScreenManager
             , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, BallProvider ballProvider, BallShooter ballShooter
             , MetaBallManager metaBallManager, GameDecorator gameDecorator, BoardThresholdCheckTask scanThresholdLineTask)
         {

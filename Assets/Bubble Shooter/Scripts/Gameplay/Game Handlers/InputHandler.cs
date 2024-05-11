@@ -1,3 +1,4 @@
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,10 +11,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private Camera mainCamera;
 
-        public Vector3 InputPosition { get; private set; }
+        public InputController InputController;
+        public Vector3 InputPosition => InputController.Pointer;
         public bool IsPressed { get; private set; }
-        public bool IsHolden { get; private set; }
-        public bool IsReleased { get; private set; }
+        public bool IsHolden => InputController.IsHolden;
+        public bool IsReleased => InputController.IsRelease;
 
         public bool IsActive { get; set; }
 
@@ -24,10 +26,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             IsActive = true;
         }
 
-        private void Update()
-        {
-            ProcessInput();
-        }
+        //private void Update()
+        //{
+        //    ProcessInput();
+        //}
 
         private void ProcessInput()
         {
@@ -43,11 +45,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void StandaloneInput()
         {
-            InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            //InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
             IsPressed = Input.GetMouseButtonDown(0);
-            IsHolden = Input.GetMouseButton(0);
-            IsReleased = Input.GetMouseButtonUp(0);
+            //IsHolden = Input.GetMouseButton(0);
+            //IsReleased = Input.GetMouseButtonUp(0);
         }
 
         private void MobileInput()
@@ -55,29 +57,29 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (Input.touchCount > 0)
             {
                 _touch = Input.GetTouch(0);
-                InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
+                //InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
 
                 switch (_touch.phase)
                 {
                     case TouchPhase.Began:
                         IsPressed = true;
-                        IsHolden = false;
-                        IsReleased = false;
+                        //IsHolden = false;
+                        //IsReleased = false;
                         break;
                     case TouchPhase.Moved:
                         IsPressed = false;
-                        IsHolden = true;
-                        IsReleased = false;
+                        //IsHolden = true;
+                        //IsReleased = false;
                         break;
                     case TouchPhase.Stationary:
                         IsPressed = false;
-                        IsHolden = true;
-                        IsReleased = false;
+                        //IsHolden = true;
+                        //IsReleased = false;
                         break;
                     case TouchPhase.Ended:
                         IsPressed = false;
-                        IsHolden = false;
-                        IsReleased = true;
+                        //IsHolden = false;
+                        //IsReleased = true;
                         break;
                 }
             }
@@ -85,11 +87,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         public bool IsPointerOverlapUI()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
-            return EventSystem.current.IsPointerOverGameObject();
-#elif UNITY_ANDROID || UNITY_IOS
-            return IsPointerOverUIObject();
-#endif
+            return InputController.IsPointerOverlapUI();
         }
 
         private bool IsPointerOverUIObject()

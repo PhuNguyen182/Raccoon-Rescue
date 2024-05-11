@@ -14,6 +14,7 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
@@ -79,7 +80,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         [Space(10)]
         [SerializeField] private AimingLine[] aimingLines;
-        [SerializeField] private InputHandler inputHandler;
+        [SerializeField] private InputController inputHandler;
         [SerializeField] private MainCharacter mainCharacter;
         
         [Space(10)]
@@ -132,8 +133,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             else DrawLineColors(false, new Color(0, 0, 0, 0));
 
-            if (inputHandler.IsReleased)
-            {
+            if(inputHandler.IsRelease)
+            { 
+                DrawLineColors(false, new Color(0, 0, 0, 0));
                 if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
                 {
                     ShootBall(_ballModel);
@@ -331,7 +333,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void GetInputDirection()
         {
-            _direction = inputHandler.InputPosition - spawnPoint.position;
+            _direction = inputHandler.Pointer - spawnPoint.position;
         }
 
         private void RotatePointer()

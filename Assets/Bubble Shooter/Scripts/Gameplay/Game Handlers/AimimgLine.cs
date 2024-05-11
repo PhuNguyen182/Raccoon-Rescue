@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
     public class AimingLine : MonoBehaviour
     {
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private InputHandler inputHandler;
+        [SerializeField] private InputController inputHandler;
         [SerializeField] private LineDrawer mainLineDrawer;
 
         private const float RaycastLength = 25f;
-        private const float NormalAimLength = 1f;
+        private const float NormalAimLength = 1.5f;
         private const float PremierAimLength = 25f;
 
         private float _angle = 0;
@@ -55,7 +56,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             }
 
             mainLineDrawer.SetColor(lineColor);
-            _originalDir = inputHandler.InputPosition - spawnPoint.position;
+            _originalDir = inputHandler.Pointer - spawnPoint.position;
             _direction = Quaternion.AngleAxis(_angle, Vector3.forward) * _originalDir;
             _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ceilMask);
 

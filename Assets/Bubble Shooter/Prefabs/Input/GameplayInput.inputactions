@@ -11,17 +11,17 @@
                     "id": "5a824624-712c-48da-aa7c-54c09f83ade4",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "Release",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "4fe56b97-f242-4b42-ac87-4bfcd08fc4af",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Touch",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "Hold",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -29,7 +29,7 @@
                     "name": "",
                     "id": "50d97d37-a9e5-40a5-bf05-568db782536c",
                     "path": "<Mouse>/position",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
@@ -40,7 +40,7 @@
                     "name": "",
                     "id": "63af379a-ed1b-4f4f-ba2e-03121ccdd322",
                     "path": "<Touchscreen>/position",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
@@ -51,7 +51,7 @@
                     "name": "",
                     "id": "e1dc260e-2735-49de-b373-79f5a6a5d296",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "Press(behavior=1)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Release",
@@ -61,8 +61,8 @@
                 {
                     "name": "",
                     "id": "616c2c09-1330-44a4-8973-163ea49b92d8",
-                    "path": "<Touchscreen>/primaryTouch/tap",
-                    "interactions": "Press(behavior=1)",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Release",
