@@ -38,9 +38,9 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Release"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""4fe56b97-f242-4b42-ac87-4bfcd08fc4af"",
-                    ""expectedControlType"": ""Touch"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": true
@@ -83,11 +83,81 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""616c2c09-1330-44a4-8973-163ea49b92d8"",
-                    ""path"": ""<Touchscreen>/primaryTouch"",
+                    ""path"": ""<Touchscreen>/Press"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Release"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Mainhome"",
+            ""id"": ""9bc6fadd-397c-49c7-a2fd-4f5356bd377a"",
+            ""actions"": [
+                {
+                    ""name"": ""Pointer"",
+                    ""type"": ""Value"",
+                    ""id"": ""1d216bc3-c99f-486d-95de-26d129e070d1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Drag"",
+                    ""type"": ""Button"",
+                    ""id"": ""71b164cf-47ef-4de5-93ba-ef3e62727475"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""29df41af-4710-4d74-810e-3e3a55f9c233"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pointer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f25aceb-c404-4148-89e8-124318efd37f"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pointer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5df2b6a7-8623-4aea-adda-cfb4815f1e89"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09f15d58-264b-4513-9af3-7608de61fb33"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -100,6 +170,10 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Release = m_Gameplay.FindAction("Release", throwIfNotFound: true);
+        // Mainhome
+        m_Mainhome = asset.FindActionMap("Mainhome", throwIfNotFound: true);
+        m_Mainhome_Pointer = m_Mainhome.FindAction("Pointer", throwIfNotFound: true);
+        m_Mainhome_Drag = m_Mainhome.FindAction("Drag", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -211,9 +285,68 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Mainhome
+    private readonly InputActionMap m_Mainhome;
+    private List<IMainhomeActions> m_MainhomeActionsCallbackInterfaces = new List<IMainhomeActions>();
+    private readonly InputAction m_Mainhome_Pointer;
+    private readonly InputAction m_Mainhome_Drag;
+    public struct MainhomeActions
+    {
+        private @GameplayInput m_Wrapper;
+        public MainhomeActions(@GameplayInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pointer => m_Wrapper.m_Mainhome_Pointer;
+        public InputAction @Drag => m_Wrapper.m_Mainhome_Drag;
+        public InputActionMap Get() { return m_Wrapper.m_Mainhome; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MainhomeActions set) { return set.Get(); }
+        public void AddCallbacks(IMainhomeActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MainhomeActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MainhomeActionsCallbackInterfaces.Add(instance);
+            @Pointer.started += instance.OnPointer;
+            @Pointer.performed += instance.OnPointer;
+            @Pointer.canceled += instance.OnPointer;
+            @Drag.started += instance.OnDrag;
+            @Drag.performed += instance.OnDrag;
+            @Drag.canceled += instance.OnDrag;
+        }
+
+        private void UnregisterCallbacks(IMainhomeActions instance)
+        {
+            @Pointer.started -= instance.OnPointer;
+            @Pointer.performed -= instance.OnPointer;
+            @Pointer.canceled -= instance.OnPointer;
+            @Drag.started -= instance.OnDrag;
+            @Drag.performed -= instance.OnDrag;
+            @Drag.canceled -= instance.OnDrag;
+        }
+
+        public void RemoveCallbacks(IMainhomeActions instance)
+        {
+            if (m_Wrapper.m_MainhomeActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMainhomeActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MainhomeActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MainhomeActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MainhomeActions @Mainhome => new MainhomeActions(this);
     public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRelease(InputAction.CallbackContext context);
+    }
+    public interface IMainhomeActions
+    {
+        void OnPointer(InputAction.CallbackContext context);
+        void OnDrag(InputAction.CallbackContext context);
     }
 }
