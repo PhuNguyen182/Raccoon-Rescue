@@ -12,7 +12,7 @@ using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using UnityEngine.InputSystem;
+using BubbleShooter.Scripts.GameUI.Boxes;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {
@@ -28,6 +28,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
         private bool _hasUsedBooster;
         private Dictionary<IngameBoosterType, ReactiveProperty<int>> _boosters;
         private IDisposable _disposable;
+
+        private const string AimBoosterBoxPath = "Gameplay/Boxes/Ingame Boosters/Aim Booster Popup";
+        private const string ColorfulBoxPath = "Gameplay/Boxes/Ingame Boosters/Colorful Booster Popup";
+        private const string ExtraBallBoxPath = "Gameplay/Boxes/Ingame Boosters/Change Ball Booster Popup";
 
         public IngameBoosterHandler(IngameBoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
         {
@@ -118,7 +122,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         private void ShowBuyBooster(IngameBoosterType boosterType)
         {
-            Debug.Log($"Out of: {boosterType}");
+            switch (boosterType)
+            {
+                case IngameBoosterType.Colorful:
+                    IngameBoosterPopup.Create(ColorfulBoxPath);
+                    break;
+                case IngameBoosterType.PreciseAimer:
+                    IngameBoosterPopup.Create(AimBoosterBoxPath);
+                    break;
+                case IngameBoosterType.ChangeBall:
+                    IngameBoosterPopup.Create(ExtraBallBoxPath);
+                    break;
+            }
         }
 
         public void Dispose()
