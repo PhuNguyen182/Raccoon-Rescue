@@ -18,7 +18,6 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using static Dreamteck.Splines.Editor.PointModule;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -102,7 +101,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
 
-        public Action OnOutOfMove;
         public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
         public Transform ShotPoint => spawnPoint;
@@ -134,7 +132,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                     }
                 }
 
-                else DrawLineColors(false, new Color(0, 0, 0, 0));
+                else 
+                    DrawLineColors(false, new Color(0, 0, 0, 0));
 
                 if (inputHandler.IsRelease)
                 {
@@ -142,14 +141,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                     {
                         inputHandler.IsActive = false;
                         ShootBall(_ballModel);
+                        SetPremierState(false);
                     }
                 }
             }
 
             else
-            {
                 DrawLineColors(false, new Color(0, 0, 0, 0));
-            }
         }
 
         public void SetPremierState(bool isPremier)
@@ -321,6 +319,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void ShootABall(BaseEntity ball, Vector3 direction, int index = 1)
         {
+            if (ball == null)
+                return;
+
             ball.IsFixedOnStart = false;
             ball.transform.SetPositionAndRotation(spawnPoint.position, Quaternion.identity);
             GridCellHolder gridCell = aimingLines[index].ReportGridCell();

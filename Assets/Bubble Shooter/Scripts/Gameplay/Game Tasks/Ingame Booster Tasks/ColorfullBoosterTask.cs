@@ -12,12 +12,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
     public class ColorfullBoosterTask
     {
         private readonly BallShooter _ballShooter;
-        private readonly BoosterPanel _boosterPanel;
+        private readonly IngameBoosterPanel _boosterPanel;
         private readonly InputProcessor _inputProcessor;
 
         private bool _canExecute;
 
-        public ColorfullBoosterTask(BoosterPanel boosterPanel, BallShooter ballShooter, InputProcessor inputProcessor)
+        public ColorfullBoosterTask(IngameBoosterPanel boosterPanel, BallShooter ballShooter, InputProcessor inputProcessor)
         {
             _canExecute = true;
             _boosterPanel = boosterPanel;

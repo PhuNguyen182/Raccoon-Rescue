@@ -7,7 +7,7 @@ namespace BubbleShooter.Scripts.Common.Enums
     {
         None = 0,
         Colorful = 1,
-        Aim = 2,
+        PreciseAimer = 2,
         ChangeBall = 3
     }
 }

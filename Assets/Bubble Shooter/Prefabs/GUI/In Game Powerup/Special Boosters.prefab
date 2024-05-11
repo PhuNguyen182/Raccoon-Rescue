@@ -384,6 +384,8 @@ MonoBehaviour:
   booster: 3
   boosterButton: {fileID: 5627308855812230883}
   boosterCount: {fileID: 1483507795863392649}
+  buttonImage: {fileID: 1765923095992998262}
+  greyscale: {fileID: 2100000, guid: 03b96525640645c4e92812b07fd75ca3, type: 2}
 --- !u!1 &4662717492592896791
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,6 +636,8 @@ MonoBehaviour:
   booster: 1
   boosterButton: {fileID: 8414814871412686509}
   boosterCount: {fileID: 560842237197714500}
+  buttonImage: {fileID: 8704162679877919862}
+  greyscale: {fileID: 2100000, guid: 03b96525640645c4e92812b07fd75ca3, type: 2}
 --- !u!1 &6370650597849577737
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,6 +947,8 @@ MonoBehaviour:
   booster: 2
   boosterButton: {fileID: 4172041883082666494}
   boosterCount: {fileID: 3799060437154869035}
+  buttonImage: {fileID: 972143327824076329}
+  greyscale: {fileID: 2100000, guid: 03b96525640645c4e92812b07fd75ca3, type: 2}
 --- !u!1 &8355524567093237592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,7 +1033,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1116971114243409588}
-  - component: {fileID: 522000035949753799}
+  - component: {fileID: 7725876600568968453}
   m_Layer: 5
   m_Name: Special Boosters
   m_TagString: Untagged
@@ -1057,7 +1063,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 685, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &522000035949753799
+--- !u!114 &7725876600568968453
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1066,7 +1072,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8552658115941195185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81bfeac85f1379a4fadc9c1bbc9beaa8, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a7f6486464560b4bb474c5722d4d435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}

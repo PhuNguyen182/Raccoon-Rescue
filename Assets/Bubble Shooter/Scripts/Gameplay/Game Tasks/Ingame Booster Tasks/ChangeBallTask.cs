@@ -11,14 +11,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {
     public class ChangeBallTask
     {
-        private readonly BoosterPanel _boosterPanel;
+        private readonly IngameBoosterPanel _boosterPanel;
         private readonly BallProvider _ballProvider;
         private readonly BallShooter _ballShooter;
         private readonly InputProcessor _inputProcessor;
 
         private bool _canExecute;
 
-        public ChangeBallTask(BoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
+        public ChangeBallTask(IngameBoosterPanel boosterPanel, BallProvider ballProvider, BallShooter ballShooter, InputProcessor inputProcessor)
         {
             _canExecute = true;
             _boosterPanel = boosterPanel;

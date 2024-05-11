@@ -136,7 +136,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            return UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: onDestroyToken);
+            PlayBlastEffect();
+            return UniTask.Delay(TimeSpan.FromSeconds(0.03f), cancellationToken: onDestroyToken);
         }
 
         public bool Break()

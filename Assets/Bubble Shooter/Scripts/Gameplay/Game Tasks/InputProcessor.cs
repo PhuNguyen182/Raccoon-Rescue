@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +5,7 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class InputProcessor : IDisposable
+    public class InputProcessor
     {
         private readonly InputController _inputHandler;
 
@@ -19,11 +18,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public InputProcessor(InputController inputHandler)
         {
             _inputHandler = inputHandler;
-        }
-
-        public void Dispose()
-        {
-
         }
     }
 }

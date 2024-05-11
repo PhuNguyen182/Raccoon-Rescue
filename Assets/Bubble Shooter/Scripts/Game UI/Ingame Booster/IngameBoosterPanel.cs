@@ -4,10 +4,11 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 namespace BubbleShooter.Scripts.GameUI.IngameBooster
 {
-    public class BoosterPanel : MonoBehaviour
+    public class IngameBoosterPanel : MonoBehaviour
     {
         [Header("Dummy Balls")]
         [SerializeField] private DummyBall blue;
@@ -26,9 +27,13 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
         private const string UIObjectsLayer = "UIObjects";
         private const string ObjectsLayer = "Objects";
 
-        public BoosterButton Colorful => colorfulBooster;
-        public BoosterButton Aiming => aimingBooster;
-        public BoosterButton ChangeBall => changeBallBooster;
+        private List<BoosterButton> _boosters;
+        public List<BoosterButton> Boosters => _boosters;
+
+        private void Awake()
+        {
+            _boosters = new() { colorfulBooster, aimingBooster, changeBallBooster };
+        }
 
         public async UniTask SpawnColorful(Vector3 toPosition)
         {
@@ -46,6 +51,11 @@ namespace BubbleShooter.Scripts.GameUI.IngameBooster
             await ball.MoveTo(toPosition);
             ball.ChangeLayer(ObjectsLayer);
             SimplePool.Despawn(ball.gameObject);
+        }
+
+        public BoosterButton GetButtonByBooster(IngameBoosterType booster)
+        {
+            return _boosters.FirstOrDefault(x => x.Booster == booster);
         }
 
         private DummyBall SpawnBall(EntityType color, Transform point)

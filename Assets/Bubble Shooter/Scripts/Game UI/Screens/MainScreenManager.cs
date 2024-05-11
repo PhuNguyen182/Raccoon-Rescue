@@ -14,13 +14,13 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private IngamePowerupPanel powerupPanel;
         [SerializeField] private NotificationPanel notificationPanel;
         [SerializeField] private EndGameScreen endGameScreen;
-        [SerializeField] private BoosterPanel boosterPanel;
+        [SerializeField] private IngameBoosterPanel boosterPanel;
 
         public InGamePanel InGamePanel => inGamePanel;
         public IngamePowerupPanel IngamePowerupPanel => powerupPanel;
         public NotificationPanel NotificationPanel => notificationPanel;
         public EndGameScreen EndGameScreen => endGameScreen;
-        public BoosterPanel BoosterPanel => boosterPanel;
+        public IngameBoosterPanel BoosterPanel => boosterPanel;
 
         public void SetInvincibleObjectActive(bool isActive)
         {

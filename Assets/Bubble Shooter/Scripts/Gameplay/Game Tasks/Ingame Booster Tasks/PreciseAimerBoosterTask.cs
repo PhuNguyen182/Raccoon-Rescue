@@ -5,11 +5,11 @@ using BubbleShooter.Scripts.Gameplay.GameHandlers;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {
-    public class AimBoosterTask
+    public class PreciseAimerBoosterTask
     {
         private readonly BallShooter _ballShooter;
 
-        public AimBoosterTask(BallShooter ballShooter)
+        public PreciseAimerBoosterTask(BallShooter ballShooter)
         {
             _ballShooter = ballShooter;
         }

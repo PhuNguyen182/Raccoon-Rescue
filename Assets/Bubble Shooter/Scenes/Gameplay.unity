@@ -696,17 +696,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1116971114243409588, guid: ea36e3a3c364274448212b42f40bc120, type: 3}
   m_PrefabInstance: {fileID: 3464729053739320997}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &157088899 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 522000035949753799, guid: ea36e3a3c364274448212b42f40bc120, type: 3}
-  m_PrefabInstance: {fileID: 3464729053739320997}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81bfeac85f1379a4fadc9c1bbc9beaa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &208736892
 GameObject:
   m_ObjectHideFlags: 0
@@ -3518,7 +3507,7 @@ MonoBehaviour:
   powerupPanel: {fileID: 981138063}
   notificationPanel: {fileID: 850251488}
   endGameScreen: {fileID: 1019391428}
-  boosterPanel: {fileID: 157088899}
+  boosterPanel: {fileID: 3464729053739320998}
 --- !u!1 &1278411867
 GameObject:
   m_ObjectHideFlags: 0
@@ -5618,6 +5607,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea36e3a3c364274448212b42f40bc120, type: 3}
+--- !u!114 &3464729053739320998 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7725876600568968453, guid: ea36e3a3c364274448212b42f40bc120, type: 3}
+  m_PrefabInstance: {fileID: 3464729053739320997}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a7f6486464560b4bb474c5722d4d435, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3739707925983050536
 PrefabInstance:
   m_ObjectHideFlags: 0

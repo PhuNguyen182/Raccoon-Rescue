@@ -9,6 +9,7 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
@@ -46,6 +47,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [SerializeField] private CameraController cameraController;
         [SerializeField] private Material ballMaterial;
 
+        private InputProcessor _inputProcessor;
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
         private EntityManager _entityManager;
@@ -54,6 +56,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private FillBoardTask _fillBoardTask;
         private CheckTargetTask _checkTargetTask;
         private CheckScoreTask _checkScoreTask;
+        private IngameBoosterHandler _ingameBoosterHandler;
         private BoardThresholdCheckTask _boardThresholdCheckTask;
         private GameTaskManager _gameTaskManager;
 
@@ -81,7 +84,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         public void Initialize()
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
-            
+
+            _inputProcessor = new(inputHandler);
             _entityFactory = new(entityDatabase, entityContainer);
             _targetFactory = new(entityDatabase, entityContainer);
             ballShooter.SetBallFactory(_entityFactory);
@@ -89,7 +93,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _entityManager = new(_targetFactory, _entityFactory);
             _metaBallManager = new(_entityManager);
             _metaBallManager.AddTo(ref builder);
-
             
             _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
@@ -105,8 +108,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
             _boardThresholdCheckTask = new(_gridCellManager, cameraController);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, _checkScoreTask, ballProvider
-                                   , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask);
+            _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
+            _ingameBoosterHandler.AddTo(ref builder);
+
+            _gameTaskManager = new(_gridCellManager, mainScreen, _inputProcessor, _checkTargetTask, _checkScoreTask, ballProvider
+                                   , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask, _ingameBoosterHandler);
             _gameTaskManager.AddTo(ref builder);
 
             _gameTaskManager.SetBallMaterialEndGame(ballMaterial);
@@ -119,6 +125,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
+
+            _ingameBoosterHandler.InitBooster(new()
+            {
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 1 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 100 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
+            });
         }
 
         private void GenerateLevel(LevelModel levelModel)

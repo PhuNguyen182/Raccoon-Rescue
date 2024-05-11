@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckTargetTask _checkTargetTask;
         private readonly BallRippleTask _ballRippleTask;
         private readonly BoardThresholdCheckTask _boardThresholdCheckTask;
+        private readonly IngameBoosterHandler _ingameBoosterHandler;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
@@ -34,13 +36,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
             , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask
-            , BallRippleTask ballRippleTask)
+            , BallRippleTask ballRippleTask, IngameBoosterHandler ingameBoosterHandler)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
             _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
             _boardThresholdCheckTask = boardThresholdCheckTask;
+            _ingameBoosterHandler = ingameBoosterHandler;
 
             _tokenSource = new();
             _token = _tokenSource.Token;
@@ -97,6 +100,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 }
 
                 await _boardThresholdCheckTask.Check();
+                _ingameBoosterHandler.AfterUseBooster();
                 _inputProcessor.IsActive = true;
             }
         }
