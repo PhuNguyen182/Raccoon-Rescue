@@ -110,6 +110,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
             for (int i = 0; i < _boosterPanel.Boosters.Count; i++)
             {
                 _boosterPanel.Boosters[i].SetBoosterActive(false);
+                _boosterPanel.Boosters[i].SetFreeState(false);
             }
 
             _hasUsedBooster = false;
