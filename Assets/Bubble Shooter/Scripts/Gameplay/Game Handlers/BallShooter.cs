@@ -18,6 +18,7 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using static Dreamteck.Splines.Editor.PointModule;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -121,25 +122,33 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             GetInputDirection();
             RotatePointer();
 
-            if (inputHandler.IsHolden)
+            if (inputHandler.IsActive)
             {
-                if (!inputHandler.IsPointerOverlapUI())
+                if (inputHandler.IsHolden)
                 {
-                    SetLineAngles();
-                    _lineColor = GetLineColor(_ballModel.BallColor);
-                    DrawLineColors(true, _lineColor);
+                    if (!inputHandler.IsPointerOverlapUI())
+                    {
+                        SetLineAngles();
+                        _lineColor = GetLineColor(_ballModel.BallColor);
+                        DrawLineColors(true, _lineColor);
+                    }
+                }
+
+                else DrawLineColors(false, new Color(0, 0, 0, 0));
+
+                if (inputHandler.IsRelease)
+                {
+                    if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
+                    {
+                        inputHandler.IsActive = false;
+                        ShootBall(_ballModel);
+                    }
                 }
             }
 
-            else DrawLineColors(false, new Color(0, 0, 0, 0));
-
-            if(inputHandler.IsRelease)
-            { 
+            else
+            {
                 DrawLineColors(false, new Color(0, 0, 0, 0));
-                if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
-                {
-                    ShootBall(_ballModel);
-                }
             }
         }
 

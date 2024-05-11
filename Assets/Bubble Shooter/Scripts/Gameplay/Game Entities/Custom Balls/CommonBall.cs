@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -135,7 +136,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            return UniTask.CompletedTask;
+            return UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: onDestroyToken);
         }
 
         public bool Break()

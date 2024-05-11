@@ -169,29 +169,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             int totalScore = 0;
             bool containTarget = false;
-            
-            using (var listPool = ListPool<UniTask>.Get(out var breakTask))
+
+            _powerupPublisher.Publish(new PowerupMessage
             {
-                _powerupPublisher.Publish(new PowerupMessage
-                {
-                    Amount = cluster.Count,
-                    PowerupColor = cluster[2].EntityType,
-                    Command = ReactiveValueCommand.Changing
-                });
+                Amount = cluster.Count,
+                PowerupColor = cluster[2].EntityType,
+                Command = ReactiveValueCommand.Changing
+            });
 
-                for (int i = 0; i < cluster.Count; i++)
-                {
-                    if (cluster[i].BallEntity is ITargetBall)
-                        containTarget = true;
+            for (int i = 0; i < cluster.Count; i++)
+            {
+                if (cluster[i].BallEntity is ITargetBall)
+                    containTarget = true;
 
-                    totalScore += cluster[i].BallEntity.Score; 
-                    breakTask.Add(_breakGridTask.Break(cluster[i]));
-                }
-
-                _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
-
-                await UniTask.WhenAll(breakTask);
+                totalScore += cluster[i].BallEntity.Score;
+                await _breakGridTask.Break(cluster[i]);
             }
+
+            _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
             return (true, containTarget);
         }

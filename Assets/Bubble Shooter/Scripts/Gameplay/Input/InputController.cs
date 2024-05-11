@@ -46,24 +46,20 @@ namespace BubbleShooter.Scripts.Gameplay.Inputs
             EnhancedTouchSupport.Enable();
         }
 
-        private void Update()
-        {
-            Pointer = mainCamera.ScreenToWorldPoint(Position);
-        }
-
         private void OnReleasePerform(InputAction.CallbackContext context)
         {
-            _hold = IsActive ? context.ReadValue<float>() : 0;
+            _hold = context.ReadValue<float>();
         }
 
         private void OnMovePerform(InputAction.CallbackContext context)
         {
             Position = context.ReadValue<Vector2>();
+            Pointer = mainCamera.ScreenToWorldPoint(Position);
         }
 
         private bool GetReleaseState()
         {
-            return IsActive ? _inputController.Gameplay.Release.WasReleasedThisFrame() : false;
+            return _inputController.Gameplay.Release.WasReleasedThisFrame();
         }
 
         public bool IsPointerOverlapUI()

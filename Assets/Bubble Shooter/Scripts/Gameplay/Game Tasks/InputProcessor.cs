@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Gameplay.Inputs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
