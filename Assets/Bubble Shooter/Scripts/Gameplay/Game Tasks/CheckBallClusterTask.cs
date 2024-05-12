@@ -4,7 +4,6 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Constants;
-using BubbleShooter.Scripts.Gameplay.Strategies;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -13,13 +12,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     {
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
-        private readonly InputProcessor _inputProcessor;
         
-        public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, InputProcessor inputProcessor)
+        public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
-            _inputProcessor = inputProcessor;
         }
 
         public void CheckFreeCluster()

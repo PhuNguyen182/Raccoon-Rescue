@@ -46,7 +46,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _ballRippleTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
-            _checkBallClusterTask = new(_gridCellManager, _breakGridTask, _inputProcessor);
+            _checkBallClusterTask = new(_gridCellManager, _breakGridTask);
             _boosterHandleTask = new(_breakGridTask, _gridCellManager, _checkBallClusterTask, _inputProcessor);
 
             _breakGridTask.SetBoosterHandleTask(_boosterHandleTask);
@@ -59,8 +59,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _endGameTask = new(metaBallManager, ballShooter, ballProvider);
             _endGameTask.AddTo(ref builder);
 
-            _gameStateController = new(_mainScreenManager.EndGameScreen, _endGameTask
-                                       , checkTargetTask, checkScoreTask, gameDecorator);
+            _gameStateController = new(_endGameTask, _mainScreenManager
+                                   , checkTargetTask, checkScoreTask, gameDecorator);
             _gameStateController.AddTo(ref builder);
 
             _disposable = builder.Build();

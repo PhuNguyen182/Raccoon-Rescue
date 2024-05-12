@@ -177,7 +177,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupPublisher.Publish(new PowerupMessage
             {
                 Amount = cluster.Count,
-                PowerupColor = cluster[2].EntityType,
+                PowerupColor = GetBoosterColor(cluster[2].EntityType),
                 Command = ReactiveValueCommand.Changing
             });
 
@@ -193,6 +193,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
             return (true, containTarget);
+        }
+
+        private EntityType GetBoosterColor(EntityType entityType)
+        {
+            return entityType switch
+            {
+                EntityType.Blue => EntityType.WaterBall,
+                EntityType.Green => EntityType.LeafBall,
+                EntityType.Red => EntityType.FireBall,
+                EntityType.Yellow => EntityType.SunBall,
+                _ => EntityType.None
+            };
         }
 
         public void Dispose()

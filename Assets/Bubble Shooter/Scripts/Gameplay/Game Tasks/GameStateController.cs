@@ -28,6 +28,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         }
 
         private readonly EndGameTask _endGameTask;
+        private readonly MainScreenManager _mainScreen;
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly CheckScoreTask _checkScoreTask;
@@ -36,11 +37,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask
+        public GameStateController(EndGameTask endGameTask, MainScreenManager mainScreen
             , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
         {
+            _mainScreen = mainScreen;
             _endGameTask = endGameTask;
-            _endGameScreen = endGameScreen;
+            _endGameScreen = mainScreen.EndGameScreen;
             _checkTargetTask = checkTargetTask;
             _checkScoreTask = checkScoreTask;
             _gameDecorator = gameDecorator;
@@ -95,6 +97,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
             _endGameTask.ContinueSpawnBall();
+            _mainScreen.ShowMainPanel(true);
         }
 
         private void EndGame(bool isWin)
@@ -107,6 +110,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask OnEndGame(bool isWin)
         {
+            _mainScreen.ShowMainPanel(false);
+
             if (isWin)
             {
                 await _endGameTask.OnWinGame();
