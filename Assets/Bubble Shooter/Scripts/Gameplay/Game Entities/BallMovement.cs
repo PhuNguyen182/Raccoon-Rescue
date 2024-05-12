@@ -6,12 +6,12 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.GameManagers;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using DG.Tweening;
-using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
