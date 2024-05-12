@@ -11,6 +11,7 @@ using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using DG.Tweening;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
@@ -93,20 +94,33 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public void Move()
         {
-            MoveBall();
-
-            if (_gridCellHolder == null)
-            {
-                CheckSnapToCeil();
-                CheckNeighborBallToSnap();
-            }
-
-            else SnapToReportedCell();
-
+            MoveToStopPosition();
             CheckReflection();
+            MoveBall();
         }
 
-        private void SnapToReportedCell()
+        private void MoveToStopPosition()
+        {
+            if (_gridCellHolder != null)
+            {
+                IGridCell gridCell = TakeGridCellFunction.Invoke(_gridCellHolder.GridPosition);
+
+                if (gridCell != null && !gridCell.ContainsBall && HasAnyNeighborAt(gridCell.GridPosition))
+                    SnapToReportedStopPosition();
+
+                else FreeMoveToStopPosition();
+            }
+
+            else FreeMoveToStopPosition();
+        }
+
+        private void FreeMoveToStopPosition()
+        {
+            CheckSnapToCeil();
+            CheckNeighborBallToSnap();
+        }
+
+        private void SnapToReportedStopPosition()
         {
             SnapToReportedCellAsync().Forget();
         }
@@ -127,9 +141,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 Vector3Int position = _gridCellHolder.GridPosition;
                 IGridCell checkCell = TakeGridCellFunction.Invoke(position);
-
-                if (checkCell == null)
-                    return;
 
                 CanMove = false;
                 ChangeLayerMask(true);
@@ -311,6 +322,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
         {
             ballBody.AddForce(force, forceMode);
+        }
+
+        private bool HasAnyNeighborAt(Vector3Int position)
+        {
+            IGridCell gridCell;
+
+            for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
+            {
+                Vector3Int neighborOffset = position.y % 2 == 0
+                                            ? CommonProperties.EvenYNeighborOffsets[i]
+                                            : CommonProperties.OddYNeighborOffsets[i];
+                gridCell = TakeGridCellFunction.Invoke(position + neighborOffset);
+                
+                if (gridCell.ContainsBall)
+                    return true;
+            }
+
+            return false;
         }
 
         private void MoveBall()
