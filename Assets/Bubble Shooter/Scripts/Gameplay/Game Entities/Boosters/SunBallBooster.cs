@@ -7,6 +7,7 @@ using BubbleShooter.Scripts.Common.Messages;
 using Scripts.Common.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
@@ -34,12 +35,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool IsIgnored { get; set; }
 
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -94,7 +110,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             return UniTask.CompletedTask;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
             return UniTask.CompletedTask;
         }
@@ -124,9 +140,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             });
         }
 
-        protected override void OnDisable()
+        private void OnDestroy()
         {
-            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

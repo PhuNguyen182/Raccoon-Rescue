@@ -51,12 +51,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             ballShooter.SetStartPosition();
         }
 
-        public void MoveTo(Vector3 toPosition)
-        {
-            MoveAsync(toPosition).Forget();
-        }
-
-        private UniTask MoveAsync(Vector3 toPosition)
+        public UniTask MoveTo(Vector3 toPosition)
         {
             _moveTween ??= CreateMoveTween(toPosition);
             _moveTween.ChangeStartValue(transform.position);

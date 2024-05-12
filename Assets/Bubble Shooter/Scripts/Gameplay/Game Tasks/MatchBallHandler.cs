@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
@@ -19,23 +20,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly GridCellManager _gridCellManager;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly BallRippleTask _ballRippleTask;
+        private readonly BoardThresholdCheckTask _boardThresholdCheckTask;
+        private readonly IngameBoosterHandler _ingameBoosterHandler;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
+        private const int RippleSpreadLevel = 3;
+
         private CancellationToken _token;
         private CancellationTokenSource _tokenSource;
         private IDisposable _disposable;
 
-        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
-            , CheckTargetTask checkTargetTask)
+        public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
+            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask
+            , BallRippleTask ballRippleTask, IngameBoosterHandler ingameBoosterHandler)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
             _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
+            _boardThresholdCheckTask = boardThresholdCheckTask;
+            _ingameBoosterHandler = ingameBoosterHandler;
 
             _tokenSource = new();
             _token = _tokenSource.Token;
@@ -49,6 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _disposable = builder.Build();
             _inputProcessor = inputProcessor;
+            _ballRippleTask = ballRippleTask;
         }
 
         public void Match(CheckMatchMessage message)
@@ -64,6 +73,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 CheckMatch(position, matchCluster);
 
                 _gridCellManager.ClearVisitedPositions();
+                await _checkBallClusterTask.CheckNeighborCluster(position);
+                await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
+                _ballRippleTask.ResetRippleIgnore();
+
                 (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
                 
                 bool isMatched = clusterResult.Item1;
@@ -79,13 +92,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                         _checkTargetTask.CheckTarget();
                     }
                 }
+
                 else
                 {
-                    await _checkBallClusterTask.CheckNeighborCluster(position);
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                     _checkTargetTask.CheckTarget();
                 }
 
+                await _boardThresholdCheckTask.Check();
+                _ingameBoosterHandler.AfterUseBooster();
                 _inputProcessor.IsActive = true;
             }
         }
@@ -158,29 +173,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             int totalScore = 0;
             bool containTarget = false;
-            
-            using (var listPool = ListPool<UniTask>.Get(out var breakTask))
+
+            _powerupPublisher.Publish(new PowerupMessage
             {
-                _powerupPublisher.Publish(new PowerupMessage
-                {
-                    Amount = cluster.Count,
-                    PowerupColor = cluster[2].EntityType,
-                    Command = ReactiveValueCommand.Changing
-                });
+                Amount = cluster.Count,
+                PowerupColor = cluster[2].EntityType,
+                Command = ReactiveValueCommand.Changing
+            });
 
-                for (int i = 0; i < cluster.Count; i++)
-                {
-                    if (cluster[i].BallEntity is ITargetBall)
-                        containTarget = true;
+            for (int i = 0; i < cluster.Count; i++)
+            {
+                if (cluster[i].BallEntity is ITargetBall)
+                    containTarget = true;
 
-                    totalScore += cluster[i].BallEntity.Score; 
-                    breakTask.Add(_breakGridTask.Break(cluster[i]));
-                }
-
-                _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
-
-                await UniTask.WhenAll(breakTask);
+                totalScore += cluster[i].BallEntity.Score;
+                await _breakGridTask.Break(cluster[i]);
             }
+
+            _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
             return (true, containTarget);
         }

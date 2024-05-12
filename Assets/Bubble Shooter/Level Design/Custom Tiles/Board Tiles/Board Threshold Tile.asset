@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4d7fe88327d844a934415f634c1a6d, type: 3}
   m_Name: Board Threshold Tile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 7482667652216324306, guid: d9c3e749ad5d09f4f9b1670c95df1853, type: 3}
-  m_Color: {r: 0.504717, g: 1, b: 0.91097856, a: 1}
+  m_Sprite: {fileID: -2135585597343286014, guid: 2d4cd955d76673f45a428024b7337875, type: 3}
+  m_Color: {r: 1, g: 1, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0

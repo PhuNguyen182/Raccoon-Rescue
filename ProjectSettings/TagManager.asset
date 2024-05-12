@@ -15,8 +15,8 @@ TagManager:
   - Ceil
   - Grid
   - Destroyer
-  - LeftWall
-  - RightWall
+  - Reflect
+  - ReflectLine
   - Ground
   - 
   - 

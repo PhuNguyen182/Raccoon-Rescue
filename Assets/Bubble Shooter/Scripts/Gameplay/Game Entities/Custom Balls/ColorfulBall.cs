@@ -8,6 +8,7 @@ using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -51,10 +52,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -102,9 +118,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
@@ -122,9 +138,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        protected override void OnDisable()
+        private void OnDestroy()
         {
-            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

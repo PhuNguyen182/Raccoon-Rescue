@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallAnimation, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -53,10 +54,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
-        private void OnEnable()
+        public Func<Vector3, Vector3Int> WorldToGridFunction 
+        { 
+            get => ballMovement.WorldToGridFunction; 
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction 
+        { 
+            get => ballMovement.TakeGridCellFunction; 
+            set => ballMovement.TakeGridCellFunction = value; 
+        }
+
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -120,9 +136,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
@@ -132,17 +148,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            return UniTask.CompletedTask;
+            PlayBlastEffect();
+            return UniTask.Delay(TimeSpan.FromSeconds(0.03f), cancellationToken: onDestroyToken);
         }
 
         public bool Break()
         {
             return true;
-        }
-
-        public void PlayBounceAnimation()
-        {
-            
         }
 
         public void PlayBlastEffect()
@@ -169,9 +181,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        protected override void OnDisable()
+        private void OnDestroy()
         {
-            base.OnDisable();
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

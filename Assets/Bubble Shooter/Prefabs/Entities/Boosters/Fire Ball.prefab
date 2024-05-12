@@ -21,7 +21,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &4697750085331226746
 Transform:
@@ -149,12 +149,12 @@ MonoBehaviour:
   ballBody: {fileID: 6020408375655933279}
   ballCollider: {fileID: 7361773460094197770}
   moveState: 0
-  moveDuration: 0.2
-  moveEase: 6
-  snapDuration: 0.2
-  snapEase: 4
+  bounceDuration: 0.15
+  bounceEase: 7
+  snapDuration: 0.25
+  snapEase: 7
   delayFrame: 3
-  ballRadius: 0.3
+  ballRadius: 0.35
   ballDistance: 1
   ceilMask:
     serializedVersion: 2
@@ -167,7 +167,7 @@ MonoBehaviour:
     m_Bits: 128
   reflectMask:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
 --- !u!114 &-1300896795331825709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +293,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &1889453202109191363
 Transform:

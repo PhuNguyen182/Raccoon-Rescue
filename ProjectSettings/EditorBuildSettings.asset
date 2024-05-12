@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Bubble Shooter/Scenes/Boostrap.unity
+    guid: d28af102b14c5274ea7776cd29fad5df
+  - enabled: 1
     path: Assets/Bubble Shooter/Scenes/Loading.unity
     guid: 8ddf082b73cd2774585f28f0d68e8f9f
   - enabled: 1
@@ -17,4 +20,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Bubble Shooter/Scenes/Gameplay.unity
     guid: 522da0318d85a5f44a8002deb14df4ac
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: f3b3825a477aa0f42bf5eb483769a3bf, type: 2}

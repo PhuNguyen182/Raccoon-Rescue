@@ -1,4 +1,4 @@
-using R3;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,34 +11,31 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private Camera mainCamera;
 
-        public Vector3 InputPosition { get; private set; }
+        public InputController InputController;
+        public Vector3 InputPosition => InputController.Pointer;
         public bool IsPressed { get; private set; }
-        public bool IsHolden { get; private set; }
-        public bool IsReleased { get; private set; }
+        public bool IsHolden => InputController.IsHolden;
+        public bool IsReleased => InputController.IsRelease;
 
         public bool IsActive { get; set; }
 
         private Touch _touch;
-        private IDisposable _disposable;
 
         private void Awake()
         {
-            var d = Disposable.CreateBuilder();
-            
-            Observable.EveryUpdate()
-                      .Index()
-                      .Subscribe(_ => ProcessInput())
-                      .AddTo(ref d);
-            
-            _disposable = d.Build();
             IsActive = true;
         }
+
+        //private void Update()
+        //{
+        //    ProcessInput();
+        //}
 
         private void ProcessInput()
         {
             if (IsActive)
             {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
                 StandaloneInput();
 #elif UNITY_ANDROID || UNITY_IOS
                 MobileInput();
@@ -48,85 +45,58 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void StandaloneInput()
         {
-            InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            //InputPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-            if (!IsUiOverlap(InputPosition))
-            {
-                IsPressed = Input.GetMouseButtonDown(0);
-                IsHolden = Input.GetMouseButton(0);
-                IsReleased = Input.GetMouseButtonUp(0);
-            }
-            else
-            {
-                IsPressed = false;
-                IsHolden = false;
-                IsReleased = false;
-            }
+            IsPressed = Input.GetMouseButtonDown(0);
+            //IsHolden = Input.GetMouseButton(0);
+            //IsReleased = Input.GetMouseButtonUp(0);
         }
 
         private void MobileInput()
         {
-            if(Input.touchCount > 0)
+            if (Input.touchCount > 0)
             {
                 _touch = Input.GetTouch(0);
-                InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
-                
-                if (!IsUiOverlap(InputPosition))
+                //InputPosition = mainCamera.ScreenToWorldPoint(_touch.position);
+
+                switch (_touch.phase)
                 {
-                    switch (_touch.phase)
-                    {
-                        case TouchPhase.Began:
-                            IsPressed = true;
-                            IsHolden = false;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Moved:
-                            IsPressed = false;
-                            IsHolden = true;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Stationary:
-                            IsPressed = false;
-                            IsHolden = true;
-                            IsReleased = false;
-                            break;
-                        case TouchPhase.Ended:
-                            IsPressed = false;
-                            IsHolden = false;
-                            IsReleased = true;
-                            break;
-                    }
-                }
-                else
-                {
-                    IsPressed = false;
-                    IsHolden = false;
-                    IsReleased = false;
+                    case TouchPhase.Began:
+                        IsPressed = true;
+                        //IsHolden = false;
+                        //IsReleased = false;
+                        break;
+                    case TouchPhase.Moved:
+                        IsPressed = false;
+                        //IsHolden = true;
+                        //IsReleased = false;
+                        break;
+                    case TouchPhase.Stationary:
+                        IsPressed = false;
+                        //IsHolden = true;
+                        //IsReleased = false;
+                        break;
+                    case TouchPhase.Ended:
+                        IsPressed = false;
+                        //IsHolden = false;
+                        //IsReleased = true;
+                        break;
                 }
             }
         }
 
-        private bool IsUiOverlap(Vector3 position)
+        public bool IsPointerOverlapUI()
         {
-#if UNITY_EDITOR
-            return EventSystem.current.IsPointerOverGameObject();
-#elif UNITY_ANDROID || UNITY_IOS
-            return IsPointerOverUIObject(position);
-#endif
+            return InputController.IsPointerOverlapUI();
         }
 
-        private bool IsPointerOverUIObject(Vector3 position)
+        private bool IsPointerOverUIObject()
         {
             PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(position.x, position.y);
+            eventDataCurrentPosition.position = new Vector2(InputPosition.x, InputPosition.y);
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
-        }
-
-        private void OnDestroy()
-        {
-            _disposable.Dispose();
         }
     }
 }

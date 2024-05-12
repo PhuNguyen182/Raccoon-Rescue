@@ -17,9 +17,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _gridPosition;
         private Dictionary<Vector3Int, IGridCell> _gridCells;
         private Dictionary<Vector3Int, bool> _visitedMatrix;
-
         private OrderablePartitioner<Vector3Int> _partitioner;
+        private BoundsInt _levelBounds;
 
+        public BoundsInt LevelBounds => _levelBounds;
         public List<Vector3Int> GridPositions => _gridPosition;
         public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
         public Func<Vector3, Vector3Int> ConvertWorldToGridFunction { get; }
@@ -44,6 +45,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void GetRow(Vector3Int position, out List<IGridCell> row)
         {
+            if(Get(position) == null)
+            {
+                row = null;
+                return;
+            }
+
             int count = 1;
             IGridCell gridCell;
             List<IGridCell> gridCells = new();
@@ -53,10 +60,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             while(gridCell != null)
             {
+                count = count + 1;
                 Vector3Int checkPos = position + new Vector3Int(-1, 0) * count;
                 gridCell = Get(checkPos);
-                gridCells.Add(gridCell);
-                count = count + 1;
+
+                if (gridCell != null)
+                    gridCells.Add(gridCell);
             }
 
             count = 0;
@@ -64,10 +73,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             while (gridCell != null)
             {
+                count = count + 1;
                 Vector3Int checkPos = position + new Vector3Int(1, 0) * count;
                 gridCell = Get(checkPos);
-                gridCells.Add(gridCell);
-                count = count + 1;
+                
+                if(gridCell != null)
+                    gridCells.Add(gridCell);
             }
 
             row = gridCells;
@@ -130,6 +141,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 _visitedMatrix.Add(_gridPosition[i], false);
             }
+
+            _levelBounds = new BoundsInt
+            {
+                min = _gridPosition[0],
+                max = _gridPosition[_gridPosition.Count - 1]
+            };
         }
 
         public bool GetIsVisited(Vector3Int position)
