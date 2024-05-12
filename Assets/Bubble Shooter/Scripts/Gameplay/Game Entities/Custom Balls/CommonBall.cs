@@ -58,6 +58,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool EasyBreak => false;
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction 
+        { 
+            get => ballMovement.WorldToGridFunction; 
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction 
+        { 
+            get => ballMovement.TakeGridCellFunction; 
+            set => ballMovement.TakeGridCellFunction = value; 
+        }
+
         protected override void OnAwake()
         {
             base.OnAwake();

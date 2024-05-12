@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.PlayDatas;
+using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
@@ -63,6 +65,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
+        }
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
         }
 
         public Vector2 MoveDirection => ballMovement.MoveDirection;

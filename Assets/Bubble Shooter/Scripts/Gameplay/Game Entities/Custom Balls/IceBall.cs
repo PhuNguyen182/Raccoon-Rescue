@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
+using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
@@ -55,7 +57,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public Vector2 MoveDirection => ballMovement.MoveDirection;
 
-        public BallMovementState MovementState { get; set; }
+        public BallMovementState MovementState
+        {
+            get => ballMovement.MovementState;
+            set => ballMovement.MovementState = value;
+        }
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
 
         public override UniTask Blast()
         {

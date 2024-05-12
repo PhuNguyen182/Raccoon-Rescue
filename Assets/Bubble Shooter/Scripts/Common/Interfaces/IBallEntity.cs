@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,5 +28,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public void PublishScore();
         public void OnFallenDestroy();
         public void SetWorldPosition(Vector3 position);
+        public void SetWorldToGridFunction(Func<Vector3, Vector3Int> function);
+        public void SetTakeGridCell(Func<Vector3Int, IGridCell> function);
     }
 }

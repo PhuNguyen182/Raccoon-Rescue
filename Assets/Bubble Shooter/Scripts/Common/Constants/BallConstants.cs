@@ -2,7 +2,7 @@ namespace BubbleShooter.Scripts.Common.Constants
 {
     public static class BallConstants
     {
-        public const float BallMoveSpeed = 21f;
+        public const float BallMoveSpeed = 24f;
         public const float CheckGridOffset = 0.35f;
         public const float SpreadShootAngle = 30f;
         public const float MinForce = 4f;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
@@ -13,5 +14,8 @@ namespace BubbleShooter.Scripts.Common.Interfaces
         public void SetMoveDirection(Vector2 direction);
         public UniTask SnapTo(Vector3 position);
         public UniTask BounceMove(Vector3 position);
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction { get; set; }
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction { get; set; }
     }
 }

@@ -107,7 +107,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public GridCellHolder ReportGridCell()
         {
             Vector3 dir, position;
-            if (_linePoints.Length == 3 && IsPremier)
+            if (_linePoints.Length == 3)
             {
                 position = _linePoints[2];
                 dir = _linePoints[1] - _linePoints[2];

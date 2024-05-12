@@ -1,13 +1,14 @@
+using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
@@ -115,6 +116,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             OnFallenDestroy();
             PublishScore();
             DestroyEntity();
+        }
+
+        public void SetWorldToGridFunction(Func<Vector3, Vector3Int> function)
+        {
+            ballMovement.WorldToGridFunction = function;
+        }
+
+        public void SetTakeGridCell(Func<Vector3Int, IGridCell> function)
+        {
+            ballMovement.TakeGridCellFunction = function;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

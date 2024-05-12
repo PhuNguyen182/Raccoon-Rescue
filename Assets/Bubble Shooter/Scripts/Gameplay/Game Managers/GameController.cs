@@ -105,6 +105,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                                    , _metaBallManager);
             _gridCellManager.AddTo(ref builder);
 
+            _entityFactory.SetGridCellManager(_gridCellManager);
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
             _boardThresholdCheckTask = new(_gridCellManager, cameraController);
 
@@ -116,7 +117,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _gameTaskManager.AddTo(ref builder);
 
             _gameTaskManager.SetBallMaterialEndGame(ballMaterial);
-
             builder.RegisterTo(this.destroyCancellationToken);
         }
 
@@ -129,7 +129,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _ingameBoosterHandler.InitBooster(new()
             {
                 new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 0 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 0 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
                 new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 0 },
             });
         }

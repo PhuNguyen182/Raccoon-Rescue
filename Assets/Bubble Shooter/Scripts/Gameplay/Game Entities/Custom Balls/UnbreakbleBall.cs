@@ -6,6 +6,7 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Messages;
 using MessagePipe;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -27,6 +28,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
+        }
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
         }
 
         public Vector2 MoveDirection => ballMovement.MoveDirection;

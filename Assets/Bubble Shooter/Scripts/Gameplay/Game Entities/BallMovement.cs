@@ -63,7 +63,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private RaycastHit2D _reflectHitInfo;
         private RaycastHit2D[] _nearestGridHitInfos;
 
-        private Collider2D _ceilCollider;
         private Collider2D _neighborBallCollider;
         private GridCellHolder _gridCellHolder;
 
@@ -80,6 +79,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         }
 
         public Vector2 MoveDirection => _moveDirection;
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction { get; set; }
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction { get; set; }
 
         private void Awake()
         {
@@ -124,7 +126,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             if(Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= 0.3f)
             {
                 Vector3Int position = _gridCellHolder.GridPosition;
-                IGridCell checkCell = GameController.Instance.GetCell(position);
+                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
                 if (checkCell == null)
                     return;
@@ -159,13 +161,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private async UniTaskVoid CheckSnapToCeilAsync()
         {
-            _ceilCollider = Physics2D.OverlapCircle(transform.position, ballRadius, cellMask);
-
-            if (_ceilCollider == null)
-                return;
-
-            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GetCell(position);
+            Vector3Int position = WorldToGridFunction.Invoke(transform.position);
+            IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
             if (checkCell == null)
                 return;
@@ -187,13 +184,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             if (_neighborBallCollider == null)
                 return;
 
-            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GetCell(position);
+            Vector3Int position = WorldToGridFunction.Invoke(_neighborBallCollider.transform.position);
+            IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
             if (checkCell == null)
                 return;
 
-            if (!_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+            if (!checkCell.ContainsBall)
+                return;
+
+            if (checkCell.BallEntity is not IBallMovement movement)
                 return;
 
             if (movement.MovementState == BallMovementState.Fixed)
@@ -229,7 +229,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder grid))
                     continue;
 
-                IGridCell gridCell = GameController.Instance.GetCell(grid.GridPosition);
+                IGridCell gridCell = TakeGridCellFunction.Invoke(grid.GridPosition);
                 if (gridCell == null || gridCell.ContainsBall)
                     continue;
 
@@ -243,7 +243,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
 
             GridCellHolder gridHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
-            targetGridCell = GameController.Instance.GetCell(gridHolder.GridPosition);
+            targetGridCell = TakeGridCellFunction.Invoke(gridHolder.GridPosition);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);

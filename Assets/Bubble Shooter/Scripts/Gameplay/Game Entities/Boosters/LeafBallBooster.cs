@@ -7,6 +7,7 @@ using BubbleShooter.Scripts.Common.Messages;
 using Scripts.Common.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
@@ -32,6 +33,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             get => ballMovement.MovementState;
             set => ballMovement.MovementState = value;
+        }
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
         }
 
         public Vector2 MoveDirection => ballMovement.MoveDirection;
