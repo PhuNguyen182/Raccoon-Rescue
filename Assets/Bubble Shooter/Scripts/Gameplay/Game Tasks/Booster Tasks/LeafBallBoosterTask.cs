@@ -29,38 +29,40 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 await booster.Activate();
 
             _gridCellManager.DestroyAt(position);
-            using (PooledObject<List<UniTask>> listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
-                var column = GetVerticalLine(position);
-                List<IBallPlayBoosterEffect> boosterEffects = new();
-
-                for (int i = 0; i < column.Count; i++)
+                using (var boosterListPool = ListPool<IBallPlayBoosterEffect>.Get(out var boosterEffects))
                 {
-                    if (column[i] == null)
-                        continue;
+                    var column = GetVerticalLine(position);
 
-                    if (position == column[i].GridPosition)
-                        continue;
-
-                    if (!column[i].ContainsBall)
-                        continue;
-
-                    if (column[i].BallEntity is IBallBooster ballBooster)
-                        if (ballBooster.IsIgnored)
+                    for (int i = 0; i < column.Count; i++)
+                    {
+                        if (column[i] == null)
                             continue;
 
-                    if (column[i].BallEntity is IBallPlayBoosterEffect boosterEffect)
-                    {
-                        boosterEffects.Add(boosterEffect);
-                        await boosterEffect.PlayBoosterEffect(EntityType.LeafBall);
+                        if (position == column[i].GridPosition)
+                            continue;
+
+                        if (!column[i].ContainsBall)
+                            continue;
+
+                        if (column[i].BallEntity is IBallBooster ballBooster)
+                            if (ballBooster.IsIgnored)
+                                continue;
+
+                        if (column[i].BallEntity is IBallPlayBoosterEffect boosterEffect)
+                        {
+                            boosterEffects.Add(boosterEffect);
+                            await boosterEffect.PlayBoosterEffect(EntityType.LeafBall);
+                        }
+
+                        breakTasks.Add(_breakGridTask.Break(column[i]));
                     }
 
-                    breakTasks.Add(_breakGridTask.Break(column[i]));
+                    await UniTask.WhenAll(breakTasks);
+                    for (int i = 0; i < boosterEffects.Count; i++)
+                        boosterEffects[i].ReleaseEffect();
                 }
-
-                await UniTask.WhenAll(breakTasks);
-                for (int i = 0; i < boosterEffects.Count; i++)
-                    boosterEffects[i].ReleaseEffect();
             }
         }
 

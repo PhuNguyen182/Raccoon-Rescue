@@ -28,38 +28,40 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 await booster.Activate();
 
             _gridCellManager.DestroyAt(position);
-            using (PooledObject<List<UniTask>> listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
-                List<IBallPlayBoosterEffect> boosterEffects = new();
-                _gridCellManager.GetRow(position, out List<IGridCell> row);
-
-                for (int i = 0; i < row.Count; i++)
+                using (var boosterListPool = ListPool<IBallPlayBoosterEffect>.Get(out var boosterEffects))
                 {
-                    if (row[i] == null)
-                        continue;
+                    _gridCellManager.GetRow(position, out List<IGridCell> row);
 
-                    if (position == row[i].GridPosition)
-                        continue;
-
-                    if (!row[i].ContainsBall)
-                        continue;
-
-                    if (row[i].BallEntity is IBallBooster ballBooster)
-                        if (ballBooster.IsIgnored)
+                    for (int i = 0; i < row.Count; i++)
+                    {
+                        if (row[i] == null)
                             continue;
 
-                    if (row[i].BallEntity is IBallPlayBoosterEffect boosterEffect)
-                    {
-                        boosterEffects.Add(boosterEffect);
-                        await boosterEffect.PlayBoosterEffect(EntityType.WaterBall);
+                        if (position == row[i].GridPosition)
+                            continue;
+
+                        if (!row[i].ContainsBall)
+                            continue;
+
+                        if (row[i].BallEntity is IBallBooster ballBooster)
+                            if (ballBooster.IsIgnored)
+                                continue;
+
+                        if (row[i].BallEntity is IBallPlayBoosterEffect boosterEffect)
+                        {
+                            boosterEffects.Add(boosterEffect);
+                            await boosterEffect.PlayBoosterEffect(EntityType.WaterBall);
+                        }
+
+                        breakTasks.Add(_breakGridTask.Break(row[i]));
                     }
 
-                    breakTasks.Add(_breakGridTask.Break(row[i]));
+                    await UniTask.WhenAll(breakTasks);
+                    for (int i = 0; i < boosterEffects.Count; i++)
+                        boosterEffects[i].ReleaseEffect();
                 }
-
-                await UniTask.WhenAll(breakTasks);
-                for (int i = 0; i < boosterEffects.Count; i++)
-                    boosterEffects[i].ReleaseEffect();
             }
         }
 

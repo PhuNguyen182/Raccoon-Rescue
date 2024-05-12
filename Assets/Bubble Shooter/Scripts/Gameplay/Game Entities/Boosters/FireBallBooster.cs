@@ -71,7 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public async UniTask Activate()
         {
-            await Blast();
+            await Explode();
         }
 
         public override UniTask Blast()

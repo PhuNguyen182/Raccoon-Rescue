@@ -204,6 +204,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             
         }
 
+        private void ReleaseObject(GameObject obj)
+        {
+            if (obj != null)
+                SimplePool.Despawn(obj);
+        }
+
         private void OnDestroy()
         {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);

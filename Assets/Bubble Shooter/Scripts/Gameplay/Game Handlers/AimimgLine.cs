@@ -13,7 +13,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         [SerializeField] private InputController inputHandler;
         [SerializeField] private LineDrawer mainLineDrawer;
 
-        private const float RaycastLength = 25f;
+        private const float RaycastLength = 30f;
         private const float NormalAimLength = 1.5f;
         private const float PremierAimLength = 25f;
 
@@ -48,7 +48,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         public void DrawAimingLine(bool isDraw, Color lineColor)
         {
-            if(!isDraw)
+            if (!isDraw)
             {
                 _angle = 0;
                 mainLineDrawer.HidePath();
@@ -58,18 +58,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             mainLineDrawer.SetColor(lineColor);
             _originalDir = inputHandler.Pointer - spawnPoint.position;
             _direction = Quaternion.AngleAxis(_angle, Vector3.forward) * _originalDir;
-            _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ceilMask);
+            _ballHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ballMask);
 
-            if (_ceilHit)
-                _linePoints = new Vector3[] { spawnPoint.position, _ceilHit.point };
+            if (_ballHit)
+                _linePoints = new Vector3[] { spawnPoint.position, _ballHit.point };
 
             else
             {
-                _ballHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ballMask);
-
-                if (_ballHit)
-                    _linePoints = new Vector3[] { spawnPoint.position, _ballHit.point };
-
+                _ceilHit = Physics2D.Raycast(spawnPoint.position, _direction, RaycastLength, _ceilMask);
+                
+                if(_ceilHit) _linePoints = new Vector3[] { spawnPoint.position, _ceilHit.point };
+                
                 else DrawReflectLine();
             }
 
@@ -86,20 +85,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 Vector2 reflectDir = Vector2.Reflect(hitPoint - spawnPoint.position, _reflectHit.normal);
 
                 Ray2D reflectRay = new(hitPoint, reflectDir);
-                _ceilHit = Physics2D.Raycast(hitPoint, reflectDir, RaycastLength, _ceilMask);
+                float extendLength = IsPremier ? PremierAimLength : NormalAimLength;
 
-                if (_ceilHit)
-                {
-                    _linePoints = new Vector3[] { spawnPoint.position, _reflectHit.point, _ceilHit.point };
-                }
+                _ballHit = Physics2D.Raycast(hitPoint, reflectDir, extendLength, _ballMask);
 
+                if (_ballHit)
+                    _linePoints = new Vector3[] { spawnPoint.position, _reflectHit.point, _ballHit.point };
+                                      
                 else
                 {
-                    float extendLength = IsPremier ? PremierAimLength : NormalAimLength;
-                    _ballHit = Physics2D.Raycast(hitPoint, reflectDir, extendLength, _ballMask);
-
-                    _linePoints = _ballHit ? new Vector3[] { spawnPoint.position, _reflectHit.point, _ballHit.point }
-                                          : new Vector3[] { spawnPoint.position, _reflectHit.point, reflectRay.GetPoint(extendLength) };
+                    _ceilHit = Physics2D.Raycast(hitPoint, reflectDir, extendLength, _ceilMask);
+                    _linePoints = _ceilHit ? new Vector3[] { spawnPoint.position, _reflectHit.point, _ceilHit.point }
+                                           : new Vector3[] { spawnPoint.position, _reflectHit.point, reflectRay.GetPoint(extendLength) };
                 }
             }
         }

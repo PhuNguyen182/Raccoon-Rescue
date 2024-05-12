@@ -30,40 +30,41 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 await booster.Activate();
                 
             _gridCellManager.DestroyAt(position);
-            using (PooledObject<List<UniTask>> listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
-                var gridPositions = GetBoosterRange(position);
-                List<IBallPlayBoosterEffect> boosterEffects = new();
-
-                foreach (Vector3Int gridPosition in gridPositions)
+                using (var effectlistPool = ListPool<IBallPlayBoosterEffect>.Get(out var boosterEffects))
                 {
-                    if (position == gridPosition)
-                        continue;
+                    var gridPositions = GetBoosterRange(position);
 
-                    IGridCell cell = _gridCellManager.Get(gridPosition);
-                    if (cell == null)
-                        continue;
-
-                    if (!cell.ContainsBall)
-                        continue;
-
-                    if (cell.BallEntity is IBallBooster ballBooster)
-                        if (ballBooster.IsIgnored)
+                    foreach (Vector3Int gridPosition in gridPositions)
+                    {
+                        if (position == gridPosition)
                             continue;
 
-                    if (cell.BallEntity is IBallPlayBoosterEffect boosterEffect)
-                    {
-                        boosterEffects.Add(boosterEffect);
-                        await boosterEffect.PlayBoosterEffect(EntityType.FireBall);
+                        IGridCell cell = _gridCellManager.Get(gridPosition);
+                        if (cell == null)
+                            continue;
+
+                        if (!cell.ContainsBall)
+                            continue;
+
+                        if (cell.BallEntity is IBallBooster ballBooster)
+                            if (ballBooster.IsIgnored)
+                                continue;
+
+                        if (cell.BallEntity is IBallPlayBoosterEffect boosterEffect)
+                        {
+                            boosterEffects.Add(boosterEffect);
+                            await boosterEffect.PlayBoosterEffect(EntityType.FireBall);
+                        }
+
+                        breakTasks.Add(_breakGridTask.Break(cell));
                     }
 
-                    breakTasks.Add(_breakGridTask.Break(cell));
+                    await UniTask.WhenAll(breakTasks);
+                    for (int i = 0; i < boosterEffects.Count; i++)
+                        boosterEffects[i].ReleaseEffect();
                 }
-
-                await UniTask.WhenAll(breakTasks);
-
-                for (int i = 0; i < boosterEffects.Count; i++)
-                    boosterEffects[i].ReleaseEffect();
             }
         }
 

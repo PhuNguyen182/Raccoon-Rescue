@@ -28,39 +28,41 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                 await booster.Activate();
 
             _gridCellManager.DestroyAt(position);
-            using (PooledObject<List<UniTask>> listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
-                var gridPosition = GetHexagonClusterBall(position);
-                List<IBallPlayBoosterEffect> boosterEffects = new();
-
-                for (int i = 0; i < gridPosition.Count; i++)
+                using (var boosterListPool = ListPool<IBallPlayBoosterEffect>.Get(out var boosterEffects))
                 {
-                    if (position == gridPosition[i])
-                        continue;
+                    var gridPosition = GetHexagonClusterBall(position);
 
-                    IGridCell cell = _gridCellManager.Get(gridPosition[i]);
-                    if (cell == null)
-                        continue;
-
-                    if (!cell.ContainsBall)
-                        continue;
-
-                    if (cell.BallEntity is IBallBooster ballBooster)
-                        if (ballBooster.IsIgnored)
+                    for (int i = 0; i < gridPosition.Count; i++)
+                    {
+                        if (position == gridPosition[i])
                             continue;
 
-                    if (cell.BallEntity is IBallPlayBoosterEffect boosterEffect)
-                    {
-                        boosterEffects.Add(boosterEffect);
-                        await boosterEffect.PlayBoosterEffect(EntityType.SunBall);
+                        IGridCell cell = _gridCellManager.Get(gridPosition[i]);
+                        if (cell == null)
+                            continue;
+
+                        if (!cell.ContainsBall)
+                            continue;
+
+                        if (cell.BallEntity is IBallBooster ballBooster)
+                            if (ballBooster.IsIgnored)
+                                continue;
+
+                        if (cell.BallEntity is IBallPlayBoosterEffect boosterEffect)
+                        {
+                            boosterEffects.Add(boosterEffect);
+                            await boosterEffect.PlayBoosterEffect(EntityType.SunBall);
+                        }
+
+                        breakTasks.Add(_breakGridTask.Break(cell));
                     }
 
-                    breakTasks.Add(_breakGridTask.Break(cell));
+                    await UniTask.WhenAll(breakTasks);
+                    for (int i = 0; i < boosterEffects.Count; i++)
+                        boosterEffects[i].ReleaseEffect();
                 }
-
-                await UniTask.WhenAll(breakTasks);
-                for (int i = 0; i < boosterEffects.Count; i++)
-                    boosterEffects[i].ReleaseEffect();
             }
         }
 
