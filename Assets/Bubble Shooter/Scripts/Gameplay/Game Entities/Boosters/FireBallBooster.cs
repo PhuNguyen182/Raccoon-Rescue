@@ -11,8 +11,10 @@ using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
+    public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
+        [SerializeField] private ParticleSystem blastEffect;
+
         public override EntityType EntityType => EntityType.FireBall;
 
         public override bool IsMatchable => false;
@@ -85,6 +87,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public UniTask Explode()
         {
+            PlayBlastEffect();
             return UniTask.CompletedTask;
         }
 
@@ -112,7 +115,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public UniTask BounceMove(Vector3 position)
         {
-            return UniTask.CompletedTask;
+            return ballMovement.BounceMove(position);
         }
 
         public void ChangeLayerMask(bool isFixed)
@@ -138,6 +141,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             {
                 Position = GridPosition
             });
+        }
+
+        public void PlayBlastEffect()
+        {
+            if (blastEffect != null)
+                SimplePool.Spawn(blastEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

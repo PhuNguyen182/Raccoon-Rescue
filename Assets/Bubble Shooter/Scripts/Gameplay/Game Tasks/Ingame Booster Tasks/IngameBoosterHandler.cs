@@ -10,9 +10,9 @@ using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.GameUI.Boxes;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using BubbleShooter.Scripts.GameUI.Boxes;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {

@@ -12,7 +12,7 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBallPlayBoosterEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -179,6 +179,29 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void OnSnapped()
         {
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
+        }
+
+        public async UniTask PlayBoosterEffect(EntityType booster)
+        {
+            switch (booster)
+            {
+                case EntityType.FireBall:
+                case EntityType.WaterBall:
+                case EntityType.SunBall:
+                    await UniTask.CompletedTask;
+                    break;
+                case EntityType.LeafBall:
+                    // await for leaf effect
+                    await UniTask.CompletedTask;
+                    break;
+            }
+
+            await UniTask.CompletedTask;
+        }
+
+        public void ReleaseEffect()
+        {
+            
         }
 
         private void OnDestroy()

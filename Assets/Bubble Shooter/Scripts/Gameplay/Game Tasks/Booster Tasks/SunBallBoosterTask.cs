@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
+using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Cysharp.Threading.Tasks;
-using UnityEngine.Pool;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -22,13 +23,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         public async UniTask Execute(Vector3Int position)
         {
             IGridCell boosterCell = _gridCellManager.Get(position);
+
             if (boosterCell.BallEntity is IBallBooster booster)
                 await booster.Activate();
 
             _gridCellManager.DestroyAt(position);
-            using (var listPool = ListPool<UniTask>.Get(out var breakTasks))
+            using (PooledObject<List<UniTask>> listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
                 var gridPosition = GetHexagonClusterBall(position);
+                List<IBallPlayBoosterEffect> boosterEffects = new();
+
                 for (int i = 0; i < gridPosition.Count; i++)
                 {
                     if (position == gridPosition[i])
@@ -45,11 +49,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (ballBooster.IsIgnored)
                             continue;
 
+                    if (cell.BallEntity is IBallPlayBoosterEffect boosterEffect)
+                    {
+                        boosterEffects.Add(boosterEffect);
+                        await boosterEffect.PlayBoosterEffect(EntityType.SunBall);
+                    }
+
                     breakTasks.Add(_breakGridTask.Break(cell));
                 }
 
                 await UniTask.WhenAll(breakTasks);
-                gridPosition.Clear();
+                for (int i = 0; i < boosterEffects.Count; i++)
+                    boosterEffects[i].ReleaseEffect();
             }
         }
 
