@@ -23,6 +23,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _maxTarget;
 
         public Action<bool> OnEndGame;
+        public int MoveCount => _moveCount;
 
         public CheckTargetTask(InGamePanel inGamePanel)
         {

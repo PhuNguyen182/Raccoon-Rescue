@@ -76,6 +76,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         [Space(10)]
         [SerializeField] private Transform spawnPoint;
+        [SerializeField] private Transform spawnPointWin;
         [SerializeField] private Transform ballContainer;
 
         [Space(10)]
@@ -203,6 +204,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
                                           , spawnPoint.position
                                           , Quaternion.identity);
+        }
+
+        public IBallEntity ShootFreeBall(EntityType color)
+        {
+            SetBallColor(false, EntityType.None);
+            
+            EntityMapData ballData = new EntityMapData
+            {
+                HP = 1,
+                EntityType = color
+            };
+
+            BaseEntity ball = _entityFactory.Create(ballData);
+            ball.transform.SetPositionAndRotation(spawnPointWin.position, Quaternion.identity);
+            return ball;
         }
 
         private void SetLineAngles()

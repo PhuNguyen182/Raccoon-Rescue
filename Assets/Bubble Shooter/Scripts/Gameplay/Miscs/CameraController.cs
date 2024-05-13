@@ -25,6 +25,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private const float DefaultScreenRatio = 16f / 9f;
 
         private Tweener _moveTween;
+        private Tweener _moveSlowTween;
         private CancellationToken _token;
 
         private void Awake()
@@ -51,6 +52,11 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             ballShooter.SetStartPosition();
         }
 
+        public void SetPosition(Vector3 toPosition)
+        {
+            transform.position = toPosition;
+        }
+
         public UniTask MoveTo(Vector3 toPosition)
         {
             _moveTween ??= CreateMoveTween(toPosition);
@@ -62,10 +68,28 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
             return UniTask.Delay(TimeSpan.FromSeconds(_moveTween.Duration()), cancellationToken: _token);
         }
+        
+        public UniTask MoveToZero(Vector3 toPosition)
+        {
+            _moveSlowTween ??= CreateMoveSlowTween(toPosition);
+            _moveSlowTween.ChangeStartValue(transform.position);
+            _moveSlowTween.ChangeEndValue(toPosition);
+
+            _moveSlowTween.Rewind();
+            _moveSlowTween.Play();
+
+            return UniTask.Delay(TimeSpan.FromSeconds(_moveSlowTween.Duration()), cancellationToken: _token);
+        }
 
         private Tweener CreateMoveTween(Vector3 toPosition)
         {
             return transform.DOMove(toPosition, moveDuration).SetEase(moveEase).SetAutoKill(false);
+        }
+
+        private Tweener CreateMoveSlowTween(Vector3 toPosition)
+        {
+            float duration = toPosition.magnitude / 12f;
+            return transform.DOMove(toPosition, duration).SetEase(moveEase).SetAutoKill(false);
         }
 
         private void OnDestroy()

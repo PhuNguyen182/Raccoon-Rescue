@@ -7,6 +7,7 @@ namespace BubbleShooter.Scripts.Common.Constants
         public const float SpreadShootAngle = 30f;
         public const float MinForce = 4f;
         public const float MaxForce = 6f;
+        public const float WinForce = 18f;
 
         public const string NormalLayer = "Objects";
         public const string HigherLayer = "HigherObjects";

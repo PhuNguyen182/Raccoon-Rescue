@@ -6,6 +6,7 @@ using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Stateless;
+using UnityEngine.InputSystem;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -33,12 +34,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly CheckTargetTask _checkTargetTask;
         private readonly CheckScoreTask _checkScoreTask;
         private readonly GameDecorator _gameDecorator;
+        private readonly InputProcessor _inputProcessor;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameTask endGameTask, MainScreenManager mainScreen
-            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
+        public GameStateController(EndGameTask endGameTask, MainScreenManager mainScreen, CheckTargetTask checkTargetTask
+            , CheckScoreTask checkScoreTask, GameDecorator gameDecorator, InputProcessor inputProcessor)
         {
             _mainScreen = mainScreen;
             _endGameTask = endGameTask;
@@ -46,6 +48,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _checkTargetTask = checkTargetTask;
             _checkScoreTask = checkScoreTask;
             _gameDecorator = gameDecorator;
+            _inputProcessor = inputProcessor;
 
             _checkTargetTask.OnEndGame = EndGame;
             CreateGameStateMachine();
@@ -98,6 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _gameDecorator.Character.Continue();
             _endGameTask.ContinueSpawnBall();
             _mainScreen.ShowMainPanel(true);
+            _inputProcessor.IsActive = true;
         }
 
         private void EndGame(bool isWin)
@@ -110,6 +114,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask OnEndGame(bool isWin)
         {
+            _inputProcessor.IsActive = false;
             _mainScreen.ShowMainPanel(false);
 
             if (isWin)

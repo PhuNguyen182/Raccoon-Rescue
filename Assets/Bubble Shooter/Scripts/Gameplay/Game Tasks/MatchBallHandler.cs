@@ -21,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly BallRippleTask _ballRippleTask;
-        private readonly BoardThresholdCheckTask _boardThresholdCheckTask;
+        private readonly MoveGameViewTask _moveGameViewTask;
         private readonly IngameBoosterHandler _ingameBoosterHandler;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
@@ -35,14 +35,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
-            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask
+            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, MoveGameViewTask moveGameViewTask
             , BallRippleTask ballRippleTask, IngameBoosterHandler ingameBoosterHandler)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
             _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
-            _boardThresholdCheckTask = boardThresholdCheckTask;
+            _moveGameViewTask = moveGameViewTask;
             _ingameBoosterHandler = ingameBoosterHandler;
 
             _tokenSource = new();
@@ -99,7 +99,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _checkTargetTask.CheckTarget();
                 }
 
-                await _boardThresholdCheckTask.Check();
+                await _moveGameViewTask.Check();
                 _ingameBoosterHandler.AfterUseBooster();
                 _inputProcessor.IsActive = true;
             }

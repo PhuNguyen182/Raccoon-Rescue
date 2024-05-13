@@ -132,10 +132,15 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             return ballModel;
         }
 
-        private BallShootModel GetRandomColorBallInPot()
+        public EntityType GetRandomColor()
         {
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType color = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
+            return _colors[Mathf.Abs(randomIndex) % _probabilities.Count]; ;
+        }
+
+        private BallShootModel GetRandomColorBallInPot()
+        {
+            EntityType color = GetRandomColor();
 
             BallShootModel newModel = new BallShootModel
             {
