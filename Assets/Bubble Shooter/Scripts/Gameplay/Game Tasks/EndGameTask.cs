@@ -4,10 +4,12 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.GameUI.Notifications;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
@@ -15,7 +17,6 @@ using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using MessagePipe;
 using DG.Tweening;
-using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -25,6 +26,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BallProvider _ballProvider;
         private readonly MetaBallManager _metaBallManager;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly NotificationPanel _notificationPanel;
         private readonly ISubscriber<BallDestroyMessage> _ballDestroySubscriber;
 
         private readonly CancellationToken _cancellationToken;
@@ -36,12 +38,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private static readonly int _greyScaleProperty = Shader.PropertyToID("_Modifier");
 
         public EndGameTask(MetaBallManager metaBallManager, BallShooter ballShooter
-            , BallProvider ballProvider, CheckTargetTask checkTargetTask)
+            , BallProvider ballProvider, CheckTargetTask checkTargetTask
+            , NotificationPanel notificationPanel)
         {
             _ballShooter = ballShooter;
             _ballProvider = ballProvider;
             _metaBallManager = metaBallManager;
             _checkTargetTask = checkTargetTask;
+            _notificationPanel = notificationPanel;
 
             _tokenSource = new();
             _cancellationToken = _tokenSource.Token;
@@ -88,9 +92,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             // Turn off current ball
             _ballShooter.SetColorModel(new BallShootModel { }, false);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.8f), cancellationToken: _cancellationToken);
+            await _notificationPanel.ShowLosePanel();
 
             float greyScale = 0;
-            await DOTween.To(() => greyScale, x => greyScale = x, 1, 1).OnUpdate(() =>
+            await DOTween.To(() => greyScale, x => greyScale = x, 1, 0.3f).OnUpdate(() =>
             {
                 _ballMaterial.SetFloat(_greyScaleProperty, greyScale);
             }).SetEase(Ease.InOutSine);

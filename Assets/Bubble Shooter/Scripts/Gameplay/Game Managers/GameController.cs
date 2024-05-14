@@ -108,7 +108,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _entityFactory.SetGridCellManager(_gridCellManager);
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
 
-            _moveGameViewTask = new(_gridCellManager, cameraController, _inputProcessor);
+            _moveGameViewTask = new(_gridCellManager, cameraController, _inputProcessor
+                                    , mainScreen.NotificationPanel, _checkTargetTask);
             _moveGameViewTask.AddTo(ref builder);
 
             _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);

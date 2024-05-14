@@ -6,7 +6,6 @@ using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
 using Stateless;
-using UnityEngine.InputSystem;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -38,6 +37,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
+
+        public bool IsEndGame { get; private set; }
 
         public GameStateController(EndGameTask endGameTask, MainScreenManager mainScreen, CheckTargetTask checkTargetTask
             , CheckScoreTask checkScoreTask, GameDecorator gameDecorator, InputProcessor inputProcessor)
@@ -89,6 +90,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
+            IsEndGame = false;
             _endGameTask.ResetBallColor();
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
@@ -96,6 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void Continue()
         {
+            IsEndGame = false;
             _endGameTask.ResetBallColor();
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
@@ -114,6 +117,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask OnEndGame(bool isWin)
         {
+            IsEndGame = true;
             _inputProcessor.IsActive = false;
             _mainScreen.ShowMainPanel(false);
 

@@ -1,16 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.GameUI.Notifications
 {
     public class NotificationPanel : MonoBehaviour
     {
+        [SerializeField] private GameObject background;
         [SerializeField] private NotificationBar notificationBar;
+        [SerializeField] private NotificationBar loseLifeBar;
 
-        public void SetNotificationInfo(NotificationMessage message)
+        public async UniTask SetNotificationInfo(string message)
         {
-            notificationBar.SetNotification(message.Icon, message.Content);
+            background.SetActive(true);
+            notificationBar.SetNotification(message);
+            await notificationBar.ShowNotification();
+            background.SetActive(false);
+        }
+
+        public async UniTask ShowLosePanel()
+        {
+            background.SetActive(true);
+            await loseLifeBar.ShowNotification();
+            background.SetActive(false);
         }
     }
 }

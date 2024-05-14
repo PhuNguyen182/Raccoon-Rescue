@@ -28,6 +28,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
+        private GameStateController _gameStateController;
+
         private const int RippleSpreadLevel = 3;
 
         private CancellationToken _token;
@@ -58,6 +60,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _disposable = builder.Build();
             _inputProcessor = inputProcessor;
             _ballRippleTask = ballRippleTask;
+        }
+
+        public void SetGameStateController(GameStateController controller)
+        {
+            _gameStateController = controller;
         }
 
         public void Match(CheckMatchMessage message)
@@ -101,7 +108,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 await _moveGameViewTask.Check();
                 _ingameBoosterHandler.AfterUseBooster();
-                _inputProcessor.IsActive = true;
+                
+                if(!_gameStateController.IsEndGame)
+                    _inputProcessor.IsActive = true;
             }
         }
 

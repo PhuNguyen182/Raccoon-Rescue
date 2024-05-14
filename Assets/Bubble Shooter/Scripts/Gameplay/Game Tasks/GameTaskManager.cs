@@ -56,12 +56,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                                     , checkTargetTask, moveGameViewTask, _ballRippleTask, ingameBoosterHandler);
             _matchBallHandler.AddTo(ref builder);
 
-            _endGameTask = new(metaBallManager, ballShooter, ballProvider, checkTargetTask);
+            _endGameTask = new(metaBallManager, ballShooter, ballProvider, checkTargetTask, mainScreenManager.NotificationPanel);
             _endGameTask.AddTo(ref builder);
 
             _gameStateController = new(_endGameTask, _mainScreenManager, checkTargetTask
                                        , checkScoreTask, gameDecorator, _inputProcessor);
             _gameStateController.AddTo(ref builder);
+            _matchBallHandler.SetGameStateController(_gameStateController);
 
             _disposable = builder.Build();
         }

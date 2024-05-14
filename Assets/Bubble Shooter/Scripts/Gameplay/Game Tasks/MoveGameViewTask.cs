@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.GameUI.Notifications;
 using Cysharp.Threading.Tasks;
-using UnityEngine.InputSystem;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
@@ -15,6 +15,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly InputProcessor _inputProcessor;
         private readonly GridCellManager _gridCellManager;
         private readonly CameraController _cameraController;
+        private readonly NotificationPanel _notificationPanel;
+        private readonly CheckTargetTask _checkTargetTask;
 
         private const float StopHeight = 5.465f;
         private const float UnitHeight = 0.5625f;
@@ -26,11 +28,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private CancellationToken _cancellationToken;
         private CancellationTokenSource _tokenSource;
 
-        public MoveGameViewTask(GridCellManager gridCellManager, CameraController cameraController, InputProcessor inputProcessor)
+        public MoveGameViewTask(GridCellManager gridCellManager, CameraController cameraController
+            , InputProcessor inputProcessor, NotificationPanel notificationPanel, CheckTargetTask checkTargetTask)
         {
             _gridCellManager = gridCellManager;
             _cameraController = cameraController;
             _inputProcessor = inputProcessor;
+            _notificationPanel = notificationPanel;
+            _checkTargetTask = checkTargetTask;
 
             _tokenSource = new();
             _cancellationToken = _tokenSource.Token;
@@ -53,6 +58,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _cameraController.SetPosition(new Vector3(0, sampleCeilPosition.y - StopHeight, -10));
             await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _cancellationToken);
             await _cameraController.MoveToZero(Vector3.back * 10);
+
+            int targetCount = _checkTargetTask.TargetCount;
+            string notice = targetCount > 2 ? $"Rescues {targetCount} baby raccoons!"
+                                            : $"Rescues {targetCount} baby raccoon!";
+
+            await _notificationPanel.SetNotificationInfo(notice);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _cancellationToken);
+
             _inputProcessor.IsActive = true;
         }
 
