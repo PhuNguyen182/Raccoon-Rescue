@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
 
 namespace BubbleShooter.Scripts.Effects
@@ -8,7 +9,7 @@ namespace BubbleShooter.Scripts.Effects
     public class EffectManager : MonoBehaviour
     {
         [SerializeField] private GameObject ballPopEffect;
-        [SerializeField] private GameObject textPopEffect;
+        [SerializeField] private FlyTextEffect[] textPopEffect;
         [SerializeField] private GameObject[] ballBoosterEffects;
 
         public static EffectManager Instance { get; private set; }
@@ -21,7 +22,11 @@ namespace BubbleShooter.Scripts.Effects
         private void Preload()
         {
             SimplePool.PoolPreLoad(ballPopEffect, 20, EffectContainer.Transform);
-            SimplePool.PoolPreLoad(textPopEffect, 20, EffectContainer.Transform);
+
+            for (int i = 0; i < textPopEffect.Length; i++)
+            {
+                SimplePool.PoolPreLoad(textPopEffect[i].gameObject, 20, EffectContainer.Transform);
+            }
 
             for (int i = 0; i < ballBoosterEffects.Length; i++)
             {
@@ -36,13 +41,34 @@ namespace BubbleShooter.Scripts.Effects
 
         public GameObject SpawnTextPopEffect(EntityType color, Vector3 position, Quaternion rotation)
         {
-            return SimplePool.Spawn(textPopEffect, EffectContainer.Transform, position, rotation);
+            FlyTextEffect effect = color switch
+            {
+                EntityType.Blue => textPopEffect[0],
+                EntityType.Green => textPopEffect[1],
+                EntityType.Orange => textPopEffect[2],
+                EntityType.Red => textPopEffect[3],
+                EntityType.Violet => textPopEffect[4],
+                EntityType.Yellow => textPopEffect[5],
+                _ => null
+            };
+
+            return SimplePool.Spawn(effect.gameObject, EffectContainer.Transform, position, rotation);
         }
 
         public GameObject SpawnBoosterEffect(EntityType color, Vector3 position, Quaternion rotation)
         {
-            // ????????????????
-            return SimplePool.Spawn(ballBoosterEffects[0], EffectContainer.Transform, position, rotation);
+            GameObject effect = color switch
+            {
+                EntityType.Blue => ballBoosterEffects[0],
+                EntityType.Green => ballBoosterEffects[1],
+                EntityType.Orange => ballBoosterEffects[2],
+                EntityType.Red => ballBoosterEffects[3],
+                EntityType.Violet => ballBoosterEffects[4],
+                EntityType.Yellow => ballBoosterEffects[5],
+                _ => null
+            };
+
+            return SimplePool.Spawn(effect, EffectContainer.Transform, position, rotation);
         }
     }
 }
