@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,11 @@ using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using System;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
+    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable, IBallEffect
     {
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
@@ -136,6 +137,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void OnSnapped()
         {
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
+        }
+
+        public void PlayBlastEffect()
+        {
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()
