@@ -3895,7 +3895,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballPopEffect: {fileID: 0}
-  textPopEffect: {fileID: 0}
+  textPopEffect:
+  - {fileID: 0}
   ballBoosterEffects: []
 --- !u!4 &1605533614
 Transform:
