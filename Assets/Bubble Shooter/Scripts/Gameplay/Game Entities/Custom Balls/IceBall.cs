@@ -7,6 +7,7 @@ using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -14,6 +15,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
     {
         [SerializeField] private EntityType entityType;
         [SerializeField] private Animator ballAnimator;
+        [SerializeField] private GameObject iceBlink;
         
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -169,7 +171,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public void PlayBlastEffect()
         {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
         public void SetMoveDirection(Vector2 direction)
@@ -185,6 +187,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public UniTask BounceMove(Vector3 position)
         {
             return ballMovement.BounceMove(position);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            if (iceBlink != null)
+                iceBlink.SetActive(active);
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
     }
 }

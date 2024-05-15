@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,15 +6,16 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
-        [SerializeField] private ParticleSystem blastEffect;
+        [SerializeField] private ParticleSystem colorfulEffect;
+        [SerializeField] private GameObject burningEffect;
 
         public override EntityType EntityType => EntityType.FireBall;
 
@@ -145,8 +147,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            if (blastEffect != null)
-                SimplePool.Spawn(blastEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBoosterEffect(EntityType.FireBall, transform.position, Quaternion.identity);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            if (burningEffect != null)
+                burningEffect.SetActive(active);
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

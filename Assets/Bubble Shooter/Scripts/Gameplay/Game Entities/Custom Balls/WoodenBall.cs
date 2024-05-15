@@ -1,13 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
-using System;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -142,7 +140,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public void PlayBlastEffect()
         {
+            EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+        }
+
+        public void ToggleEffect(bool active)
+        {
             
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
     }
 }

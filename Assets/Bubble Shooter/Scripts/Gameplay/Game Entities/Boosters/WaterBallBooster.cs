@@ -9,13 +9,12 @@ using Scripts.Common.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using MessagePipe;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class WaterBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
-        [SerializeField] private ParticleSystem blastEffect;
-
         public override EntityType EntityType => EntityType.WaterBall;
 
         public override bool IsMatchable => false;
@@ -146,8 +145,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            if (blastEffect != null)
-                SimplePool.Spawn(blastEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBoosterEffect(EntityType.Blue, transform.position, Quaternion.identity);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

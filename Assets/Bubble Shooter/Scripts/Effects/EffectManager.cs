@@ -8,9 +8,11 @@ namespace BubbleShooter.Scripts.Effects
 {
     public class EffectManager : MonoBehaviour
     {
-        [SerializeField] private GameObject ballPopEffect;
+        [SerializeField] private ParticleSystem ballPopEffect;
+        [SerializeField] private ParticleSystem colorfulEffect;
+        [SerializeField] private ParticleSystem woodenEffect;
         [SerializeField] private FlyTextEffect[] textPopEffect;
-        [SerializeField] private GameObject[] ballBoosterEffects;
+        [SerializeField] private ParticleSystem[] ballBoosterEffects;
 
         public static EffectManager Instance { get; private set; }
 
@@ -21,16 +23,12 @@ namespace BubbleShooter.Scripts.Effects
 
         private void Preload()
         {
-            SimplePool.PoolPreLoad(ballPopEffect, 20, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(ballPopEffect.gameObject, 20, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(colorfulEffect.gameObject, 20, EffectContainer.Transform);
 
             for (int i = 0; i < textPopEffect.Length; i++)
             {
                 SimplePool.PoolPreLoad(textPopEffect[i].gameObject, 20, EffectContainer.Transform);
-            }
-
-            for (int i = 0; i < ballBoosterEffects.Length; i++)
-            {
-                SimplePool.PoolPreLoad(ballBoosterEffects[i], 20, EffectContainer.Transform);
             }
         }
 
@@ -39,7 +37,17 @@ namespace BubbleShooter.Scripts.Effects
             SimplePool.Spawn(ballPopEffect, EffectContainer.Transform, position, rotation);
         }
 
-        public GameObject SpawnTextPopEffect(EntityType color, Vector3 position, Quaternion rotation)
+        public void SpawnColorfulEffect(Vector3 position, Quaternion rotation)
+        {
+            SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, position, rotation);
+        }
+
+        public void SpawnWoodenEffect(Vector3 position, Quaternion rotation)
+        {
+            SimplePool.Spawn(woodenEffect, EffectContainer.Transform, position, rotation);
+        }
+
+        public FlyTextEffect SpawnTextPopEffect(EntityType color, Vector3 position, Quaternion rotation)
         {
             FlyTextEffect effect = color switch
             {
@@ -52,12 +60,12 @@ namespace BubbleShooter.Scripts.Effects
                 _ => null
             };
 
-            return SimplePool.Spawn(effect.gameObject, EffectContainer.Transform, position, rotation);
+            return effect != null ? SimplePool.Spawn(effect, EffectContainer.Transform, position, rotation) : null;
         }
 
-        public GameObject SpawnBoosterEffect(EntityType color, Vector3 position, Quaternion rotation)
+        public ParticleSystem SpawnBoosterEffect(EntityType color, Vector3 position, Quaternion rotation)
         {
-            GameObject effect = color switch
+            ParticleSystem effect = color switch
             {
                 EntityType.Blue => ballBoosterEffects[0],
                 EntityType.Green => ballBoosterEffects[1],
@@ -68,7 +76,7 @@ namespace BubbleShooter.Scripts.Effects
                 _ => null
             };
 
-            return SimplePool.Spawn(effect, EffectContainer.Transform, position, rotation);
+            return effect != null ? SimplePool.Spawn(effect, EffectContainer.Transform, position, rotation) : null ;
         }
     }
 }

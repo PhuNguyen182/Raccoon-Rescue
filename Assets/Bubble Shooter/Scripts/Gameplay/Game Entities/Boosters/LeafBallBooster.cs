@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,14 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class LeafBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
-        [SerializeField] private ParticleSystem blastEffect;
-
         public override EntityType EntityType => EntityType.LeafBall;
 
         public override bool IsMatchable => false;
@@ -145,8 +144,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            if (blastEffect != null)
-                SimplePool.Spawn(blastEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBoosterEffect(EntityType.Green, transform.position, Quaternion.identity);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

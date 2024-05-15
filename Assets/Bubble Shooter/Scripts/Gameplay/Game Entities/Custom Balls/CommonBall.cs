@@ -6,6 +6,7 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
@@ -159,7 +160,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public void PlayBlastEffect()
         {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
         public override void DestroyEntity()
@@ -208,6 +209,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         {
             if (obj != null)
                 SimplePool.Despawn(obj);
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            
+        }
+
+        public void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()
