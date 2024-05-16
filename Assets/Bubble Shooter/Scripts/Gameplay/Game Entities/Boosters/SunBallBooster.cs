@@ -14,8 +14,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class SunBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
-        [SerializeField] private ParticleSystem blastEffect;
-
         public override EntityType EntityType => EntityType.SunBall;
 
         public override bool IsMatchable => false;
@@ -146,8 +144,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            if (blastEffect != null)
-                SimplePool.Spawn(blastEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
         }
 
         public void ToggleEffect(bool active)

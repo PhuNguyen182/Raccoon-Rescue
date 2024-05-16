@@ -10,12 +10,19 @@ using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using BubbleShooter.Scripts.Effects.BallEffects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBallPlayBoosterEffect, IBreakable
     {
         [SerializeField] private EntityType ballColor;
+
+        [Header("Booster Effects")]
+        [FoldoutGroup("Booster Effects")]
+        [SerializeField] private GameObject leafEffect;
+        [FoldoutGroup("Booster Effects")]
+        [SerializeField] private ParticleSystem waterEffect;
 
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -31,7 +38,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
+        [Header("Text Colors")]
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color blueColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color greenColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color orangeColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color redColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color violetColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color yellowColor;
+
+        private Color _textColor;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
+        private GameObject _leafEffect;
 
         public bool CanMove 
         { 
@@ -97,21 +120,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             switch (color)
             {
                 case EntityType.Red:
+                    _textColor = redColor;
                     entityGraphics.SetEntitySprite(red);
                     break;
                 case EntityType.Yellow:
+                    _textColor = yellowColor;
                     entityGraphics.SetEntitySprite(yellow);
                     break;
                 case EntityType.Green:
+                    _textColor = greenColor;
                     entityGraphics.SetEntitySprite(green);
                     break;
                 case EntityType.Blue:
+                    _textColor = blueColor;
                     entityGraphics.SetEntitySprite(blue);
                     break;
                 case EntityType.Violet:
+                    _textColor = violetColor;
                     entityGraphics.SetEntitySprite(violet);
                     break;
                 case EntityType.Orange:
+                    _textColor = orangeColor;
                     entityGraphics.SetEntitySprite(orange);
                     break;
             }
@@ -161,6 +190,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void PlayBlastEffect()
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(_textColor);
         }
 
         public override void DestroyEntity()
@@ -192,7 +224,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
                     await UniTask.CompletedTask;
                     break;
                 case EntityType.LeafBall:
-                    // await for leaf effect
+                    _leafEffect = SimplePool.Spawn(leafEffect, transform, transform.position, Quaternion.identity);
                     await UniTask.CompletedTask;
                     break;
             }
@@ -202,13 +234,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public void ReleaseEffect()
         {
-            
+            ReleaseObject(_leafEffect);
         }
 
         private void ReleaseObject(GameObject obj)
         {
             if (obj != null)
+            {
+                obj.transform.SetParent(EffectContainer.Transform);
                 SimplePool.Despawn(obj);
+            }
         }
 
         public void ToggleEffect(bool active)

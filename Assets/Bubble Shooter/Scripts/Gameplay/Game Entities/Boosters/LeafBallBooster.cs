@@ -144,7 +144,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            EffectManager.Instance.SpawnBoosterEffect(EntityType.Green, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBoosterEffect(EntityType.LeafBall, transform.position, Quaternion.identity);
         }
 
         public void ToggleEffect(bool active)

@@ -18,6 +18,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
     public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
         [SerializeField] private FreedTarget freedTarget;
+        [SerializeField] private GameObject boomEffect;
 
         [Header("Target Setting")]
         [SerializeField] private int id;
@@ -189,6 +190,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private async UniTask FreeTargetAsync()
         {
+            if (boomEffect != null)
+                SimplePool.Spawn(boomEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+
             SimplePool.Spawn(freedTarget, EffectContainer.Transform
                              , transform.position, Quaternion.identity);
 

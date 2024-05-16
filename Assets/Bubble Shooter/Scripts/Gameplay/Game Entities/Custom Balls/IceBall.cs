@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [SerializeField] private EntityType entityType;
         [SerializeField] private Animator ballAnimator;
         [SerializeField] private GameObject iceBlink;
+        [SerializeField] private ParticleSystem iceBreak;
         
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -92,7 +93,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
                 
                 int rand = Random.Range(1, 7); 
                 EntityType color = (EntityType)rand;
-                PlayBlastEffect();
+                PlayIceBreak();
 
                 _isMatchable = true;
                 entityType = color;
@@ -110,10 +111,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             SimplePool.Despawn(this.gameObject);
         }
 
-        public override void InitMessages()
-        {
-            
-        }
+        public override void InitMessages() { }
 
         public void SetMaxHP(int maxHP)
         {
@@ -131,6 +129,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballAnimator.enabled = true;
 
             entityType = EntityType.IceBall;
+            ToggleEffect(true);
         }
 
         public void TransformTo(EntityType color)
@@ -147,17 +146,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             };
 
             entityGraphics.SetEntitySprite(toColor);
+            ToggleEffect(false);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void OnSnapped() { }
 
-        public void ChangeLayerMask(bool isFixed)
-        {
-            
-        }
+        public void ChangeLayerMask(bool isFixed) { }
 
         public void SetBodyActive(bool active)
         {
@@ -174,10 +168,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public UniTask SnapTo(Vector3 position)
         {
@@ -198,6 +189,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
+        }
+
+        private void PlayIceBreak()
+        {
+            if (iceBreak != null)
+                SimplePool.Spawn(iceBreak, EffectContainer.Transform, transform.position, Quaternion.identity);
         }
     }
 }

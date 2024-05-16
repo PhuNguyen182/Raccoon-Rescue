@@ -11,6 +11,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable, IBallEffect
     {
+        [SerializeField] private Color textScoreColor;
+
         [Header("Health Sprites")]
         [SerializeField] private Sprite[] hpStates;
 

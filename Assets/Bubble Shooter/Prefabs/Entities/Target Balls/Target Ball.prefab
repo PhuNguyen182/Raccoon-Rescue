@@ -120,6 +120,7 @@ MonoBehaviour:
   entityGraphics: {fileID: 2321141897896256763}
   entityAudio: {fileID: 9025547474888883602}
   freedTarget: {fileID: 5489758021592695362, guid: a92825164f2361646bd0b341e2048f0a, type: 3}
+  boomEffect: {fileID: 2520445617587399052, guid: c895669410361e64ba28fe2715b4275d, type: 3}
   id: 0
   entityColor: 0
   targetColor: 0

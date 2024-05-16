@@ -2950,6 +2950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
+  followParticle: {fileID: 1345582352795284580, guid: 070aaee41847dd74c93512a46cf6f8f9, type: 3}
   ballProvider: {fileID: 2085312156}
   blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
   green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
@@ -3894,10 +3895,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65279667aa442d847912c42d49d862bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPopEffect: {fileID: 0}
-  textPopEffect:
+  mainCamera: {fileID: 1885966887}
+  ballPopEffect: {fileID: 2346759656142666719, guid: 6a51c85d082fc38459853dd62f818b22, type: 3}
+  colorfulEffect: {fileID: 6531379277446194419, guid: dcbe623e56ed8814ba9d05324ec10883, type: 3}
+  woodenEffect: {fileID: 833000866560661028, guid: a40ff76830452c74980ee32325362476, type: 3}
+  textPopEffect: {fileID: 519410504568207307, guid: e7e730de1f1416f44bc4e6e62dfde264, type: 3}
+  ballBoosterEffects:
+  - {fileID: 2689918268500557824, guid: 1d47060093b608b4f9c088ed65c4b1cb, type: 3}
+  - {fileID: 2353207892107861052, guid: cbd71a148b7ba98448dd59645cf21137, type: 3}
   - {fileID: 0}
-  ballBoosterEffects: []
+  - {fileID: 4658626098209746007, guid: f9c4f488935b40941bab19ae63bf3ac6, type: 3}
 --- !u!4 &1605533614
 Transform:
   m_ObjectHideFlags: 0

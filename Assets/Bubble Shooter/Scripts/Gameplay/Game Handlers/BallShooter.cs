@@ -24,6 +24,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     public class BallShooter : MonoBehaviour
     {
         [SerializeField] private CommonBall prefab;
+        [SerializeField] private ParticleSystem followParticle;
         [SerializeField] private BallProvider ballProvider;
 
         [Header("Dummy Balls")]
@@ -174,13 +175,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetColorModel(BallShootModel model, bool isActive)
         {
             _ballModel = model;
-            SetBallColor(isActive, _ballModel.BallColor);
+            SetBallColor(isActive, _ballModel.BallColor, _ballModel.IsPowerup);
         }
 
-        public void SetBallColor(bool isActive, EntityType color)
+        public void SetBallColor(bool isActive, EntityType color, bool isPowerup = false)
         {
             if (DummyBall != null)
+            {
+                DummyBall.ToggleEffect(false);
                 SimplePool.Despawn(DummyBall.gameObject);
+            }
 
             if (!isActive)
                 return;
@@ -201,9 +205,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 _ => null
             };
 
-            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
-                                          , spawnPoint.position
-                                          , Quaternion.identity);
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+            DummyBall.ToggleEffect(false);
+
+            if (isPowerup)
+            {
+                SimplePool.Spawn(followParticle, DummyBall.transform, DummyBall.transform.position, Quaternion.identity);
+                DummyBall.ToggleEffect(true);
+            }
         }
 
         public IBallEntity ShootFreeBall(EntityType color)

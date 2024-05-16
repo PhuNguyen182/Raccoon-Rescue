@@ -14,8 +14,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
     {
-        [SerializeField] private ParticleSystem colorfulEffect;
         [SerializeField] private GameObject burningEffect;
+
+        private Vector3 _direction;
+        private Vector3 _previousPosition;
 
         public override EntityType EntityType => EntityType.FireBall;
 
@@ -60,6 +62,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         protected override void OnAwake()
         {
             base.OnAwake();
+            _previousPosition = transform.position;
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -67,8 +70,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             if (CanMove && !IsFixedOnStart)
             {
+                ToggleEffect(true);
                 ballMovement.Move();
             }
+
+            else ToggleEffect(false);
+
+            CalculateBurnEffectAngle();
         }
 
         public async UniTask Activate()
@@ -159,6 +167,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
+        }
+
+        private void CalculateBurnEffectAngle()
+        {
+            _direction = transform.position - _previousPosition;
+            float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg + 180f;
+            burningEffect.transform.rotation = Quaternion.Euler(0, 0, angle);
+            _previousPosition = transform.position;
         }
 
         private void OnDestroy()
