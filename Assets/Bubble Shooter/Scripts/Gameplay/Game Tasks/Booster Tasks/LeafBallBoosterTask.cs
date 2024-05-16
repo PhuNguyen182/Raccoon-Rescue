@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
+        private CancellationToken _cancellationToken;
+        private CancellationTokenSource _tokenSource;
+
         public LeafBallBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+
+            _tokenSource = new();
+            _cancellationToken = _tokenSource.Token;
         }
 
         public async UniTask Execute(Vector3Int position)
@@ -59,6 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                         breakTasks.Add(_breakGridTask.Break(column[i]));
                     }
 
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _cancellationToken);
                     await UniTask.WhenAll(breakTasks);
                     for (int i = 0; i < boosterEffects.Count; i++)
                         boosterEffects[i].ReleaseEffect();
@@ -81,7 +89,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-            
+            _tokenSource.Dispose();
         }
     }
 }

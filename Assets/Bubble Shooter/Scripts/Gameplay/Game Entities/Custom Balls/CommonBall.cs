@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using BubbleShooter.Scripts.Effects.BallEffects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -219,13 +219,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             switch (booster)
             {
                 case EntityType.FireBall:
-                case EntityType.WaterBall:
-                case EntityType.SunBall:
                     await UniTask.CompletedTask;
+                    break;
+                case EntityType.WaterBall:
+                    EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
+                    break;
+                case EntityType.SunBall:
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: destroyCancellationToken);
                     break;
                 case EntityType.LeafBall:
                     _leafEffect = SimplePool.Spawn(leafEffect, transform, transform.position, Quaternion.identity);
-                    await UniTask.CompletedTask;
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: destroyCancellationToken);
                     break;
             }
 

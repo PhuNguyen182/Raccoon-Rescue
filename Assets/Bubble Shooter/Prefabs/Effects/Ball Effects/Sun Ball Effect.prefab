@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5280365261184713068}
   - component: {fileID: 1524559394924169339}
   - component: {fileID: 4738552752838062314}
-  - component: {fileID: 4122722520412761671}
   m_Layer: 0
   m_Name: Sun Ball Effect
   m_TagString: Untagged
@@ -4831,16 +4830,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &4122722520412761671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787373371189282911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 655d0abdf60d596449d020d51e39516f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 1

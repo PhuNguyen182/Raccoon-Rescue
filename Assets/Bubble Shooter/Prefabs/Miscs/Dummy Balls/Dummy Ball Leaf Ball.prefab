@@ -127,7 +127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2353207892107861052, guid: cbd71a148b7ba98448dd59645cf21137, type: 3}
       propertyPath: prewarm
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2353207892107861052, guid: cbd71a148b7ba98448dd59645cf21137, type: 3}
       propertyPath: VelocityModule.enabled
@@ -225,7 +225,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8857930263506394681, guid: cbd71a148b7ba98448dd59645cf21137, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

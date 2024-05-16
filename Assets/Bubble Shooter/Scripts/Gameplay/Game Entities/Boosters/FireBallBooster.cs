@@ -98,7 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public UniTask Explode()
         {
             PlayBlastEffect();
-            return UniTask.CompletedTask;
+            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: destroyCancellationToken);
         }
 
         public override void InitMessages()
@@ -172,7 +172,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         private void CalculateBurnEffectAngle()
         {
             _direction = transform.position - _previousPosition;
-            float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg + 180f;
+            float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
             burningEffect.transform.rotation = Quaternion.Euler(0, 0, angle);
             _previousPosition = transform.position;
         }

@@ -87,7 +87,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public UniTask Explode()
         {
             PlayBlastEffect();
-            return UniTask.CompletedTask;
+            return UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: destroyCancellationToken);
         }
 
         public override void InitMessages()
@@ -144,7 +144,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public void PlayBlastEffect()
         {
-            EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
         public void ToggleEffect(bool active)

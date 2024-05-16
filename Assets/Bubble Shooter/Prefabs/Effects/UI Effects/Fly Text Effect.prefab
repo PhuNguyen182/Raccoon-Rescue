@@ -74,7 +74,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 16777215
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.4
-  m_fontSizeBase: 0.4
+  m_fontSize: 0.425
+  m_fontSizeBase: 0.425
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -268,4 +268,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 655d0abdf60d596449d020d51e39516f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.6
+  duration: 1
