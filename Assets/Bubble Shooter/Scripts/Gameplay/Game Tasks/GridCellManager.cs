@@ -51,7 +51,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 return;
             }
 
-            int count = 1;
+            int count = 0;
             IGridCell gridCell;
             List<IGridCell> gridCells = new();
 
