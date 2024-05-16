@@ -2950,7 +2950,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
-  followParticle: {fileID: 1345582352795284580, guid: 070aaee41847dd74c93512a46cf6f8f9, type: 3}
   ballProvider: {fileID: 2085312156}
   blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
   green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}

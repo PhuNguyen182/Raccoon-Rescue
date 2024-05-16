@@ -24,7 +24,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     public class BallShooter : MonoBehaviour
     {
         [SerializeField] private CommonBall prefab;
-        [SerializeField] private ParticleSystem followParticle;
         [SerializeField] private BallProvider ballProvider;
 
         [Header("Dummy Balls")]
@@ -206,13 +205,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             };
 
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
-            DummyBall.ToggleEffect(false);
-
-            if (isPowerup)
-            {
-                SimplePool.Spawn(followParticle, DummyBall.transform, DummyBall.transform.position, Quaternion.identity);
-                DummyBall.ToggleEffect(true);
-            }
+            DummyBall.ToggleEffect(isPowerup);
         }
 
         public IBallEntity ShootFreeBall(EntityType color)

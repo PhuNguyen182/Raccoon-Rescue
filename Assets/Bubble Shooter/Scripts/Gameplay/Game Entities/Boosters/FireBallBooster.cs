@@ -98,7 +98,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public UniTask Explode()
         {
             PlayBlastEffect();
-            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: destroyCancellationToken);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
         }
 
         public override void InitMessages()
