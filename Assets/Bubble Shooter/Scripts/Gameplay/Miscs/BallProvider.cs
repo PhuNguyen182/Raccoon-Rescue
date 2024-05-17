@@ -1,27 +1,49 @@
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
-using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Gameplay.GameManagers;
 using BubbleShooter.Scripts.Gameplay.Models;
+using BubbleShooter.Scripts.Common.Enums;
+using Sirenix.OdinInspector;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class BallProvider : MonoBehaviour
     {
         [SerializeField] private Transform toPoint;
-        [SerializeField] private SpriteRenderer nextBall;
+        [SerializeField] private Transform spawnPoint;
         [SerializeField] private BallShooter ballShooter;
-        [SerializeField] private DummyBall dummyBall;
+
+        [Header("Dummy Balls")]
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall blue;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall green;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall orange;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall red;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall violet;
+        [FoldoutGroup("Ball Colors")]
+        [SerializeField] private DummyBall yellow;
 
         [Header("Buttons")]
         [SerializeField] private Button potButton;
         [SerializeField] private Button arrowButton;
 
+        private bool _canClick;
         private BallShootModel _firstModel;
         private BallShootModel _secondModel;
+        private CancellationToken _token;
+
+        public DummyBall DummyBall { get; set; }
 
         #region Random color calculating
         private List<int> _colorDensities = new();
@@ -32,6 +54,8 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private void Awake()
         {
+            _canClick = true;
+            _token = this.GetCancellationTokenOnDestroy();
             potButton.onClick.AddListener(SwitchBall);
             arrowButton.onClick.AddListener(SwitchBall);
         }
@@ -43,15 +67,50 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             CreateBallOnStartGame();
         }
 
-        public void PopSequence()
+        public async UniTask PopSequence()
         {
             _firstModel = _secondModel;
+            _secondModel = GetRandomColorBallInPot();
+            await DummyBall.SwapTo(ballShooter.ShotPoint.position);
+
             ballShooter.SetColorModel(_firstModel, true);
-            _secondModel = GetRandomColorBall();
-            SetBallColor(true, _secondModel.BallColor);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Create);
         }
 
-        public void SwitchRandomBall()
+        public void SetBallColor(bool isActive, EntityType color, DummyBallState ballState)
+        {
+            if (DummyBall != null)
+                SimplePool.Despawn(DummyBall.gameObject);
+
+            if (!isActive)
+                return;
+
+            DummyBall ballPrefab = color switch
+            {
+                EntityType.Red => red,
+                EntityType.Yellow => yellow,
+                EntityType.Green => green,
+                EntityType.Blue => blue,
+                EntityType.Violet => violet,
+                EntityType.Orange => orange,
+                _ => null
+            };
+
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+
+            if (ballState == DummyBallState.Create)
+                DummyBall.transform.DOScale(0, 0.2f).SetEase(Ease.OutQuad).From();
+        }
+
+        private void CreateBallOnStartGame()
+        {
+            _firstModel = GetRandomColorBallInPot();
+            ballShooter.SetColorModel(_firstModel, true);
+            _secondModel = GetRandomColorBallInPot();
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.New);
+        }
+
+        public BallShootModel GetRandomHelperBall()
         {
             EntityType currentColor = ballShooter.BallModel.BallColor;
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
@@ -63,33 +122,25 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
                 nextColor = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
             }
 
-            var ballModel = new BallShootModel
+            BallShootModel ballModel = new BallShootModel
             {
                 BallColor = nextColor,
                 BallCount = ballShooter.BallModel.BallCount,
                 IsPowerup = ballShooter.BallModel.IsPowerup
             };
 
-            ballShooter.SetColorModel(ballModel, true);
+            return ballModel;
         }
 
-        public void SetBallColor(bool isActive, EntityType color)
-        {
-            dummyBall.SetBallColor(isActive, color);
-        }
-
-        private void CreateBallOnStartGame()
-        {
-            _firstModel = GetRandomColorBall();
-            ballShooter.SetColorModel(_firstModel, true);
-            _secondModel = GetRandomColorBall();
-            SetBallColor(true, _secondModel.BallColor);
-        }
-
-        private BallShootModel GetRandomColorBall()
+        public EntityType GetRandomColor()
         {
             int randomIndex = ProbabilitiesController.GetItemByProbabilityRarity(_probabilities);
-            EntityType color = _colors[Mathf.Abs(randomIndex) % _probabilities.Count];
+            return _colors[Mathf.Abs(randomIndex) % _probabilities.Count]; ;
+        }
+
+        private BallShootModel GetRandomColorBallInPot()
+        {
+            EntityType color = GetRandomColor();
 
             BallShootModel newModel = new BallShootModel
             {
@@ -118,12 +169,33 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private void SwitchBall()
         {
+            SwitchBallAsync().Forget();
+        }
+
+        private async UniTask SwitchBallAsync()
+        {
+            if (!_canClick)
+                return;
+
+            _canClick = false;
+            GameController.Instance.SetInputActive(false);
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(true);
+
             if (arrowButton.gameObject.activeInHierarchy)
                 arrowButton.gameObject.SetActive(false);
 
+            UniTask swapBall1 = DummyBall.SwapTo(ballShooter.DummyBall.transform.position);
+            UniTask swapBall2 = ballShooter.DummyBall.SwapTo(DummyBall.transform.position);
+            await UniTask.WhenAll(swapBall1, swapBall2);
+
             (_firstModel, _secondModel) = (_secondModel, _firstModel);
-            SetBallColor(true, _secondModel.BallColor);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Swap);
             ballShooter.SetColorModel(_firstModel, true);
+
+            GameController.Instance.SetInputActive(true);
+            await UniTask.DelayFrame(60, PlayerLoopTiming.Update, _token); ;
+            GameController.Instance.MainScreenManager.SetInvincibleObjectActive(false);
+            _canClick = true;
         }
     }
 }

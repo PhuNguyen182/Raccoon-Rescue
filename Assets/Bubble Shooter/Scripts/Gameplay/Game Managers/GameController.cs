@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
+using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Factories;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.GameUI.Screens;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
@@ -25,7 +28,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [Header("Game Handler")]
         [SerializeField] private BallShooter ballShooter;
         [SerializeField] private BallProvider ballProvider;
-        [SerializeField] private InputHandler inputHandler;
+        [SerializeField] private InputController inputHandler;
         [SerializeField] private GridCellHolder gridPrefab;
         [SerializeField] private EntityDatabase entityDatabase;
 
@@ -41,7 +44,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
+        [SerializeField] private CameraController cameraController;
+        [SerializeField] private Material ballMaterial;
 
+        private InputProcessor _inputProcessor;
         private EntityFactory _entityFactory;
         private TargetFactory _targetFactory;
         private EntityManager _entityManager;
@@ -50,9 +56,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private FillBoardTask _fillBoardTask;
         private CheckTargetTask _checkTargetTask;
         private CheckScoreTask _checkScoreTask;
+        private IngameBoosterHandler _ingameBoosterHandler;
+        private MoveGameViewTask _moveGameViewTask;
         private GameTaskManager _gameTaskManager;
-        
+
         public GameDecorator GameDecorator => gameDecorator;
+        public MainScreenManager MainScreenManager => mainScreen;
         public static GameController Instance { get; private set; }
 
         private void Awake()
@@ -75,10 +84,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         public void Initialize()
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
-            
-            _gridCellManager = new(ConvertGridPositionToWolrdPosition, ConvertWorldPositionToGridPosition);
-            _gridCellManager.AddTo(ref builder);
 
+            _inputProcessor = new(inputHandler);
             _entityFactory = new(entityDatabase, entityContainer);
             _targetFactory = new(entityDatabase, entityContainer);
             ballShooter.SetBallFactory(_entityFactory);
@@ -86,8 +93,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _entityManager = new(_targetFactory, _entityFactory);
             _metaBallManager = new(_entityManager);
             _metaBallManager.AddTo(ref builder);
-
-            _fillBoardTask = new(_gridCellManager, _metaBallManager);
             
             _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
@@ -95,20 +100,59 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _checkScoreTask = new(mainScreen.InGamePanel);
             _checkScoreTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager, inputHandler, mainScreen, _checkTargetTask, ballShooter);
+            _gridCellManager = new(ConvertGridPositionToWolrdPosition
+                                   , ConvertWorldPositionToGridPosition
+                                   , _metaBallManager);
+            _gridCellManager.AddTo(ref builder);
+
+            _entityFactory.SetGridCellManager(_gridCellManager);
+            _fillBoardTask = new(_gridCellManager, _metaBallManager);
+
+            _moveGameViewTask = new(_gridCellManager, cameraController, _inputProcessor
+                                    , mainScreen.NotificationPanel, _checkTargetTask);
+            _moveGameViewTask.AddTo(ref builder);
+
+            _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
+            _ingameBoosterHandler.AddTo(ref builder);
+
+            _gameTaskManager = new(_gridCellManager, mainScreen, _inputProcessor, _checkTargetTask, _checkScoreTask, ballProvider
+                                   , ballShooter,_metaBallManager, gameDecorator, _moveGameViewTask, _ingameBoosterHandler);
             _gameTaskManager.AddTo(ref builder);
 
+            _gameTaskManager.SetBallMaterialEndGame(ballMaterial);
             builder.RegisterTo(this.destroyCancellationToken);
         }
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_1").text;
+            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
             GenerateLevel(levelModel);
+
+            _ingameBoosterHandler.InitBooster(new()
+            {
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 10 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
+            });
         }
 
         private void GenerateLevel(LevelModel levelModel)
+        {
+            GenerateGridCell(levelModel);
+            GenerateEntities(levelModel);
+
+            _checkScoreTask.SetScores(levelModel);
+            _checkTargetTask.SetTargetCount(levelModel);
+
+            SetShootSequence(levelModel);
+            _fillBoardTask.Fill();
+
+            _moveGameViewTask.CalculateFirstItemHeight();
+            _moveGameViewTask.MoveViewOnStart().Forget();
+        }
+
+        private void GenerateGridCell(LevelModel levelModel)
         {
             for (int i = 0; i < levelModel.BoardMapPositions.Count; i++)
             {
@@ -123,8 +167,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 gridCell.GridPosition = gridPosition;
                 _gridCellManager.Add(gridCell);
             }
+        }
 
+        private void GenerateEntities(LevelModel levelModel)
+        {
             SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
+            _moveGameViewTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
+
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {
                 var gridCell = _gridCellManager.Get(levelModel.CeilMapPositions[i].Position);
@@ -135,7 +184,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             for (int i = 0; i < levelModel.StartingEntityMap.Count; i++)
             {
                 var data = levelModel.StartingEntityMap[i].MapData;
-                if(data.EntityType == EntityType.Random)
+                if (data.EntityType == EntityType.Random)
                 {
                     _metaBallManager.AddRandomMapPosition(levelModel.StartingEntityMap[i]);
                     continue;
@@ -148,12 +197,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             {
                 _metaBallManager.AddTarget(levelModel.TargetMapPositions[i]);
             }
+        }
 
-            _checkScoreTask.SetScores(levelModel);
-            _checkTargetTask.SetTargetCount(levelModel);
-
-            SetShootSequence(levelModel);
-            _fillBoardTask.Fill();
+        public void SetInputActive(bool active)
+        {
+            _gameTaskManager.SetInputActive(active);
         }
 
         public Vector3 ConvertGridPositionToWolrdPosition(Vector3Int position)
@@ -169,6 +217,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         public IGridCell GetCell(Vector3Int position)
         {
             return _gridCellManager.Get(position);
+        }
+
+        public void AddEntity(IBallEntity ballEntity)
+        {
+            _metaBallManager.AddEntity(ballEntity);
         }
 
         private void SetShootSequence(LevelModel levelModel)

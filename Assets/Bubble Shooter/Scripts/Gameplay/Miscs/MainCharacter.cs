@@ -26,5 +26,15 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         {
             characterAnimator.SetTrigger(_continueHash);
         }
+
+        public void ResetPlayState()
+        {
+            characterAnimator.ResetTrigger(_continueHash);
+        }
+
+        public void ResetCryState()
+        {
+            characterAnimator.ResetTrigger(_loseHash);
+        }
     }
 }

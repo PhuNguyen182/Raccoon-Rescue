@@ -1,24 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable, IBallEffect
+    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable
     {
+        [SerializeField] private Color textColor;
+
         [Header("Health Sprites")]
         [SerializeField] private Sprite[] hpStates;
 
         private int _hp = 0;
         private int _maxHp = 0;
-
-        private IPublisher<AddScoreMessage> _addScorePublisher;
 
         public bool CanMove { get => false; set { } }
         public override EntityType EntityType => EntityType.WoodenBall;
@@ -39,12 +39,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
-        public override void InitMessages()
-        {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
-        }
+        public override void InitMessages() { }
 
         public override UniTask Blast()
         {
@@ -53,7 +64,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool Break()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
 
             if (_hp > 0)
             {
@@ -67,9 +78,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -96,19 +105,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public UniTask SnapTo(Vector3 position)
         {
             return UniTask.CompletedTask;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         private void SetRenderer()
@@ -119,19 +125,34 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             }
         }
 
-        public void ChangeLayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed) { }
+
+        public override void OnSnapped() { }
+
+        public override void PlayBlastEffect(bool isFallen)
         {
-            
+            if (!isFallen)
+            {
+                if (_hp > 0)
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                
+                else
+                {
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                    EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+                }
+            }
+
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
 
-        public void PlayBlastEffect()
-        {
-            
-        }
+        public override void PlayColorfulEffect() { }
     }
 }

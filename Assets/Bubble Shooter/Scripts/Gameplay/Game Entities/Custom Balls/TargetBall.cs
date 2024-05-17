@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.PlayDatas;
+using BubbleShooter.Scripts.Effects;
+using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
@@ -16,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
     public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
         [SerializeField] private FreedTarget freedTarget;
+        [SerializeField] private GameObject boomEffect;
 
         [Header("Target Setting")]
         [SerializeField] private int id;
@@ -41,7 +45,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
         private IPublisher<MoveToTargetMessage> _moveTargetPublisher;
-        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<AddTargetMessage> _checkTargetPublisher;
 
         public override bool IsMatchable => true;
@@ -66,6 +69,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
         protected override void OnStart()
@@ -81,7 +98,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void DestroyEntity()
         {
             FreeTargetAsync().Forget();
-            _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -93,13 +109,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void InitMessages()
         {
             _moveTargetPublisher = GlobalMessagePipe.GetPublisher<MoveToTargetMessage>();
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkTargetPublisher = GlobalMessagePipe.GetPublisher<AddTargetMessage>();
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void SetColor(EntityType color)
@@ -176,6 +191,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private async UniTask FreeTargetAsync()
         {
+            if (boomEffect != null)
+                SimplePool.Spawn(boomEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+
             SimplePool.Spawn(freedTarget, EffectContainer.Transform
                              , transform.position, Quaternion.identity);
 
@@ -211,6 +229,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
             _moveTargetPublisher.Publish(message);
             return message.Source.Task;
+        }
+
+        public override void PlayBlastEffect(bool isFallen) { }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
     }
 }

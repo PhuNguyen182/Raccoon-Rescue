@@ -1,16 +1,19 @@
-using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class UnbreakbleBall : BaseEntity, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
+
         public override bool IsMatchable => false;
 
         public override bool IsFixedOnStart { get; set; }
@@ -29,7 +32,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
 
         public override UniTask Blast()
         {
@@ -38,20 +53,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
-        public override void InitMessages()
-        {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
-        }
+        public override void InitMessages() { }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void SetBodyActive(bool active)
@@ -64,10 +74,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public override void ResetBall()
         {
@@ -80,14 +87,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public void ChangeLayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed) { }
+
+        public override void OnSnapped() { }
+
+        public override void PlayBlastEffect(bool isFallen) 
         {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect() { }
     }
 }

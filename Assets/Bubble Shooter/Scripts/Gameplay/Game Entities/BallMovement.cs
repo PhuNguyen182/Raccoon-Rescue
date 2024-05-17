@@ -6,6 +6,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.GameManagers;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
@@ -22,13 +23,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         [Header("Moving")]
         [BoxGroup(GroupID = "Move")]
-        [SerializeField] private float moveDuration = 0.2f;
+        [SerializeField] private float bounceDuration = 0.25f;
         [BoxGroup(GroupID = "Move")]
-        [SerializeField] private Ease moveEase = Ease.OutQuad;
+        [SerializeField] private Ease bounceEase = Ease.InOutSine;
         
         [Header("Snapping")]
         [BoxGroup(GroupID = "Snap")]
-        [SerializeField] private float snapDuration = 0.2f;
+        [SerializeField] private float snapDuration = 0.25f;
         [BoxGroup(GroupID = "Snap")]
         [SerializeField] private Ease snapEase = Ease.OutQuad;
 
@@ -47,9 +48,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [FoldoutGroup("Check Layer Maskes")]
         [SerializeField] private LayerMask reflectMask;
 
-        private const string BallLayer = "Ball";
-        private const string DefaultLayer = "Default";
-
         private int _ballLayer;
         private int _defaultLayer;
 
@@ -66,8 +64,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private RaycastHit2D _reflectHitInfo;
         private RaycastHit2D[] _nearestGridHitInfos;
 
-        private Collider2D _ceilCollider;
         private Collider2D _neighborBallCollider;
+        private GridCellHolder _gridCellHolder;
 
         public bool CanMove
         {
@@ -81,20 +79,50 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             set => moveState = value; 
         }
 
+        public Vector2 MoveDirection => _moveDirection;
+
+        public Func<Vector3, Vector3Int> WorldToGridFunction { get; set; }
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction { get; set; }
+
         private void Awake()
         {
             _currentBall = GetComponent<IBallEntity>();
-            _ballLayer = LayerMask.NameToLayer(BallLayer);
-            _defaultLayer = LayerMask.NameToLayer(DefaultLayer);
+            _ballLayer = LayerMask.NameToLayer(BallConstants.BallLayer);
+            _defaultLayer = LayerMask.NameToLayer(BallConstants.DefaultLayer);
             _token = this.GetCancellationTokenOnDestroy();
         }
 
         public void Move()
         {
+            MoveToStopPosition();
+            CheckReflection();
             MoveBall();
+        }
+
+        private void MoveToStopPosition()
+        {
+            if (_gridCellHolder != null)
+            {
+                IGridCell gridCell = TakeGridCellFunction.Invoke(_gridCellHolder.GridPosition);
+
+                if (gridCell != null && !gridCell.ContainsBall && HasAnyNeighborAt(gridCell.GridPosition))
+                    SnapToReportedStopPosition();
+
+                else FreeMoveToStopPosition();
+            }
+
+            else FreeMoveToStopPosition();
+        }
+
+        private void FreeMoveToStopPosition()
+        {
             CheckSnapToCeil();
             CheckNeighborBallToSnap();
-            CheckReflection();
+        }
+
+        private void SnapToReportedStopPosition()
+        {
+            SnapToReportedCellAsync().Forget();
         }
 
         private void CheckReflection()
@@ -105,6 +133,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private void CheckSnapToCeil()
         {
             CheckSnapToCeilAsync().Forget();
+        }
+
+        private async UniTask SnapToReportedCellAsync()
+        {
+            if(Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= 0.3f)
+            {
+                Vector3Int position = _gridCellHolder.GridPosition;
+                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
+
+                CanMove = false;
+                ChangeLayerMask(true);
+
+                await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+                SnapToCell(checkCell).Forget();
+            }
         }
 
         private async UniTaskVoid CheckReflectionAsync()
@@ -129,13 +172,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private async UniTaskVoid CheckSnapToCeilAsync()
         {
-            _ceilCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 1.5f, cellMask);
-
-            if (_ceilCollider == null)
-                return;
-
-            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GetCell(position);
+            Vector3Int position = WorldToGridFunction.Invoke(transform.position);
+            IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
             if (checkCell == null)
                 return;
@@ -144,25 +182,29 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 CanMove = false;
                 ChangeLayerMask(true);
+
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
-                SnapToCeilCell(checkCell).Forget();
+                SnapToCell(checkCell).Forget();
             }
         }
 
         private void CheckNeighborBallToSnap()
         {
-            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius * 0.8f, ballMask);
+            _neighborBallCollider = Physics2D.OverlapCircle(transform.position, ballRadius, ballMask);
 
             if (_neighborBallCollider == null)
                 return;
 
-            Vector3Int position = GameController.Instance.ConvertWorldPositionToGridPosition(transform.position);
-            IGridCell checkCell = GameController.Instance.GetCell(position);
+            Vector3Int position = WorldToGridFunction.Invoke(_neighborBallCollider.transform.position);
+            IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
             if (checkCell == null)
                 return;
 
-            if (!_neighborBallCollider.TryGetComponent(out IBallMovement movement))
+            if (!checkCell.ContainsBall)
+                return;
+
+            if (checkCell.BallEntity is not IBallMovement movement)
                 return;
 
             if (movement.MovementState == BallMovementState.Fixed)
@@ -173,12 +215,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             }
         }
 
-        private async UniTaskVoid SnapToCeilCell(IGridCell ceilCell)
+        private async UniTaskVoid SnapToCell(IGridCell cell)
         {
             MovementState = BallMovementState.Fixed;
 
-            SetItemToGrid(ceilCell);
-            SnapTo(ceilCell.WorldPosition).Forget();
+            SetItemToGrid(cell);
+            SnapTo(cell.WorldPosition).Forget();
+
             await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             _currentBall.OnSnapped();
         }
@@ -186,17 +229,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private async UniTask CheckNearestGrid()
         {
             float nearestGridDistance = Mathf.Infinity;
-            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius, transform.up, ballDistance, cellMask);
+            _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
+                                                          , transform.up, ballDistance, cellMask);
 
             IGridCell targetGridCell;
             RaycastHit2D targetCellInfo = _nearestGridHitInfos[0];
 
             for (int i = 0; i < _nearestGridHitInfos.Length; i++)
             {
-                if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder gridHolder))
+                if (!_nearestGridHitInfos[i].collider.TryGetComponent(out GridCellHolder grid))
                     continue;
 
-                IGridCell gridCell = GameController.Instance.GetCell(gridHolder.GridPosition);
+                IGridCell gridCell = TakeGridCellFunction.Invoke(grid.GridPosition);
                 if (gridCell == null || gridCell.ContainsBall)
                     continue;
 
@@ -209,12 +253,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 }
             }
 
-            var gridContainer = targetCellInfo.collider.GetComponent<GridCellHolder>();
-            targetGridCell = GameController.Instance.GetCell(gridContainer.GridPosition);
+            GridCellHolder gridHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
+            targetGridCell = TakeGridCellFunction.Invoke(gridHolder.GridPosition);
             MovementState = BallMovementState.Fixed;
             
             SetItemToGrid(targetGridCell);
             SnapTo(targetCellInfo.transform.position).Forget();
+
             await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             _currentBall.OnSnapped();
         }
@@ -222,6 +267,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         private void SetItemToGrid(IGridCell gridCell)
         {
             gridCell.SetBall(_currentBall);
+            GameController.Instance.AddEntity(_currentBall);
+        }
+
+        public void SetGridCellHolder(GridCellHolder gridCellHolder)
+        {
+            _gridCellHolder = gridCellHolder;
         }
 
         public void ChangeLayerMask(bool isFixed)
@@ -229,16 +280,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             gameObject.layer = isFixed ? _ballLayer : _defaultLayer;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            _movingTween ??= CreateMoveTween(position);
+            _movingTween ??= CreateMoveBounceTween(position);
             _movingTween.ChangeStartValue(transform.position);
             _movingTween.ChangeEndValue(position);
 
             _movingTween.Rewind();
             _movingTween.Play();
 
-            return UniTask.Delay(TimeSpan.FromSeconds(_movingTween.Duration()), cancellationToken: _token);
+            float duration = _movingTween.Duration();
+            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
         }
 
         public UniTask SnapTo(Vector3 position)
@@ -250,7 +302,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             _snappingTween.Rewind();
             _snappingTween.Play();
 
-            return UniTask.Delay(TimeSpan.FromSeconds(_snappingTween.Duration()), cancellationToken: _token);
+            float duration = _snappingTween.Duration();
+            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
         }
 
         public void SetBodyActive(bool active)
@@ -271,6 +324,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             ballBody.AddForce(force, forceMode);
         }
 
+        private bool HasAnyNeighborAt(Vector3Int position)
+        {
+            IGridCell gridCell;
+
+            for (int i = 0; i < CommonProperties.MaxNeighborCount; i++)
+            {
+                Vector3Int neighborOffset = position.y % 2 == 0
+                                            ? CommonProperties.EvenYNeighborOffsets[i]
+                                            : CommonProperties.OddYNeighborOffsets[i];
+                gridCell = TakeGridCellFunction.Invoke(position + neighborOffset);
+
+                if (gridCell == null)
+                    continue;
+
+                if (gridCell.ContainsBall)
+                    return true;
+            }
+
+            return false;
+        }
+
         private void MoveBall()
         {
             ballBody.position = ballBody.position + Time.fixedDeltaTime * _ballSpeed * _moveDirection;
@@ -278,12 +352,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private Tweener CreateSnapTween(Vector3 position)
         {
-            return transform.DOMove(position, snapDuration).SetEase(snapEase).SetAutoKill(false);
+            return transform.DOMove(position, snapDuration)
+                            .SetEase(snapEase).SetAutoKill(false);
         }
 
-        private Tweener CreateMoveTween(Vector3 position)
+        private Tweener CreateMoveBounceTween(Vector3 position)
         {
-            return transform.DOMove(position, moveDuration).SetEase(moveEase).SetAutoKill(false);
+            return transform.DOMove(position, bounceDuration)
+                            .SetEase(bounceEase).SetLoops(2, LoopType.Yoyo)
+                            .SetAutoKill(false);
         }
 
         private void OnDestroy()

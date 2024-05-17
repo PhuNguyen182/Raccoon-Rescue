@@ -7,6 +7,7 @@ using BubbleShooter.Scripts.Gameplay.GameEntities;
 using BubbleShooter.Scripts.Common.Databases;
 using BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls;
 using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Common.Factories
 {
@@ -14,6 +15,7 @@ namespace BubbleShooter.Scripts.Common.Factories
     {
         private readonly EntityDatabase _entityDatabase;
         private readonly Transform _entityContainer;
+        private GridCellManager _gridCellManager;
 
         public EntityFactory(EntityDatabase database, Transform container)
         {
@@ -33,6 +35,8 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     ball.SetColor(data.EntityType);
                     ball.transform.SetParent(_entityContainer);
+                    ball.SetTakeGridCell(_gridCellManager.Get);
+                    ball.SetWorldToGridFunction(_gridCellManager.ConvertWorldToGridFunction);
                     ball.InitMessages();
                     ball.ResetBall();
 
@@ -49,6 +53,8 @@ namespace BubbleShooter.Scripts.Common.Factories
                     booster.ResetBall();
                     booster.transform.SetParent(_entityContainer);
                     booster.IsFixedOnStart = false;
+                    booster.SetTakeGridCell(_gridCellManager.Get);
+                    booster.SetWorldToGridFunction(_gridCellManager.ConvertWorldToGridFunction);
                     booster.InitMessages();
 
                     return booster;
@@ -68,18 +74,31 @@ namespace BubbleShooter.Scripts.Common.Factories
 
                     entity.ResetBall();
                     entity.transform.SetParent(_entityContainer);
+                    entity.SetTakeGridCell(_gridCellManager.Get);
+                    entity.SetWorldToGridFunction(_gridCellManager.ConvertWorldToGridFunction);
                     entity.InitMessages();
 
                     return entity;
                 }
             }
 
-            return default;
+            return null;
+        }
+
+        public void SetGridCellManager(GridCellManager gridCellManager)
+        {
+            _gridCellManager = gridCellManager;
         }
 
         private void PreloadEntities()
         {
-            SimplePool.PoolPreLoad(_entityDatabase.BallPrefab.gameObject, 20, _entityContainer);
+            SimplePool.PoolPreLoad(_entityDatabase.BallPrefab.gameObject, 300, _entityContainer);
+            SimplePool.PoolPreLoad(_entityDatabase.BallEntities[0].gameObject, 10, _entityContainer);
+
+            for (int i = 0; i < _entityDatabase.Boosters.Length; i++)
+            {
+                SimplePool.PoolPreLoad(_entityDatabase.Boosters[i].gameObject, 10, _entityContainer);
+            }
         }
     }
 }

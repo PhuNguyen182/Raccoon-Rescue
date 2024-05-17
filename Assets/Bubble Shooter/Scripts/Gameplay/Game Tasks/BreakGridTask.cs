@@ -25,12 +25,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public async UniTask Break(IGridCell gridCell)
         {
             if (gridCell == null)
-                await UniTask.CompletedTask;
+                return;
 
             IBallEntity ballEntity = gridCell.BallEntity;
 
             if (ballEntity == null)
-                await UniTask.CompletedTask;
+                return;
 
             if (ballEntity is IBallBooster)
                 _boosterHandleTask.ActiveBooster(gridCell.GridPosition).Forget();

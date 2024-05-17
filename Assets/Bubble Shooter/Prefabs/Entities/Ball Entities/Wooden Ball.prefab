@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &8977377430217278071
 Transform:
@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3365656cf9f766d4688dd4c3399985af, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1592121711
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6e4618ff144204362a90f9ce911de934, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -105,7 +105,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &3827508529882168166
 Transform:
@@ -203,6 +203,9 @@ MonoBehaviour:
   ballMovement: {fileID: 6324382987147095321}
   entityGraphics: {fileID: 7393648386679340297}
   entityAudio: {fileID: 6014331376056225527}
+  leafEffect: {fileID: 0}
+  waterEffect: {fileID: 0}
+  textColor: {r: 0.5176471, g: 0.18823531, b: 0.043137256, a: 1}
   hpStates:
   - {fileID: 21300000, guid: 6d7c85a5bb76b42dd985fbccd2b57a1a, type: 3}
   - {fileID: 21300000, guid: 6e4618ff144204362a90f9ce911de934, type: 3}
@@ -236,10 +239,10 @@ MonoBehaviour:
   ballBody: {fileID: 4173159098274802609}
   ballCollider: {fileID: 3374717475890955613}
   moveState: 0
-  moveDuration: 0.2
-  moveEase: 6
-  snapDuration: 0.2
-  snapEase: 4
+  bounceDuration: 0.15
+  bounceEase: 7
+  snapDuration: 0.25
+  snapEase: 7
   delayFrame: 3
   ballRadius: 0.3
   ballDistance: 1

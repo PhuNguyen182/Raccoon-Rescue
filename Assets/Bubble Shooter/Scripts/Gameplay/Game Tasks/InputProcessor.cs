@@ -1,16 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Gameplay.GameHandlers;
-using BubbleShooter.Scripts.Common.Interfaces;
-using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class InputProcessor : IDisposable
+    public class InputProcessor
     {
-        private readonly InputHandler _inputHandler;
+        private readonly InputController _inputHandler;
 
         public bool IsActive
         {
@@ -18,14 +15,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             set => _inputHandler.IsActive = value;
         }
 
-        public InputProcessor(InputHandler inputHandler)
+        public InputProcessor(InputController inputHandler)
         {
             _inputHandler = inputHandler;
-        }
-
-        public void Dispose()
-        {
-
         }
     }
 }

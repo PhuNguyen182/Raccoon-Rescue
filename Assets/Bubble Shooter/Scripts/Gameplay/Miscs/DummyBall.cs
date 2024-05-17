@@ -1,47 +1,75 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Common.Enums;
-using Sirenix.OdinInspector;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class DummyBall : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer ballPreview;
+        [SerializeField] private GameObject effect;
+        [SerializeField] private SpriteRenderer ballRenderer;
 
-        [Header("Ball Colors")]
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite blue;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite green;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite orange;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite red;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite violet;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite yellow;
-        [FoldoutGroup("Ball Colors")]
-        [SerializeField] private Sprite colorful;
+        [Header("Swap Move")]
+        [SerializeField] private float swapDuration = 0.35f;
+        [SerializeField] private Ease swapEase = Ease.OutQuad;
 
-        public void SetBallColor(bool isActive, EntityType ballColor)
+        [Header("Booster Move")]
+        [SerializeField] private float moveDuration = 0.35f;
+        [SerializeField] private Ease moveEaseX = Ease.Linear;
+        [SerializeField] private Ease moveEaseY = Ease.OutQuad;
+
+        private Tweener _swapTween;
+
+        private CancellationToken _token;
+
+        private void Awake()
         {
-            Sprite color = ballColor switch
-            {
-                EntityType.Blue => blue,
-                EntityType.Green => green,
-                EntityType.Orange => orange,
-                EntityType.Red => red,
-                EntityType.Violet => violet,
-                EntityType.Yellow => yellow,
-                EntityType.ColorfulBall => colorful,
-                _ => null
-            };
+            _token = this.GetCancellationTokenOnDestroy();
+        }
 
-            ballPreview.sprite = color;
-            ballPreview.gameObject.SetActive(isActive);
+        public void ToggleEffect(bool active)
+        {
+            if (effect != null)
+                effect.SetActive(active);
+        }
+
+        public UniTask SwapTo(Vector3 toPosition)
+        {
+            _swapTween ??= CreateSwapTween(toPosition);
+            _swapTween.ChangeStartValue(transform.position);
+            _swapTween.ChangeEndValue(toPosition);
+            _swapTween.Rewind();
+            _swapTween.Play();
+
+            return UniTask.Delay(TimeSpan.FromSeconds(_swapTween.Duration()), cancellationToken: _token);
+        }
+
+        public UniTask MoveTo(Vector3 toPosition)
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.Insert(0, transform.DOMoveX(toPosition.x, moveDuration).SetEase(moveEaseX));
+            sequence.Insert(0, transform.DOMoveY(toPosition.y, moveDuration).SetEase(moveEaseY));
+            sequence.SetAutoKill(true);
+            return sequence.AwaitForComplete(TweenCancelBehaviour.Complete);
+        }
+
+        public void ChangeLayer(string layerName)
+        {
+            ballRenderer.sortingLayerID = SortingLayer.NameToID(layerName);
+        }
+
+        private Tweener CreateSwapTween(Vector3 toPosition)
+        {
+            return transform.DOMove(toPosition, swapDuration).SetEase(swapEase).SetAutoKill(false);
+        }
+
+        private void OnDestroy()
+        {
+            _swapTween?.Kill();
         }
     }
 }

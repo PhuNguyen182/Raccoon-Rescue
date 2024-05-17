@@ -13,7 +13,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     {
         private readonly IDisposable _disposable;
         private readonly InGamePanel _inGamePanel;
-        private readonly ISubscriber<AddScoreMessage> _addScoreSubscriber;
+        private readonly ISubscriber<PublishScoreMessage> _addScoreSubscriber;
 
         private int _tier = 0;
         private int _tier1Score = 0;
@@ -22,16 +22,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _maxScore = 0;
         private int _score = 0;
 
+        public int Tier => _tier;
+        public int Score => _score;
+
         public CheckScoreTask(InGamePanel inGamePanel)
         {
             _score = 0;
             _inGamePanel = inGamePanel;
 
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
-            _addScoreSubscriber = GlobalMessagePipe.GetSubscriber<AddScoreMessage>();
+
+            _addScoreSubscriber = GlobalMessagePipe.GetSubscriber<PublishScoreMessage>();
             _addScoreSubscriber.Subscribe(message => AddScore(message.Score)).AddTo(builder);
+
             _disposable = builder.Build();
-            
             UpdateScore();
         }
 

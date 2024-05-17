@@ -1,18 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
+        [SerializeField] private GameObject burningEffect;
+
+        private Vector3 _direction;
+        private Vector3 _previousPosition;
+
         public override EntityType EntityType => EntityType.FireBall;
 
         public override bool IsMatchable => false;
@@ -35,13 +43,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool IsIgnored { get; set; }
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<ActiveBoosterMessage> _boosterPublisher;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
+            _previousPosition = transform.position;
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
@@ -49,13 +72,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         {
             if (CanMove && !IsFixedOnStart)
             {
+                ToggleEffect(true);
                 ballMovement.Move();
             }
+
+            else ToggleEffect(false);
+
+            CalculateBurnEffectAngle();
         }
 
         public async UniTask Activate()
         {
-            await Blast();
+            await Explode();
         }
 
         public override UniTask Blast()
@@ -65,19 +93,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
         public UniTask Explode()
         {
-            return UniTask.CompletedTask;
+            PlayBlastEffect(false);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
         }
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _boosterPublisher = GlobalMessagePipe.GetPublisher<ActiveBoosterMessage>();
         }
 
@@ -98,9 +125,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             return UniTask.CompletedTask;
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return UniTask.CompletedTask;
+            return ballMovement.BounceMove(position);
         }
 
         public void ChangeLayerMask(bool isFixed)
@@ -121,16 +148,46 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void OnSnapped()
         {
             IsIgnored = true;
-            // To do: execute active booster
+            
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {
                 Position = GridPosition
             });
         }
 
-        protected override void OnDisable()
+        public override void PlayBlastEffect(bool isFallen)
         {
-            base.OnDisable();
+            if (!isFallen)
+                EffectManager.Instance.SpawnBoosterEffect(EntityType.FireBall, transform.position, Quaternion.identity);
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
+        }
+
+        public override void ToggleEffect(bool active)
+        {
+            if (burningEffect != null)
+                burningEffect.SetActive(active);
+        }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
+        }
+
+        private void CalculateBurnEffectAngle()
+        {
+            _direction = transform.position - _previousPosition;
+            float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
+            burningEffect.transform.rotation = Quaternion.Euler(0, 0, angle);
+            _previousPosition = transform.position;
+        }
+
+        private void OnDestroy()
+        {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

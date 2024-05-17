@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
@@ -13,6 +16,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
+        [SerializeField] private Color textColor;
+
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite red;
@@ -27,7 +32,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite orange;
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove
@@ -52,16 +56,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Func<Vector3, Vector3Int> WorldToGridFunction
+        {
+            get => ballMovement.WorldToGridFunction;
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction
+        {
+            get => ballMovement.TakeGridCellFunction;
+            set => ballMovement.TakeGridCellFunction = value;
+        }
+
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
-        private void OnEnable()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
@@ -77,9 +95,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -106,9 +122,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
@@ -126,9 +142,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        protected override void OnDisable()
+        public override void PlayBlastEffect(bool isFallen)
         {
-            base.OnDisable();
+            if (!isFallen)
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
+        }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
+        }
+
+        private void OnDestroy()
+        {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

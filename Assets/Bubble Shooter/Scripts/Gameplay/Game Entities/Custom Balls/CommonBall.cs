@@ -1,17 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallAnimation, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -29,7 +32,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
-        private IPublisher<AddScoreMessage> _addScorePublisher;
+        [Header("Text Colors")]
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color blueColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color greenColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color orangeColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color redColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color violetColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color yellowColor;
+
+        private Color _textColor;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove 
@@ -54,16 +71,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             set => ballMovement.MovementState = value;
         }
 
+        public Vector2 MoveDirection => ballMovement.MoveDirection;
+
         public bool EasyBreak => false;
 
-        private void OnEnable()
+        public Func<Vector3, Vector3Int> WorldToGridFunction 
+        { 
+            get => ballMovement.WorldToGridFunction; 
+            set => ballMovement.WorldToGridFunction = value;
+        }
+
+        public Func<Vector3Int, IGridCell> TakeGridCellFunction 
+        { 
+            get => ballMovement.TakeGridCellFunction; 
+            set => ballMovement.TakeGridCellFunction = value; 
+        }
+
+        protected override void OnAwake()
         {
+            base.OnAwake();
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
         public override void InitMessages()
         {
-            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
             _checkMatchPublisher = GlobalMessagePipe.GetPublisher<CheckMatchMessage>();
         }
 
@@ -82,21 +113,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             switch (color)
             {
                 case EntityType.Red:
+                    _textColor = redColor;
                     entityGraphics.SetEntitySprite(red);
                     break;
                 case EntityType.Yellow:
+                    _textColor = yellowColor;
                     entityGraphics.SetEntitySprite(yellow);
                     break;
                 case EntityType.Green:
+                    _textColor = greenColor;
                     entityGraphics.SetEntitySprite(green);
                     break;
                 case EntityType.Blue:
+                    _textColor = blueColor;
                     entityGraphics.SetEntitySprite(blue);
                     break;
                 case EntityType.Violet:
+                    _textColor = violetColor;
                     entityGraphics.SetEntitySprite(violet);
                     break;
                 case EntityType.Orange:
+                    _textColor = orangeColor;
                     entityGraphics.SetEntitySprite(orange);
                     break;
             }
@@ -122,9 +159,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask BounceMove(Vector3 position)
         {
-            return ballMovement.MoveTo(position);
+            return ballMovement.BounceMove(position);
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode = ForceMode2D.Impulse)
@@ -134,7 +171,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            return UniTask.CompletedTask;
+            PlayBlastEffect(false);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.03f), cancellationToken: onDestroyToken);
         }
 
         public bool Break()
@@ -142,21 +180,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return true;
         }
 
-        public void PlayBounceAnimation()
+        public override void PlayBlastEffect(bool isFallen)
         {
-            
-        }
-
-        public void PlayBlastEffect()
-        {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(_textColor);
         }
 
         public override void DestroyEntity()
         {
-            if (IsFallen)
-                _addScorePublisher.Publish(new AddScoreMessage { Score = Score });
-
+            PublishScore();
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -173,9 +207,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        protected override void OnDisable()
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
         {
-            base.OnDisable();
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
+        }
+
+        private void OnDestroy()
+        {
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }

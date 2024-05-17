@@ -1,10 +1,9 @@
+using UnityEngine;
+
 namespace BubbleShooter.Scripts.Common.Interfaces
 {
-    /// <summary>
-    /// Play ball animations
-    /// </summary>
     public interface IBallAnimation
     {
-        public void PlayBounceAnimation();
+        public void PlaySpringAnimation(Vector3Int direction);
     }
 }

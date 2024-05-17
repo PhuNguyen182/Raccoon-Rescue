@@ -78,25 +78,6 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
-        public LevelExporter BuildBoardThresholdMap(Tilemap tilemap)
-        {
-            var positions = tilemap.cellBounds.Iterator();
-            foreach (Vector3Int position in positions)
-            {
-                var tile = tilemap.GetTile<BoardThresholdTile>(position);
-
-                if (tile == null)
-                    continue;
-
-                _levelModel.BoardThresholdMapPositions.Add(new BoardThresholdMapPosition
-                {
-                    Position = position
-                });
-            }
-
-            return this;
-        }
-
         public LevelExporter BuildColorProportion(List<ColorProportion> colorProportions)
         {
             for (int i = 0; i < colorProportions.Count; i++)
