@@ -148,7 +148,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void OnSnapped()
         {
             IsIgnored = true;
-            // To do: execute active booster
+            
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {
                 Position = GridPosition

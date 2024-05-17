@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly InputProcessor _inputProcessor;
+        private readonly BallRippleTask _ballRippleTask;
 
         private readonly FireBallBoosterTask _fireBallBoosterTask;
         private readonly LeafBallBoosterTask _leafBallBoosterTask;
@@ -25,12 +26,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private IDisposable _disposable;
 
-        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager, CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor)
+        public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager
+            , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
+            , BallRippleTask ballRippleTask)
         {
             _breakGridTask = breakGridTask;
             _checkBallClusterTask = checkBallClusterTask;
             _gridCellManager = gridCellManager;
             _inputProcessor = inputProcessor;
+            _ballRippleTask = ballRippleTask;
 
             _fireBallBoosterTask = new(_gridCellManager, _breakGridTask);
             _leafBallBoosterTask = new(_gridCellManager, _breakGridTask);
@@ -59,19 +63,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             switch (gridCell.BallEntity.EntityType)
             {
                 case EntityType.FireBall:
+                    _ballRippleTask.RippleAt(position, 5).Forget();
                     await _fireBallBoosterTask.Execute(position);
                     break;
                 case EntityType.LeafBall:
+                    _ballRippleTask.RippleAt(position, 3).Forget();
                     await _leafBallBoosterTask.Execute(position);
                     break;
                 case EntityType.WaterBall:
+                    _ballRippleTask.RippleAt(position, 4).Forget();
                     await _waterBallBoosterTask.Execute(position);
                     break;
                 case EntityType.SunBall:
+                    _ballRippleTask.RippleAt(position, 3).Forget();
                     await _sunBallBoosterTask.Execute(position);
                     break;
             }
 
+            _ballRippleTask.ResetRippleIgnore();
             _checkBallClusterTask.CheckFreeCluster();
             _inputProcessor.IsActive = true;
         }

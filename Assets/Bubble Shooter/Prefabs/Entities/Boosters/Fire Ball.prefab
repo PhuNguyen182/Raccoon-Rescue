@@ -121,6 +121,7 @@ MonoBehaviour:
   entityAudio: {fileID: -1300896795331825709}
   leafEffect: {fileID: 0}
   waterEffect: {fileID: 0}
+  rippleLevel: 5
   textColor: {r: 0.9490197, g: 0.5803922, b: 0.20784315, a: 1}
   burningEffect: {fileID: 7313120596383096101}
 --- !u!114 &1199371286681559618
