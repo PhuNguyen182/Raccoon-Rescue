@@ -9,6 +9,7 @@ using BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks;
 using BubbleShooter.Scripts.Gameplay.Strategies;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Common.Factories;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks 
 {
@@ -41,6 +42,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _mainScreenManager = mainScreenManager;
             _powerupControlTask = new(_mainScreenManager.IngamePowerupPanel, ballShooter, _inputProcessor);
             _powerupControlTask.AddTo(ref builder);
+            ballShooter.SetIngamePowerup(_powerupControlTask);
 
             _ballRippleTask = new(_gridCellManager);
             _ballRippleTask.AddTo(ref builder);

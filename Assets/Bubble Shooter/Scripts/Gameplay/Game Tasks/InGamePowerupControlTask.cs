@@ -26,6 +26,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private int _yellowBallCount;
         private int _blueBallCount;
 
+        public bool IsPowerupInUse { get; set; }
+
         public InGamePowerupControlTask(IngamePowerupPanel ingamePowerupPanel, BallShooter ballShooter, InputProcessor inputProcessor)
         {
             _inputProcessor = inputProcessor;
@@ -87,6 +89,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask FreePowerup(PowerupMessage message)
         {
+            if (IsPowerupInUse)
+                return;
+
+            IsPowerupInUse = true;
             _inputProcessor.IsActive = false;
             _ballShooter.SetColorModel(default, false);
 

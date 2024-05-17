@@ -131,9 +131,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             _ingameBoosterHandler.InitBooster(new()
             {
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 0 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 10 },
                 new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 0 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
             });
         }
 

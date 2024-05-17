@@ -18,6 +18,7 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -98,6 +99,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
+        private InGamePowerupControlTask _inGamePowerups;
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
@@ -162,6 +164,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
+        }
+
+        public void SetIngamePowerup(InGamePowerupControlTask inGamePowerup)
+        {
+            _inGamePowerups = inGamePowerup;
         }
 
         public void SetStartPosition()
@@ -332,6 +339,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 CanDecreaseMove = !shootModel.IsPowerup
             });
 
+            _inGamePowerups.IsPowerupInUse = false;
             _canFire = true;
         }
 
