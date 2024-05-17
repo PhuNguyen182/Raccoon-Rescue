@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effect: {fileID: 6555667179924075953}
   ballRenderer: {fileID: 1441149359374469186}
-  swapDuration: 0.75
+  swapDuration: 0.45
   swapEase: 6
   moveDuration: 0.35
   moveEaseX: 1

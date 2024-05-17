@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -26,6 +27,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
             if (boosterCell.BallEntity is IBallBooster booster)
                 await booster.Activate();
+
+            Vector3 pos = new Vector3(0, boosterCell.WorldPosition.y);
+            EffectManager.Instance.SpawnHorizontalEffect(pos, Quaternion.identity);
 
             _gridCellManager.DestroyAt(position);
             using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))

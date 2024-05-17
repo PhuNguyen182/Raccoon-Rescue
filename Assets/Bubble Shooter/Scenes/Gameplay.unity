@@ -3899,6 +3899,7 @@ MonoBehaviour:
   colorfulEffect: {fileID: 6531379277446194419, guid: dcbe623e56ed8814ba9d05324ec10883, type: 3}
   woodenEffect: {fileID: 833000866560661028, guid: a40ff76830452c74980ee32325362476, type: 3}
   textPopEffect: {fileID: 519410504568207307, guid: e7e730de1f1416f44bc4e6e62dfde264, type: 3}
+  horizontalPowerupEffect: {fileID: 8467073934908867482, guid: f2eb9b229c66ddc4ca77e1393d170180, type: 3}
   ballBoosterEffects:
   - {fileID: 2689918268500557824, guid: 1d47060093b608b4f9c088ed65c4b1cb, type: 3}
   - {fileID: 2353207892107861052, guid: cbd71a148b7ba98448dd59645cf21137, type: 3}

@@ -7,10 +7,10 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
-using Cysharp.Threading.Tasks;
-using MessagePipe;
 using BubbleShooter.Scripts.Effects;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {

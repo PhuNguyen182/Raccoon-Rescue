@@ -13,6 +13,7 @@ namespace BubbleShooter.Scripts.Effects
         [SerializeField] private ParticleSystem colorfulEffect;
         [SerializeField] private ParticleSystem woodenEffect;
         [SerializeField] private FlyTextEffect textPopEffect;
+        [SerializeField] private GameObject horizontalPowerupEffect;
         [SerializeField] private ParticleSystem[] ballBoosterEffects;
 
         public Camera MainCamera => mainCamera;
@@ -49,6 +50,11 @@ namespace BubbleShooter.Scripts.Effects
         public void SpawnWoodenEffect(Vector3 position, Quaternion rotation)
         {
             SimplePool.Spawn(woodenEffect, EffectContainer.Transform, position, rotation);
+        }
+
+        public void SpawnHorizontalEffect(Vector3 position, Quaternion rotation)
+        {
+            SimplePool.Spawn(horizontalPowerupEffect, EffectContainer.Transform, position, rotation);
         }
 
         public ParticleSystem SpawnBoosterEffect(EntityType color, Vector3 position, Quaternion rotation)
