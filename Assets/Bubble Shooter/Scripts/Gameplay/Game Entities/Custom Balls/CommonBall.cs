@@ -14,15 +14,9 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBallPlayBoosterEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
         [SerializeField] private EntityType ballColor;
-
-        [Header("Booster Effects")]
-        [FoldoutGroup("Booster Effects")]
-        [SerializeField] private GameObject leafEffect;
-        [FoldoutGroup("Booster Effects")]
-        [SerializeField] private ParticleSystem waterEffect;
 
         [Header("Ball Colors")]
         [FoldoutGroup("Ball Colors")]
@@ -54,7 +48,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private Color _textColor;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
-        private GameObject _leafEffect;
 
         public bool CanMove 
         { 
@@ -178,7 +171,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
             return UniTask.Delay(TimeSpan.FromSeconds(0.03f), cancellationToken: onDestroyToken);
         }
 
@@ -187,7 +180,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return true;
         }
 
-        public void PlayBlastEffect()
+        public override void PlayBlastEffect(bool isFallen)
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
             FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
@@ -214,49 +207,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        public async UniTask PlayBoosterEffect(EntityType booster)
-        {
-            switch (booster)
-            {
-                case EntityType.FireBall:
-                    await UniTask.CompletedTask;
-                    break;
-                case EntityType.WaterBall:
-                    EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
-                    break;
-                case EntityType.SunBall:
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: destroyCancellationToken);
-                    break;
-                case EntityType.LeafBall:
-                    _leafEffect = SimplePool.Spawn(leafEffect, transform, transform.position, Quaternion.identity);
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: destroyCancellationToken);
-                    break;
-            }
+        public override void ToggleEffect(bool active) { }
 
-            await UniTask.CompletedTask;
-        }
-
-        public void ReleaseEffect()
-        {
-            ReleaseObject(_leafEffect);
-        }
-
-        private void ReleaseObject(GameObject obj)
-        {
-            if (obj != null)
-            {
-                obj.transform.SetParent(EffectContainer.Transform);
-                SimplePool.Despawn(obj);
-            }
-        }
-
-        public void ToggleEffect(bool active)
-        {
-            
-        }
-
-        public void PlayColorfulEffect()
+        public override void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }

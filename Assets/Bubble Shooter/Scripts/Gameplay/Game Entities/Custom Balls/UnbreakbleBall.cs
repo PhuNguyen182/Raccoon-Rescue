@@ -1,12 +1,11 @@
-using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
-using System;
+using BubbleShooter.Scripts.Common.Interfaces;
+using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
@@ -55,10 +54,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             SimplePool.Despawn(this.gameObject);
         }
 
-        public override void InitMessages()
-        {
-            
-        }
+        public override void InitMessages() { }
 
         public UniTask BounceMove(Vector3 position)
         {
@@ -75,10 +71,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public override void ResetBall()
         {
@@ -91,14 +84,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.SnapTo(position);
         }
 
-        public void ChangeLayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed) { }
+
+        public override void OnSnapped() { }
+
+        public override void PlayBlastEffect(bool isFallen) 
         {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect() { }
     }
 }

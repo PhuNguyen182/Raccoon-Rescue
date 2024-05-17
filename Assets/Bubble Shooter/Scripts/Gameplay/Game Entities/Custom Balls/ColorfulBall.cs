@@ -13,7 +13,7 @@ using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable, IBallEffect
+    public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
@@ -139,18 +139,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
-        public void PlayBlastEffect()
+        public override void PlayBlastEffect(bool isFallen)
+        {
+            if (!isFallen)
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+        }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
-        }
-
-        public void ToggleEffect(bool active)
-        {
-            
-        }
-
-        public void PlayColorfulEffect()
-        {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 

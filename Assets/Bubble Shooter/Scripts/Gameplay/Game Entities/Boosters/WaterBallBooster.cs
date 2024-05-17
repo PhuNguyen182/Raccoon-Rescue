@@ -13,7 +13,7 @@ using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
-    public class WaterBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect
+    public class WaterBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
         public override EntityType EntityType => EntityType.WaterBall;
 
@@ -87,7 +87,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public UniTask Explode()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
             return UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: destroyCancellationToken);
         }
 
@@ -143,18 +143,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
             });
         }
 
-        public void PlayBlastEffect()
+        public override void PlayBlastEffect(bool isFallen)
         {
-            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
-            EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+            if (!isFallen)
+            {
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+            }
+
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
-        public void ToggleEffect(bool active)
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
 
-        public void PlayColorfulEffect()
+        public override void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }

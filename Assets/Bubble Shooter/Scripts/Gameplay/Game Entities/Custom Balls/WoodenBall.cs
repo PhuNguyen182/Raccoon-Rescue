@@ -9,7 +9,7 @@ using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable, IBallEffect
+    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable
     {
         [SerializeField] private Color textScoreColor;
 
@@ -54,10 +54,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool EasyBreak => false;
 
-        public override void InitMessages()
-        {
-            
-        }
+        public override void InitMessages() { }
 
         public override UniTask Blast()
         {
@@ -66,7 +63,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool Break()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
 
             if (_hp > 0)
             {
@@ -107,10 +104,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public UniTask SnapTo(Vector3 position)
         {
@@ -130,29 +124,30 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             }
         }
 
-        public void ChangeLayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed) { }
+
+        public override void OnSnapped() { }
+
+        public override void PlayBlastEffect(bool isFallen)
         {
-            
+            if (!isFallen)
+            {
+                if (_hp > 0)
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                
+                else
+                {
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                    EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+                }
+            }
+
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
 
-        public void PlayBlastEffect()
-        {
-            EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
-        }
-
-        public void ToggleEffect(bool active)
-        {
-            
-        }
-
-        public void PlayColorfulEffect()
-        {
-            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
-        }
+        public override void PlayColorfulEffect() { }
     }
 }

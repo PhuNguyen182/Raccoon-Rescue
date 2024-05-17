@@ -11,7 +11,7 @@ using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class IceBall : BaseEntity, IBallHealth, IBallPhysics, IBreakable, IBallTransformation, IBallEffect, IBallMovement
+    public class IceBall : BaseEntity, IBallHealth, IBallPhysics, IBreakable, IBallTransformation, IBallMovement
     {
         [SerializeField] private EntityType entityType;
         [SerializeField] private Animator ballAnimator;
@@ -163,7 +163,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void PlayBlastEffect()
+        public override void PlayBlastEffect(bool isFallen)
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
         }
@@ -180,13 +180,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return ballMovement.BounceMove(position);
         }
 
-        public void ToggleEffect(bool active)
+        public override void ToggleEffect(bool active)
         {
             if (iceBlink != null)
                 iceBlink.SetActive(active);
         }
 
-        public void PlayColorfulEffect()
+        public override void PlayColorfulEffect()
         {
             EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
