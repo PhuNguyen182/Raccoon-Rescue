@@ -87,6 +87,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         private async UniTask ExecuteBoosterAsync(IngameBoosterType booster)
         {
+            if (_hasUsedBooster)
+                return;
+
             switch (booster)
             {
                 case IngameBoosterType.Colorful:
