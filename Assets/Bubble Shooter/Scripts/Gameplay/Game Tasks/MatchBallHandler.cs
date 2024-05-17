@@ -28,12 +28,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly IPublisher<PublishScoreMessage> _addScorePublisher;
         private readonly ISubscriber<CheckMatchMessage> _checkMatchSubscriber;
 
-        private GameStateController _gameStateController;
-
         private const int RippleSpreadLevel = 3;
 
-        private CancellationToken _token;
+        private bool _isMatchWithColorful;
+        
         private CancellationTokenSource _tokenSource;
+        private GameStateController _gameStateController;
+        
+        private CancellationToken _token;
         private IDisposable _disposable;
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
@@ -60,6 +62,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _disposable = builder.Build();
             _inputProcessor = inputProcessor;
             _ballRippleTask = ballRippleTask;
+            _isMatchWithColorful = false;
         }
 
         public void SetGameStateController(GameStateController controller)
@@ -86,6 +89,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
                 
+                _isMatchWithColorful = false;
                 bool isMatched = clusterResult.Item1;
                 bool containTarget = clusterResult.Item2;
 
@@ -156,6 +160,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             else
             {
+                _isMatchWithColorful = true;
                 for (int i = 0; i < neighbours.Count; i++)
                 {
                     if (neighbours[i] == null)
@@ -194,6 +199,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 if (cluster[i].BallEntity is ITargetBall)
                     containTarget = true;
+
+                if (_isMatchWithColorful && cluster[i].BallEntity is IBallEffect effect)
+                    effect.PlayColorfulEffect();
 
                 totalScore += cluster[i].BallEntity.Score;
                 await _breakGridTask.Break(cluster[i]);
