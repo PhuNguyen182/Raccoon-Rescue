@@ -6,15 +6,18 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using BubbleShooter.Scripts.Effects;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
+        [SerializeField] private Color textColor;
+
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite red;
@@ -145,6 +148,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
                 EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
             else
                 EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
         public override void ToggleEffect(bool active) { }

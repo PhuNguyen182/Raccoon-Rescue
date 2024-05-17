@@ -226,6 +226,9 @@ MonoBehaviour:
   ballMovement: {fileID: 8418358627647204705}
   entityGraphics: {fileID: 3004196628998565189}
   entityAudio: {fileID: -175614566852079362}
+  leafEffect: {fileID: 0}
+  waterEffect: {fileID: 0}
+  textColor: {r: 0.4666667, g: 0.9843138, b: 0.9921569, a: 1}
   entityType: 10
   ballAnimator: {fileID: 773041862644955857}
   iceBlink: {fileID: 7034810909518512606}
@@ -236,6 +239,12 @@ MonoBehaviour:
   red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
   violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
   yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
+  blueColor: {r: 0.15686274, g: 0.6812863, b: 1, a: 1}
+  greenColor: {r: 0.42834833, g: 1, b: 0.15686274, a: 1}
+  orangeColor: {r: 1, g: 0.6566162, b: 0.15686274, a: 1}
+  redColor: {r: 1, g: 0.15566039, b: 0.15566039, a: 1}
+  violetColor: {r: 1, g: 0.15686274, b: 0.9883694, a: 1}
+  yellowColor: {r: 1, g: 0.90346223, b: 0.15686274, a: 1}
 --- !u!114 &3004196628998565189
 MonoBehaviour:
   m_ObjectHideFlags: 0

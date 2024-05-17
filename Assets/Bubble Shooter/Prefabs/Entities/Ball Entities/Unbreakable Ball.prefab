@@ -119,6 +119,9 @@ MonoBehaviour:
   ballMovement: {fileID: 1609921815473741664}
   entityGraphics: {fileID: 9061143345380407489}
   entityAudio: {fileID: -6387836123810064833}
+  leafEffect: {fileID: 0}
+  waterEffect: {fileID: 0}
+  textColor: {r: 0.18823531, g: 0.121568635, b: 0.09019608, a: 1}
 --- !u!114 &9061143345380407489
 MonoBehaviour:
   m_ObjectHideFlags: 0

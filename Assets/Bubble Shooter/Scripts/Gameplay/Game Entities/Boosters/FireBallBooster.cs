@@ -5,6 +5,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Interfaces;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class FireBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
         [SerializeField] private GameObject burningEffect;
 
         private Vector3 _direction;
@@ -159,6 +161,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
                 EffectManager.Instance.SpawnBoosterEffect(EntityType.FireBall, transform.position, Quaternion.identity);
             else
                 EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
         public override void ToggleEffect(bool active)

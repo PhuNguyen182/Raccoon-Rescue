@@ -203,7 +203,9 @@ MonoBehaviour:
   ballMovement: {fileID: 6324382987147095321}
   entityGraphics: {fileID: 7393648386679340297}
   entityAudio: {fileID: 6014331376056225527}
-  textScoreColor: {r: 0.7725491, g: 0.3372549, b: 0.08235294, a: 1}
+  leafEffect: {fileID: 0}
+  waterEffect: {fileID: 0}
+  textColor: {r: 0.5176471, g: 0.18823531, b: 0.043137256, a: 1}
   hpStates:
   - {fileID: 21300000, guid: 6d7c85a5bb76b42dd985fbccd2b57a1a, type: 3}
   - {fileID: 21300000, guid: 6e4618ff144204362a90f9ce911de934, type: 3}

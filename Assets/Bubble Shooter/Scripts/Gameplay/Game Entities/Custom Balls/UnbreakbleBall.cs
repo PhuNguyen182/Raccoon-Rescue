@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class UnbreakbleBall : BaseEntity, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
+
         public override bool IsMatchable => false;
 
         public override bool IsFixedOnStart { get; set; }
@@ -91,6 +94,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void PlayBlastEffect(bool isFallen) 
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
         public override void ToggleEffect(bool active) { }

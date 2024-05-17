@@ -5,6 +5,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class SunBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
+
         public override EntityType EntityType => EntityType.SunBall;
 
         public override bool IsMatchable => false;
@@ -145,6 +148,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void PlayBlastEffect(bool isFallen)
         {
             EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
         public override void ToggleEffect(bool active) { }
