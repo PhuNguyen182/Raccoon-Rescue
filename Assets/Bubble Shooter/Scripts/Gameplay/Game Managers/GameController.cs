@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.PlayDatas;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
 using BubbleShooter.Scripts.Gameplay.Strategies;
@@ -57,7 +57,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private CheckTargetTask _checkTargetTask;
         private CheckScoreTask _checkScoreTask;
         private IngameBoosterHandler _ingameBoosterHandler;
-        private BoardThresholdCheckTask _boardThresholdCheckTask;
+        private MoveGameViewTask _moveGameViewTask;
         private GameTaskManager _gameTaskManager;
 
         public GameDecorator GameDecorator => gameDecorator;
@@ -107,13 +107,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             _entityFactory.SetGridCellManager(_gridCellManager);
             _fillBoardTask = new(_gridCellManager, _metaBallManager);
-            _boardThresholdCheckTask = new(_gridCellManager, cameraController);
+
+            _moveGameViewTask = new(_gridCellManager, cameraController, _inputProcessor
+                                    , mainScreen.NotificationPanel, _checkTargetTask);
+            _moveGameViewTask.AddTo(ref builder);
 
             _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
             _ingameBoosterHandler.AddTo(ref builder);
 
             _gameTaskManager = new(_gridCellManager, mainScreen, _inputProcessor, _checkTargetTask, _checkScoreTask, ballProvider
-                                   , ballShooter,_metaBallManager, gameDecorator, _boardThresholdCheckTask, _ingameBoosterHandler);
+                                   , ballShooter,_metaBallManager, gameDecorator, _moveGameViewTask, _ingameBoosterHandler);
             _gameTaskManager.AddTo(ref builder);
 
             _gameTaskManager.SetBallMaterialEndGame(ballMaterial);
@@ -128,9 +131,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             _ingameBoosterHandler.InitBooster(new()
             {
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 0 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 10 },
                 new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 0 },
+                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
             });
         }
 
@@ -144,7 +147,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();
-            _boardThresholdCheckTask.CalculateFirstItemHeight();
+
+            _moveGameViewTask.CalculateFirstItemHeight();
+            _moveGameViewTask.MoveViewOnStart().Forget();
         }
 
         private void GenerateGridCell(LevelModel levelModel)
@@ -167,7 +172,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void GenerateEntities(LevelModel levelModel)
         {
             SetTopCeilPosition(levelModel.CeilMapPositions[0].Position);
-            _boardThresholdCheckTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
+            _moveGameViewTask.SetCeilHeight(levelModel.CeilMapPositions[0].Position);
 
             for (int i = 0; i < levelModel.CeilMapPositions.Count; i++)
             {

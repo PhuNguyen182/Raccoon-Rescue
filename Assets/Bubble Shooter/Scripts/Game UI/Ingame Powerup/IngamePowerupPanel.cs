@@ -10,6 +10,7 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
 {
     public class IngamePowerupPanel : MonoBehaviour
     {
+        [SerializeField] private ParticleSystem followParticle;
         [SerializeField] private BallShooter ballShooter;
 
         [Header("Dummy Balls")]
@@ -69,9 +70,13 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(fireBall, DummyBallContainer.Transform
                                               , fireballButton.transform.position, Quaternion.identity);
+            var particle = SimplePool.Spawn(followParticle, ball.transform, ball.transform.position, Quaternion.identity);
+
+            ball.ToggleEffect(false);
             ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
             ball.ChangeLayer(ObjectsLayer);
+            particle.transform.SetParent(EffectContainer.Transform);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -79,9 +84,13 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(leafBall, DummyBallContainer.Transform
                                               , leafballButton.transform.position, Quaternion.identity);
+            var particle = SimplePool.Spawn(followParticle, ball.transform, ball.transform.position, Quaternion.identity);
+
+            ball.ToggleEffect(false);
             ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
             ball.ChangeLayer(ObjectsLayer);
+            particle.transform.SetParent(EffectContainer.Transform);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -89,9 +98,13 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(sunBall, DummyBallContainer.Transform
                                               , sunballButton.transform.position, Quaternion.identity);
+            var particle = SimplePool.Spawn(followParticle, ball.transform, ball.transform.position, Quaternion.identity);
+
+            ball.ToggleEffect(false);
             ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
             ball.ChangeLayer(ObjectsLayer);
+            particle.transform.SetParent(EffectContainer.Transform);
             SimplePool.Despawn(ball.gameObject);
         }
 
@@ -99,9 +112,13 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         {
             DummyBall ball = SimplePool.Spawn(waterBall, DummyBallContainer.Transform
                                               , waterballButton.transform.position, Quaternion.identity);
+            var particle = SimplePool.Spawn(followParticle, ball.transform, ball.transform.position, Quaternion.identity);
+
+            ball.ToggleEffect(false);
             ball.ChangeLayer(UIObjectsLayer);
             await ball.SwapTo(ballShooter.ShotPoint.position);
             ball.ChangeLayer(ObjectsLayer);
+            particle.transform.SetParent(EffectContainer.Transform);
             SimplePool.Despawn(ball.gameObject);
         }
     }

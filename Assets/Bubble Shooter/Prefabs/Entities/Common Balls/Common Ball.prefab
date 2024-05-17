@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1592121711
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -204,12 +204,20 @@ MonoBehaviour:
   entityGraphics: {fileID: -5590487632725766420}
   entityAudio: {fileID: 3721925691739807356}
   ballColor: 4
+  leafEffect: {fileID: 7474055565188371299, guid: a39ed9b8a647b7e4aa579584ae12e069, type: 3}
+  waterEffect: {fileID: 4658626098209746007, guid: f9c4f488935b40941bab19ae63bf3ac6, type: 3}
   blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
   green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
   orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
   red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
   violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
   yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
+  blueColor: {r: 0.15686274, g: 0.6812863, b: 1, a: 1}
+  greenColor: {r: 0.42834833, g: 1, b: 0.15686274, a: 1}
+  orangeColor: {r: 1, g: 0.6566162, b: 0.15686274, a: 1}
+  redColor: {r: 1, g: 0.15566039, b: 0.15566039, a: 1}
+  violetColor: {r: 1, g: 0.15686274, b: 0.9883694, a: 1}
+  yellowColor: {r: 1, g: 0.90346223, b: 0.15686274, a: 1}
 --- !u!114 &-5590487632725766420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,8 +250,8 @@ MonoBehaviour:
   moveState: 0
   bounceDuration: 0.15
   bounceEase: 7
-  snapDuration: 0.25
-  snapEase: 7
+  snapDuration: 0.05
+  snapEase: 5
   delayFrame: 3
   ballRadius: 0.35
   ballDistance: 1

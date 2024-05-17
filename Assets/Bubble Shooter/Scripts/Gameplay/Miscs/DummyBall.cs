@@ -10,6 +10,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class DummyBall : MonoBehaviour
     {
+        [SerializeField] private GameObject effect;
         [SerializeField] private SpriteRenderer ballRenderer;
 
         [Header("Swap Move")]
@@ -28,6 +29,12 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
+        }
+
+        public void ToggleEffect(bool active)
+        {
+            if (effect != null)
+                effect.SetActive(active);
         }
 
         public UniTask SwapTo(Vector3 toPosition)

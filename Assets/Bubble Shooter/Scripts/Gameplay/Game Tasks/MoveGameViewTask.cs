@@ -1,16 +1,22 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.GameUI.Notifications;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {
-    public class BoardThresholdCheckTask
+    public class MoveGameViewTask : IDisposable
     {
+        private readonly InputProcessor _inputProcessor;
         private readonly GridCellManager _gridCellManager;
         private readonly CameraController _cameraController;
+        private readonly NotificationPanel _notificationPanel;
+        private readonly CheckTargetTask _checkTargetTask;
 
         private const float StopHeight = 5.465f;
         private const float UnitHeight = 0.5625f;
@@ -19,10 +25,48 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private BoundsInt _levelBounds;
         private Vector3Int _sampleCeilPosition;
 
-        public BoardThresholdCheckTask(GridCellManager gridCellManager, CameraController cameraController)
+        private CancellationToken _cancellationToken;
+        private CancellationTokenSource _tokenSource;
+
+        public MoveGameViewTask(GridCellManager gridCellManager, CameraController cameraController
+            , InputProcessor inputProcessor, NotificationPanel notificationPanel, CheckTargetTask checkTargetTask)
         {
             _gridCellManager = gridCellManager;
             _cameraController = cameraController;
+            _inputProcessor = inputProcessor;
+            _notificationPanel = notificationPanel;
+            _checkTargetTask = checkTargetTask;
+
+            _tokenSource = new();
+            _cancellationToken = _tokenSource.Token;
+        }
+
+        public async UniTask MoveViewOnStart()
+        {
+            _inputProcessor.IsActive = false;
+            Vector3 sampleCeilPosition = _gridCellManager
+                                         .ConvertGridToWorldFunction
+                                         .Invoke(_sampleCeilPosition);
+
+            // If the ceil is close, don't move it
+            if(Mathf.Abs(sampleCeilPosition.y - StopHeight) <= 0.01)
+            {
+                _inputProcessor.IsActive = true;
+                return;
+            }
+
+            _cameraController.SetPosition(new Vector3(0, sampleCeilPosition.y - StopHeight, -10));
+            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _cancellationToken);
+            await _cameraController.MoveToZero(Vector3.back * 10);
+
+            int targetCount = _checkTargetTask.TargetCount;
+            string notice = targetCount > 2 ? $"Rescues {targetCount} baby raccoons!"
+                                            : $"Rescues {targetCount} baby raccoon!";
+
+            await _notificationPanel.SetNotificationInfo(notice);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _cancellationToken);
+
+            _inputProcessor.IsActive = true;
         }
 
         public async UniTask Check()
@@ -134,6 +178,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             float height = GetBottomItemDistance(bottomPosition);
             return height;
+        }
+
+        public void Dispose()
+        {
+            _tokenSource.Dispose();
         }
     }
 }

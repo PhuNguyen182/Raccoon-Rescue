@@ -8,6 +8,7 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.PlayDatas;
+using BubbleShooter.Scripts.Effects;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
@@ -18,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
     public class TargetBall : BaseEntity, IBallMovement, ITargetBall, IBreakable
     {
         [SerializeField] private FreedTarget freedTarget;
+        [SerializeField] private GameObject boomEffect;
 
         [Header("Target Setting")]
         [SerializeField] private int id;
@@ -189,6 +191,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private async UniTask FreeTargetAsync()
         {
+            if (boomEffect != null)
+                SimplePool.Spawn(boomEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
+
             SimplePool.Spawn(freedTarget, EffectContainer.Transform
                              , transform.position, Quaternion.identity);
 
@@ -224,6 +229,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
             _moveTargetPublisher.Publish(message);
             return message.Source.Task;
+        }
+
+        public override void PlayBlastEffect(bool isFallen) { }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
     }
 }

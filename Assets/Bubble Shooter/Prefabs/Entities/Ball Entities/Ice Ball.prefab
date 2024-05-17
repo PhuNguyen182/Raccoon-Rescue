@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1592121711
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0c4510302bf0e459ba8be37cb3d0f7b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -143,6 +143,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9165464164265471025}
+  - {fileID: 5155695615955207911}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &3561969301962652813
@@ -225,14 +226,25 @@ MonoBehaviour:
   ballMovement: {fileID: 8418358627647204705}
   entityGraphics: {fileID: 3004196628998565189}
   entityAudio: {fileID: -175614566852079362}
+  leafEffect: {fileID: 0}
+  waterEffect: {fileID: 0}
+  textColor: {r: 0.4666667, g: 0.9843138, b: 0.9921569, a: 1}
   entityType: 10
   ballAnimator: {fileID: 773041862644955857}
+  iceBlink: {fileID: 7034810909518512606}
+  iceBreak: {fileID: 723736413935258021, guid: 3cfcb1322f3ebf5419d7ae07dd09f8b2, type: 3}
   blue: {fileID: 21300000, guid: d4a1121e8a4b8435786ed23c7a9095c3, type: 3}
   green: {fileID: 21300000, guid: 0f7377aa01b304d51bd84fdc39ff99b3, type: 3}
   orange: {fileID: 21300000, guid: 051247463683e49eeb97ec36653f8c97, type: 3}
   red: {fileID: 21300000, guid: 3de71b4fac7b14018af05aac95da2f6a, type: 3}
   violet: {fileID: 21300000, guid: a72f8c9549a4942cab311586c94414a9, type: 3}
   yellow: {fileID: 21300000, guid: 3adc2acc076964ac7a809ce55116cbfd, type: 3}
+  blueColor: {r: 0.15686274, g: 0.6812863, b: 1, a: 1}
+  greenColor: {r: 0.42834833, g: 1, b: 0.15686274, a: 1}
+  orangeColor: {r: 1, g: 0.6566162, b: 0.15686274, a: 1}
+  redColor: {r: 1, g: 0.15566039, b: 0.15566039, a: 1}
+  violetColor: {r: 1, g: 0.15686274, b: 0.9883694, a: 1}
+  yellowColor: {r: 1, g: 0.90346223, b: 0.15686274, a: 1}
 --- !u!114 &3004196628998565189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,3 +403,70 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1001 &1253038122468244131
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6771670502491645208}
+    m_Modifications:
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125343412302461821, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+      propertyPath: m_Name
+      value: Ice Blink
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+--- !u!4 &5155695615955207911 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6264254538345184324, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+  m_PrefabInstance: {fileID: 1253038122468244131}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7034810909518512606 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8125343412302461821, guid: d2ca7defb56685e4f80c0f5fbf508920, type: 3}
+  m_PrefabInstance: {fileID: 1253038122468244131}
+  m_PrefabAsset: {fileID: 0}

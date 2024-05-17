@@ -7,17 +7,25 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics
+    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics, IBallEffect, IBallPlayBoosterEffect
     {
         [SerializeField] protected LayerMask destroyerLayer;
         [SerializeField] protected BallMovement ballMovement;
         [SerializeField] protected EntityGraphics entityGraphics;
         [SerializeField] protected EntityAudio entityAudio;
+
+        [Header("Booster Effects")]
+        [FoldoutGroup("Booster Effects")]
+        [SerializeField] private GameObject leafEffect;
+        [FoldoutGroup("Booster Effects")]
+        [SerializeField] private ParticleSystem waterEffect;
 
         protected CancellationToken onDestroyToken;
 
@@ -25,6 +33,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         protected IPublisher<PublishScoreMessage> _addScorePublisher;
         protected IPublisher<BallDestroyMessage> _ballDestroyMessage;
         #endregion
+
+        private GameObject _leafEffect;
 
         public int Score => 10;
 
@@ -132,8 +142,52 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         {
             if((destroyerLayer.value & (1 << collision.gameObject.layer)) > 0)
             {
-                if(IsFallen)
+                if (IsFallen)
+                {
+                    PlayBlastEffect(true);
                     DestroyOnFallen();
+                }
+            }
+        }
+
+        public abstract void PlayBlastEffect(bool isFallen);
+
+        public abstract void ToggleEffect(bool active);
+
+        public abstract void PlayColorfulEffect();
+
+        public virtual async UniTask PlayBoosterEffect(EntityType booster)
+        {
+            switch (booster)
+            {
+                case EntityType.FireBall:
+                    await UniTask.CompletedTask;
+                    break;
+                case EntityType.WaterBall:
+                    EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
+                    break;
+                case EntityType.SunBall:
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: destroyCancellationToken);
+                    break;
+                case EntityType.LeafBall:
+                    _leafEffect = SimplePool.Spawn(leafEffect, transform, transform.position, Quaternion.identity);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: destroyCancellationToken);
+                    break;
+            }
+        }
+
+        public void ReleaseEffect()
+        {
+            ReleaseObject(_leafEffect);
+        }
+
+        private void ReleaseObject(GameObject obj)
+        {
+            if (obj != null)
+            {
+                obj.transform.SetParent(EffectContainer.Transform);
+                SimplePool.Despawn(obj);
             }
         }
 

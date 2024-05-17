@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Common.Enums;
-using BubbleShooter.Scripts.Common.Messages;
-using MessagePipe;
-using System;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable, IBallEffect
+    public class WoodenBall : BaseEntity, IBallMovement, IBallPhysics, IBallHealth, IBreakable
     {
+        [SerializeField] private Color textColor;
+
         [Header("Health Sprites")]
         [SerializeField] private Sprite[] hpStates;
 
@@ -54,10 +55,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool EasyBreak => false;
 
-        public override void InitMessages()
-        {
-            
-        }
+        public override void InitMessages() { }
 
         public override UniTask Blast()
         {
@@ -66,7 +64,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public bool Break()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
 
             if (_hp > 0)
             {
@@ -107,10 +105,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             ballMovement.AddForce(force, forceMode);
         }
 
-        public void SetMoveDirection(Vector2 direction)
-        {
-            
-        }
+        public void SetMoveDirection(Vector2 direction) { }
 
         public UniTask SnapTo(Vector3 position)
         {
@@ -130,19 +125,34 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             }
         }
 
-        public void ChangeLayerMask(bool isFixed)
+        public void ChangeLayerMask(bool isFixed) { }
+
+        public override void OnSnapped() { }
+
+        public override void PlayBlastEffect(bool isFallen)
         {
-            
+            if (!isFallen)
+            {
+                if (_hp > 0)
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                
+                else
+                {
+                    EffectManager.Instance.SpawnWoodenEffect(transform.position, Quaternion.identity);
+                    EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+                }
+            }
+
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
         }
 
-        public override void OnSnapped()
-        {
-            
-        }
+        public override void ToggleEffect(bool active) { }
 
-        public void PlayBlastEffect()
-        {
-            
-        }
+        public override void PlayColorfulEffect() { }
     }
 }

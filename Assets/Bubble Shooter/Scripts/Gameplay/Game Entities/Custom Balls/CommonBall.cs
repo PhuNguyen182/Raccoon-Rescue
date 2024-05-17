@@ -3,16 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
-using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Common.Interfaces;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
-    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBallEffect, IBreakable
+    public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
         [SerializeField] private EntityType ballColor;
 
@@ -30,6 +32,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
+        [Header("Text Colors")]
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color blueColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color greenColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color orangeColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color redColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color violetColor;
+        [FoldoutGroup("Text Colors")]
+        [SerializeField] private Color yellowColor;
+
+        private Color _textColor;
         private IPublisher<CheckMatchMessage> _checkMatchPublisher;
 
         public bool CanMove 
@@ -96,21 +113,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             switch (color)
             {
                 case EntityType.Red:
+                    _textColor = redColor;
                     entityGraphics.SetEntitySprite(red);
                     break;
                 case EntityType.Yellow:
+                    _textColor = yellowColor;
                     entityGraphics.SetEntitySprite(yellow);
                     break;
                 case EntityType.Green:
+                    _textColor = greenColor;
                     entityGraphics.SetEntitySprite(green);
                     break;
                 case EntityType.Blue:
+                    _textColor = blueColor;
                     entityGraphics.SetEntitySprite(blue);
                     break;
                 case EntityType.Violet:
+                    _textColor = violetColor;
                     entityGraphics.SetEntitySprite(violet);
                     break;
                 case EntityType.Orange:
+                    _textColor = orangeColor;
                     entityGraphics.SetEntitySprite(orange);
                     break;
             }
@@ -148,7 +171,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override UniTask Blast()
         {
-            PlayBlastEffect();
+            PlayBlastEffect(false);
             return UniTask.Delay(TimeSpan.FromSeconds(0.03f), cancellationToken: onDestroyToken);
         }
 
@@ -157,9 +180,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             return true;
         }
 
-        public void PlayBlastEffect()
+        public override void PlayBlastEffect(bool isFallen)
         {
-            
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(_textColor);
         }
 
         public override void DestroyEntity()
@@ -179,6 +205,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void OnSnapped()
         {
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
+        }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

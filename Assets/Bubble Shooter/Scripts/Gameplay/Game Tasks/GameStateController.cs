@@ -28,22 +28,28 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         }
 
         private readonly EndGameTask _endGameTask;
+        private readonly MainScreenManager _mainScreen;
         private readonly EndGameScreen _endGameScreen;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly CheckScoreTask _checkScoreTask;
         private readonly GameDecorator _gameDecorator;
+        private readonly InputProcessor _inputProcessor;
 
         private StateMachine<State, Trigger> _gameStateMachine;
         private StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(EndGameScreen endGameScreen, EndGameTask endGameTask
-            , CheckTargetTask checkTargetTask, CheckScoreTask checkScoreTask, GameDecorator gameDecorator)
+        public bool IsEndGame { get; private set; }
+
+        public GameStateController(EndGameTask endGameTask, MainScreenManager mainScreen, CheckTargetTask checkTargetTask
+            , CheckScoreTask checkScoreTask, GameDecorator gameDecorator, InputProcessor inputProcessor)
         {
+            _mainScreen = mainScreen;
             _endGameTask = endGameTask;
-            _endGameScreen = endGameScreen;
+            _endGameScreen = mainScreen.EndGameScreen;
             _checkTargetTask = checkTargetTask;
             _checkScoreTask = checkScoreTask;
             _gameDecorator = gameDecorator;
+            _inputProcessor = inputProcessor;
 
             _checkTargetTask.OnEndGame = EndGame;
             CreateGameStateMachine();
@@ -84,6 +90,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
+            IsEndGame = false;
             _endGameTask.ResetBallColor();
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
@@ -91,10 +98,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void Continue()
         {
+            IsEndGame = false;
             _endGameTask.ResetBallColor();
             _gameDecorator.Character.ResetCryState();
             _gameDecorator.Character.Continue();
             _endGameTask.ContinueSpawnBall();
+            _mainScreen.ShowMainPanel(true);
+            _inputProcessor.IsActive = true;
         }
 
         private void EndGame(bool isWin)
@@ -107,6 +117,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask OnEndGame(bool isWin)
         {
+            IsEndGame = true;
+            _inputProcessor.IsActive = false;
+            _mainScreen.ShowMainPanel(false);
+
             if (isWin)
             {
                 await _endGameTask.OnWinGame();

@@ -5,15 +5,18 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
+using BubbleShooter.Scripts.Effects.BallEffects;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
-using Random = UnityEngine.Random;
 using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 {
     public class WaterBallBooster : BaseEntity, IBallBooster, IFixedUpdateHandler, IBallMovement, IBallPhysics
     {
+        [SerializeField] private Color textColor;
+
         public override EntityType EntityType => EntityType.WaterBall;
 
         public override bool IsMatchable => false;
@@ -70,7 +73,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public async UniTask Activate()
         {
-            await Blast();
+            await Explode();
         }
 
         public override UniTask Blast()
@@ -86,7 +89,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public UniTask Explode()
         {
-            return UniTask.CompletedTask;
+            PlayBlastEffect(false);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: destroyCancellationToken);
         }
 
         public override void InitMessages()
@@ -113,7 +117,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public UniTask BounceMove(Vector3 position)
         {
-            return UniTask.CompletedTask;
+            return ballMovement.BounceMove(position);
         }
 
         public void ChangeLayerMask(bool isFixed)
@@ -133,12 +137,35 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         public override void OnSnapped()
         {
-            // To do: execute active booster logic here
             IsIgnored = true;
+
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {
                 Position = GridPosition
             });
+        }
+
+        public override void PlayBlastEffect(bool isFallen)
+        {
+            if (!isFallen)
+            {
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
+            }
+
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
+        }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

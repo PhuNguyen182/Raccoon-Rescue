@@ -92,7 +92,13 @@ namespace BubbleShooter.Scripts.Common.Factories
 
         private void PreloadEntities()
         {
-            SimplePool.PoolPreLoad(_entityDatabase.BallPrefab.gameObject, 20, _entityContainer);
+            SimplePool.PoolPreLoad(_entityDatabase.BallPrefab.gameObject, 300, _entityContainer);
+            SimplePool.PoolPreLoad(_entityDatabase.BallEntities[0].gameObject, 10, _entityContainer);
+
+            for (int i = 0; i < _entityDatabase.Boosters.Length; i++)
+            {
+                SimplePool.PoolPreLoad(_entityDatabase.Boosters[i].gameObject, 10, _entityContainer);
+            }
         }
     }
 }

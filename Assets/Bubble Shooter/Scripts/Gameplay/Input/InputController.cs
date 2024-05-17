@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using BubbleShooter.Scripts.Gameplay.Miscs;
 
 namespace BubbleShooter.Scripts.Gameplay.Inputs
 {
     public class InputController : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private GameDecorator gameDecorator;
 
         private float _hold;
         private GameplayInput _inputController;
@@ -49,6 +51,7 @@ namespace BubbleShooter.Scripts.Gameplay.Inputs
         private void OnReleasePerform(InputAction.CallbackContext context)
         {
             _hold = context.ReadValue<float>();
+            gameDecorator.ShowReflectWalls(IsHolden && IsActive);
         }
 
         private void OnMovePerform(InputAction.CallbackContext context)

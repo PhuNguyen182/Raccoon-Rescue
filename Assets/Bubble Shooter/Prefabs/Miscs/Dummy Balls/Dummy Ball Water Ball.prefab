@@ -98,8 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69352f5fb8d37246b5154e19ed91b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effect: {fileID: 0}
   ballRenderer: {fileID: 7491467625448510991}
-  swapDuration: 0.3
+  swapDuration: 0.45
   swapEase: 6
   moveDuration: 0.35
   moveEaseX: 1

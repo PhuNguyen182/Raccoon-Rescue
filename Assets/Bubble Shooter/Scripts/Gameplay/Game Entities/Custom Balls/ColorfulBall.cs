@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,15 +6,18 @@ using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Effects.BallEffects;
+using BubbleShooter.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using System;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class ColorfulBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
+        [SerializeField] private Color textColor;
+
         [Header("Colorful Balls")]
         [FoldoutGroup("Colors")]
         [SerializeField] private Sprite red;
@@ -136,6 +140,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public override void OnSnapped()
         {
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
+        }
+
+        public override void PlayBlastEffect(bool isFallen)
+        {
+            if (!isFallen)
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            else
+                EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+
+            FlyTextEffect flyText = EffectManager.Instance.SpawnFlyText(transform.position, Quaternion.identity);
+            flyText.SetScore(Score);
+            flyText.SetTextColor(textColor);
+        }
+
+        public override void ToggleEffect(bool active) { }
+
+        public override void PlayColorfulEffect()
+        {
+            EffectManager.Instance.SpawnBallPopEffect(transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnColorfulEffect(transform.position, Quaternion.identity);
         }
 
         private void OnDestroy()

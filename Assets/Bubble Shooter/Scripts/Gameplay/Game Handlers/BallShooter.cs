@@ -18,6 +18,7 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -76,6 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         [Space(10)]
         [SerializeField] private Transform spawnPoint;
+        [SerializeField] private Transform spawnPointWin;
         [SerializeField] private Transform ballContainer;
 
         [Space(10)]
@@ -97,6 +99,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private CancellationToken _token;
         private EntityFactory _entityFactory;
+        private InGamePowerupControlTask _inGamePowerups;
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
@@ -163,6 +166,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             _entityFactory = factory;
         }
 
+        public void SetIngamePowerup(InGamePowerupControlTask inGamePowerup)
+        {
+            _inGamePowerups = inGamePowerup;
+        }
+
         public void SetStartPosition()
         {
             _startPosition = mainCamera.ViewportToWorldPoint(normalizePosition);
@@ -173,13 +181,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetColorModel(BallShootModel model, bool isActive)
         {
             _ballModel = model;
-            SetBallColor(isActive, _ballModel.BallColor);
+            SetBallColor(isActive, _ballModel.BallColor, _ballModel.IsPowerup);
         }
 
-        public void SetBallColor(bool isActive, EntityType color)
+        public void SetBallColor(bool isActive, EntityType color, bool isPowerup = false)
         {
             if (DummyBall != null)
+            {
+                DummyBall.ToggleEffect(false);
                 SimplePool.Despawn(DummyBall.gameObject);
+            }
 
             if (!isActive)
                 return;
@@ -200,9 +211,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 _ => null
             };
 
-            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint
-                                          , spawnPoint.position
-                                          , Quaternion.identity);
+            DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+            DummyBall.ToggleEffect(isPowerup);
+        }
+
+        public IBallEntity ShootFreeBall(EntityType color)
+        {
+            SetBallColor(false, EntityType.None);
+            
+            EntityMapData ballData = new EntityMapData
+            {
+                HP = 1,
+                EntityType = color
+            };
+
+            BaseEntity ball = _entityFactory.Create(ballData);
+            ball.transform.SetPositionAndRotation(spawnPointWin.position, Quaternion.identity);
+            return ball;
         }
 
         private void SetLineAngles()
@@ -314,6 +339,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 CanDecreaseMove = !shootModel.IsPowerup
             });
 
+            _inGamePowerups.IsPowerupInUse = false;
             _canFire = true;
         }
 

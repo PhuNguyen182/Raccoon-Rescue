@@ -334,7 +334,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                                             ? CommonProperties.EvenYNeighborOffsets[i]
                                             : CommonProperties.OddYNeighborOffsets[i];
                 gridCell = TakeGridCellFunction.Invoke(position + neighborOffset);
-                
+
+                if (gridCell == null)
+                    continue;
+
                 if (gridCell.ContainsBall)
                     return true;
             }

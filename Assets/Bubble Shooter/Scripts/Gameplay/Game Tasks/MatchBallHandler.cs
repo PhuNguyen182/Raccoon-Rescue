@@ -21,7 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly BallRippleTask _ballRippleTask;
-        private readonly BoardThresholdCheckTask _boardThresholdCheckTask;
+        private readonly MoveGameViewTask _moveGameViewTask;
         private readonly IngameBoosterHandler _ingameBoosterHandler;
 
         private readonly IPublisher<PowerupMessage> _powerupPublisher;
@@ -30,19 +30,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private const int RippleSpreadLevel = 3;
 
-        private CancellationToken _token;
+        private bool _isMatchWithColorful;
+        
         private CancellationTokenSource _tokenSource;
+        private GameStateController _gameStateController;
+        
+        private CancellationToken _token;
         private IDisposable _disposable;
 
         public MatchBallHandler(GridCellManager gridCellManager, BreakGridTask breakGridTask , CheckBallClusterTask checkBallClusterTask
-            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, BoardThresholdCheckTask boardThresholdCheckTask
+            , InputProcessor inputProcessor, CheckTargetTask checkTargetTask, MoveGameViewTask moveGameViewTask
             , BallRippleTask ballRippleTask, IngameBoosterHandler ingameBoosterHandler)
         {
             _gridCellManager = gridCellManager;
             _checkBallClusterTask = checkBallClusterTask;
             _checkTargetTask = checkTargetTask;
             _breakGridTask = breakGridTask;
-            _boardThresholdCheckTask = boardThresholdCheckTask;
+            _moveGameViewTask = moveGameViewTask;
             _ingameBoosterHandler = ingameBoosterHandler;
 
             _tokenSource = new();
@@ -58,6 +62,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _disposable = builder.Build();
             _inputProcessor = inputProcessor;
             _ballRippleTask = ballRippleTask;
+            _isMatchWithColorful = false;
+        }
+
+        public void SetGameStateController(GameStateController controller)
+        {
+            _gameStateController = controller;
         }
 
         public void Match(CheckMatchMessage message)
@@ -79,6 +89,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
                 
+                _isMatchWithColorful = false;
                 bool isMatched = clusterResult.Item1;
                 bool containTarget = clusterResult.Item2;
 
@@ -99,9 +110,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _checkTargetTask.CheckTarget();
                 }
 
-                await _boardThresholdCheckTask.Check();
+                await _moveGameViewTask.Check();
                 _ingameBoosterHandler.AfterUseBooster();
-                _inputProcessor.IsActive = true;
+                
+                if(!_gameStateController.IsEndGame)
+                    _inputProcessor.IsActive = true;
             }
         }
 
@@ -147,6 +160,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             else
             {
+                _isMatchWithColorful = true;
                 for (int i = 0; i < neighbours.Count; i++)
                 {
                     if (neighbours[i] == null)
@@ -177,7 +191,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _powerupPublisher.Publish(new PowerupMessage
             {
                 Amount = cluster.Count,
-                PowerupColor = cluster[2].EntityType,
+                PowerupColor = GetBoosterColor(cluster[2].EntityType),
                 Command = ReactiveValueCommand.Changing
             });
 
@@ -186,6 +200,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (cluster[i].BallEntity is ITargetBall)
                     containTarget = true;
 
+                if (_isMatchWithColorful && cluster[i].BallEntity is IBallEffect effect)
+                    effect.PlayColorfulEffect();
+
                 totalScore += cluster[i].BallEntity.Score;
                 await _breakGridTask.Break(cluster[i]);
             }
@@ -193,6 +210,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
             return (true, containTarget);
+        }
+
+        private EntityType GetBoosterColor(EntityType entityType)
+        {
+            return entityType switch
+            {
+                EntityType.Blue => EntityType.WaterBall,
+                EntityType.Green => EntityType.LeafBall,
+                EntityType.Red => EntityType.FireBall,
+                EntityType.Yellow => EntityType.SunBall,
+                _ => EntityType.None
+            };
         }
 
         public void Dispose()
