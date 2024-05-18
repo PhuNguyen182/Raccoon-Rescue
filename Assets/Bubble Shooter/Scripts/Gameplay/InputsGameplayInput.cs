@@ -120,7 +120,7 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""29df41af-4710-4d74-810e-3e3a55f9c233"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -131,7 +131,7 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8f25aceb-c404-4148-89e8-124318efd37f"",
-                    ""path"": ""<Touchscreen>/position"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

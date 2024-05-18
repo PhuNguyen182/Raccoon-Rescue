@@ -56,6 +56,10 @@ public abstract class BaseBox : MonoBehaviour
         }
 
         DoAppear();
+    }
+
+    private void Start()
+    {
         OnStart();
     }
 
