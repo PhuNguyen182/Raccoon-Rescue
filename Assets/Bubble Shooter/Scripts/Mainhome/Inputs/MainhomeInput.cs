@@ -10,6 +10,7 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
     {
         [SerializeField] private Camera inputObserverCamera;
 
+        private Vector2 _delta, _deltaTemp;
         private Vector2 _pointerPosition;
         private GameplayInput _inputActions;
 
@@ -20,7 +21,7 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
 
         public bool IsDragging { get; private set; }
         public Vector2 PointerPosition { get; private set; }
-        public Vector2 Delta { get; private set; }
+        public Vector2 Delta => _deltaTemp;
 
         private void Awake()
         {
@@ -41,7 +42,9 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
 
         private void OnPointerDelta(InputAction.CallbackContext context)
         {
-            Delta = context.ReadValue<Vector2>();
+            _delta = context.ReadValue<Vector2>();
+            _deltaTemp.x = _delta.x / Screen.width;
+            _deltaTemp.y = _delta.y / Screen.height;
         }
 
         private void OnPointerDrag(InputAction.CallbackContext context)

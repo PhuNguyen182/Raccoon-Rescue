@@ -14,20 +14,30 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
 
         private Vector2 _inputDelta;
 
+        public bool IsDraggable { get; set; }
+
+        private void Awake()
+        {
+            IsDraggable = true;
+        }
+
         private void Update()
         {
-            if (input.IsDragging)
+            if (IsDraggable)
             {
-                if (!input.IsPointerOverlapUI())
-                {
-                    _inputDelta = -input.Delta.normalized;
-                }
-            }
+                if (input.IsDragging)
+                    _inputDelta = !input.IsPointerOverlapUI() ? -input.Delta
+                                  : Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);
 
-            else
-                _inputDelta = Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);
-            
-            lookCamera.transform.Translate(Vector3.up * _inputDelta.y * translateSpeed * Time.deltaTime);
+                else _inputDelta = Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);
+
+                lookCamera.transform.Translate(Vector3.up * _inputDelta.y * translateSpeed * Time.deltaTime);
+            }
+        }
+
+        public void MoveTo(Vector3 position)
+        {
+            lookCamera.transform.position = position;
         }
     }
 }
