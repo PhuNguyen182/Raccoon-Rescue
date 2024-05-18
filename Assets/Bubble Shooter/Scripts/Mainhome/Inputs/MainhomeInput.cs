@@ -20,6 +20,7 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
 
         public bool IsDragging { get; private set; }
         public Vector2 PointerPosition { get; private set; }
+        public Vector2 Delta { get; private set; }
 
         private void Awake()
         {
@@ -32,6 +33,15 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
             _inputActions.Mainhome.Drag.started += OnPointerDrag;
             _inputActions.Mainhome.Drag.performed += OnPointerDrag;
             _inputActions.Mainhome.Drag.canceled += OnPointerDrag;
+
+            _inputActions.Mainhome.Delta.started += OnPointerDelta;
+            _inputActions.Mainhome.Delta.performed += OnPointerDelta;
+            _inputActions.Mainhome.Delta.canceled += OnPointerDelta;
+        }
+
+        private void OnPointerDelta(InputAction.CallbackContext context)
+        {
+            Delta = context.ReadValue<Vector2>();
         }
 
         private void OnPointerDrag(InputAction.CallbackContext context)

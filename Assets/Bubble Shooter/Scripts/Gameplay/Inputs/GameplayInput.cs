@@ -114,13 +114,22 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Delta"",
+                    ""type"": ""Value"",
+                    ""id"": ""1e5e7198-3756-4e58-99ae-66398a69286b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""29df41af-4710-4d74-810e-3e3a55f9c233"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -131,7 +140,7 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8f25aceb-c404-4148-89e8-124318efd37f"",
-                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -160,6 +169,28 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
                     ""action"": ""Drag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""587d0538-53c0-4839-9e2f-04b5df04e887"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""387b592a-62e8-41b1-9f9f-ddd34605e7b0"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -174,6 +205,7 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
         m_Mainhome = asset.FindActionMap("Mainhome", throwIfNotFound: true);
         m_Mainhome_Pointer = m_Mainhome.FindAction("Pointer", throwIfNotFound: true);
         m_Mainhome_Drag = m_Mainhome.FindAction("Drag", throwIfNotFound: true);
+        m_Mainhome_Delta = m_Mainhome.FindAction("Delta", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -291,12 +323,14 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
     private List<IMainhomeActions> m_MainhomeActionsCallbackInterfaces = new List<IMainhomeActions>();
     private readonly InputAction m_Mainhome_Pointer;
     private readonly InputAction m_Mainhome_Drag;
+    private readonly InputAction m_Mainhome_Delta;
     public struct MainhomeActions
     {
         private @GameplayInput m_Wrapper;
         public MainhomeActions(@GameplayInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pointer => m_Wrapper.m_Mainhome_Pointer;
         public InputAction @Drag => m_Wrapper.m_Mainhome_Drag;
+        public InputAction @Delta => m_Wrapper.m_Mainhome_Delta;
         public InputActionMap Get() { return m_Wrapper.m_Mainhome; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -312,6 +346,9 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
             @Drag.started += instance.OnDrag;
             @Drag.performed += instance.OnDrag;
             @Drag.canceled += instance.OnDrag;
+            @Delta.started += instance.OnDelta;
+            @Delta.performed += instance.OnDelta;
+            @Delta.canceled += instance.OnDelta;
         }
 
         private void UnregisterCallbacks(IMainhomeActions instance)
@@ -322,6 +359,9 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
             @Drag.started -= instance.OnDrag;
             @Drag.performed -= instance.OnDrag;
             @Drag.canceled -= instance.OnDrag;
+            @Delta.started -= instance.OnDelta;
+            @Delta.performed -= instance.OnDelta;
+            @Delta.canceled -= instance.OnDelta;
         }
 
         public void RemoveCallbacks(IMainhomeActions instance)
@@ -348,5 +388,6 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
     {
         void OnPointer(InputAction.CallbackContext context);
         void OnDrag(InputAction.CallbackContext context);
+        void OnDelta(InputAction.CallbackContext context);
     }
 }

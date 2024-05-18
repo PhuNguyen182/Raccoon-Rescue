@@ -1155,7 +1155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookCamera: {fileID: 226634807}
   input: {fileID: 828621517}
-  translateSpeed: 3
+  translateSpeed: 15
+  smoothSpeed: 7.5
 --- !u!4 &698601492
 Transform:
   m_ObjectHideFlags: 0

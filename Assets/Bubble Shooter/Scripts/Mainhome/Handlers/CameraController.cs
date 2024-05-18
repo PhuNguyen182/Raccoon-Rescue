@@ -10,24 +10,24 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
         [SerializeField] private Camera lookCamera;
         [SerializeField] private MainhomeInput input;
         [SerializeField] private float translateSpeed = 3f;
+        [SerializeField] private float smoothSpeed = 25f;
 
-        private Vector2 _inputOffset;
-        private Vector2 _inputPosition;
+        private Vector2 _inputDelta;
 
         private void Update()
         {
-            if (!input.IsDragging)
-                return;
+            if (input.IsDragging)
+            {
+                if (!input.IsPointerOverlapUI())
+                {
+                    _inputDelta = -input.Delta.normalized;
+                }
+            }
 
-            if (input.IsPointerOverlapUI())
-                return;
-
-            _inputPosition = input.PointerPosition;
-            _inputOffset = input.PointerPosition - _inputPosition;
+            else
+                _inputDelta = Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);
             
-            _inputOffset.Normalize();
-            lookCamera.transform.Translate(Vector3.up * _inputOffset.y * translateSpeed * Time.deltaTime);
-            _inputPosition = input.PointerPosition;
+            lookCamera.transform.Translate(Vector3.up * _inputDelta.y * translateSpeed * Time.deltaTime);
         }
     }
 }
