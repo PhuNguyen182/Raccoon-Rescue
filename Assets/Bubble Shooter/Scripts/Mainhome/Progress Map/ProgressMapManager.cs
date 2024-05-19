@@ -15,6 +15,8 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 {
     public class ProgressMapManager : MonoBehaviour
     {
+        [SerializeField] private int minLevel = 1;
+        [SerializeField] private int maxLevel = 100;
         [SerializeField] private List<LevelNodePath> nodePaths;
 
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
@@ -23,6 +25,9 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
         private CancellationToken _token;
         private IDisposable _disposable;
+
+        public int MinLevel => minLevel;
+        public int MaxLevel => maxLevel;
 
         private void Awake()
         {
