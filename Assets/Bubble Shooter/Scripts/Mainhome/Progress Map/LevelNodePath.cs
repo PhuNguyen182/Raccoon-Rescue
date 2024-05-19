@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using R3;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Sirenix.OdinInspector;
 using TMPro;
 
 namespace BubbleShooter.Scripts.Mainhome.ProgressMap
@@ -24,12 +24,16 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
         private static readonly int _starIdleHash = Animator.StringToHash("StarIdle");
         private static readonly int _starCompleteHash = Animator.StringToHash("StarComplete");
 
-        public int Level => level;
+        private int _star = 0;
+        private bool _isAvailable;
 
-        private void Awake()
-        {
-            nodeButton.onClick.AddListener(OnPlayLevelClick);
-        }
+        public int Level => level;
+        public int Star => _star;
+
+        public Observable<(int Level, int Star)> OnClickObservable 
+            => nodeButton.OnClickAsObservable()
+                         .Where(unit => _isAvailable)
+                         .Select(unit => (level, _star));
 
         public void SetAvailableState(bool isAvailable)
         {
@@ -38,18 +42,20 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
         public void SetIdleState(int star, bool isRecentComplete)
         {
+            _star = star;
             nodeAnimator.SetInteger(!isRecentComplete ? _starIdleHash : _starCompleteHash, star);
         }
 
-        [Button]
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            SetLevelText();
+        }
+#endif
+
         public void SetLevelText()
         {
             levelText.text = $"{level}";
-        }
-
-        private void OnPlayLevelClick()
-        {
-
         }
     }
 }
