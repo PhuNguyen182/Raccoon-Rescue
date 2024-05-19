@@ -28,7 +28,6 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
         private bool _isAvailable;
 
         public int Level => level;
-        public int Star => _star;
 
         public Observable<(int Level, int Star)> OnClickObservable 
             => nodeButton.OnClickAsObservable()
@@ -37,6 +36,7 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
         public void SetAvailableState(bool isAvailable)
         {
+            _isAvailable = isAvailable;
             nodeImage.sprite = isAvailable ? availableState : notAvailableState;
         }
 
