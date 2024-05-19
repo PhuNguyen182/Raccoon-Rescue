@@ -16,10 +16,13 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
         [Button]
         public void CalculateBounds()
         {
+            Vector2 min = minBackground.bounds.min;
+            Vector2 max = maxBackground.bounds.max;
+
             bounds = new Bounds
             {
-                min = minBackground.bounds.min,
-                max = maxBackground.bounds.max
+                min = min,
+                max = max
             };
         }
     }

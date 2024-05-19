@@ -9,7 +9,6 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 {
     public class PathFollower : MonoBehaviour
     {
-        [SerializeField] private float moveDuration = 1f;
         [SerializeField] private Vector2 offset = new(0, 2.7f);
         [SerializeField] private SplineComputer splineComputer;
 
@@ -20,7 +19,7 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
             _token = this.GetCancellationTokenOnDestroy();
         }
 
-        public async UniTaskVoid Move(int startIndex, int endIndex, float duration)
+        public async UniTask Move(int startIndex, int endIndex, float duration)
         {
             float elapsedTime = 0;
             float progressPercent;

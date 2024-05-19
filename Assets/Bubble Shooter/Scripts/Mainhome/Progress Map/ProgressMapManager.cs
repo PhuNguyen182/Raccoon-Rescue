@@ -17,6 +17,11 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
     {
         [SerializeField] private int minLevel = 1;
         [SerializeField] private int maxLevel = 100;
+        [SerializeField] private float moveDuration = 1f;
+
+        [Header("Progress Map")]
+        [SerializeField] private PathFollower pathFollower;
+        [SerializeField] private Transform nodeContainer;
         [SerializeField] private List<LevelNodePath> nodePaths;
 
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
@@ -38,13 +43,30 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
         [Button]
         public void FetchBodePaths()
         {
-            for (int i = 0; i < transform.childCount; i++)
+            nodePaths.Clear();
+
+            for (int i = 0; i < nodeContainer.childCount; i++)
             {
-                if(transform.GetChild(i).TryGetComponent<LevelNodePath>(out var node))
+                if(nodeContainer.GetChild(i).TryGetComponent<LevelNodePath>(out var node))
                 {
                     nodePaths.Add(node);
                 }
             }
+        }
+
+        public LevelNodePath GetLevelNode(int level)
+        {
+            return _nodePathDict[level];
+        }
+
+        public async UniTask Move(int startIndex, int endIndex)
+        {
+            await pathFollower.Move(startIndex, endIndex, moveDuration);
+        }
+
+        public void Translate(int level)
+        {
+            pathFollower.SetPositionImediately(level);
         }
 
         private void InitProgressLevel()
