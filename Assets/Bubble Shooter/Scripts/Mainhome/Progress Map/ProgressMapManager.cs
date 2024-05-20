@@ -1,7 +1,6 @@
 using R3;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +27,6 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
         private Dictionary<int, LevelNodePath> _nodePathDict;
 
-        private CancellationToken _token;
         private IDisposable _disposable;
 
         public int MinLevel => minLevel;
@@ -36,7 +34,6 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
         private void Awake()
         {
-            _token = this.GetCancellationTokenOnDestroy();
             InitProgressLevel();
         }
 

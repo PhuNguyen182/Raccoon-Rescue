@@ -47,6 +47,11 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
             RestrictCamera();
         }
 
+        public void SetCameraBounds(ScreenBoundsHandler screenBounds)
+        {
+            this.screenBounds = screenBounds;
+        }
+
         public void TranslateTo(Vector3 position)
         {
             IsDraggable = false;
