@@ -38,6 +38,12 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void Start()
         {
+            BackHomeConfig.Current = new BackHomeConfig
+            {
+                Level = 2 - 1, // Path node index is started from 0
+                Star = 3
+            };
+
             OnStartMainhome();
         }
 
@@ -51,7 +57,11 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void ShowCurrentMainhome()
         {
-
+            int level = 1; // test level
+            int star = 2; // test star
+            LevelNodePath levelNode = progressMap.GetLevelNode(level);
+            cameraController.TranslateTo(levelNode.transform.position);
+            levelNode.SetIdleState(star, false);
         }
 
         private async UniTask OnBackHome()
@@ -61,11 +71,12 @@ namespace BubbleShooter.Scripts.Mainhome
 
             LevelNodePath levelNode = progressMap.GetLevelNode(level);
             cameraController.TranslateTo(levelNode.transform.position);
-            progressMap.Translate(level);
 
-            await progressMap.Move(level - 1, level);
             levelNode.SetIdleState(star, true);
+            progressMap.Translate(level - 1);
 
+            await UniTask.Delay(TimeSpan.FromSeconds(1.75f), cancellationToken: _token);
+            await progressMap.Move(level - 1, level);
             BackHomeConfig.Current = null;
         }
 

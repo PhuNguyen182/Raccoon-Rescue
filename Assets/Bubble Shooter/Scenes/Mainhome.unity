@@ -968,6 +968,17 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &623159678 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1600537457557825553, guid: 3f77e2f8c7bc3214ab75b03ca096e255, type: 3}
+  m_PrefabInstance: {fileID: 964297174078369039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42f6f8536640164b9e79e97f1801507, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &698601490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,9 +1619,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingButton: {fileID: 2004058379}
-  coinHolder: {fileID: 0}
-  progressMap: {fileID: 0}
-  cameraController: {fileID: 0}
+  coinHolder: {fileID: 1464885229}
+  progressMap: {fileID: 623159678}
+  cameraController: {fileID: 698601491}
 --- !u!1 &1836317159
 GameObject:
   m_ObjectHideFlags: 0

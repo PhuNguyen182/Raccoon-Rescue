@@ -55,14 +55,16 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
         public void TranslateTo(Vector3 position)
         {
             IsDraggable = false;
-            lookCamera.transform.position = position;
+            Vector3 toPosition = new(position.x, position.y, -10);
+            lookCamera.transform.position = toPosition;
             IsDraggable = true;
         }
 
         public async UniTask MoveTo(Vector3 position, float duration, Ease ease)
         {
             IsDraggable = false;
-            await lookCamera.transform.DOMove(position, duration).SetEase(ease);
+            Vector3 toPosition = new(position.x, position.y, -10);
+            await lookCamera.transform.DOMove(toPosition, duration).SetEase(ease);
 
             lookCamera.transform.DOKill();
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);

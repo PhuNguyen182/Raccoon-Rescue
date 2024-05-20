@@ -11,6 +11,7 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
     {
         [SerializeField] private Vector2 offset = new(0, 2.7f);
         [SerializeField] private SplineComputer splineComputer;
+        [SerializeField] private AnimationCurve smoothCurve;
 
         private CancellationToken _token;
 
@@ -22,6 +23,7 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
         public async UniTask Move(int startIndex, int endIndex, float duration)
         {
             float elapsedTime = 0;
+            float curveEvaluate;
             float progressPercent;
             float startPercent = (float)splineComputer.GetPointPercent(startIndex);
             float endPercent = (float)splineComputer.GetPointPercent(endIndex);
@@ -29,7 +31,8 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMap
 
             while (elapsedTime < duration)
             {
-                progressPercent = Mathf.Lerp(startPercent, endPercent, elapsedTime / duration);
+                curveEvaluate = smoothCurve.Evaluate(elapsedTime / duration);
+                progressPercent = Mathf.Lerp(startPercent, endPercent, curveEvaluate);
                 progressPosition = splineComputer.EvaluatePosition(progressPercent);
                 transform.position = progressPosition + offset;
 
