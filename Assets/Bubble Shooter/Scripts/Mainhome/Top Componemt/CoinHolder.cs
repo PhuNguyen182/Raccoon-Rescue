@@ -24,7 +24,7 @@ namespace BubbleShooter.Scripts.Mainhome.TopComponents
 
         private void OpenShop()
         {
-
+            MainhomeNavigator.Instance.ShowShopPanel();
         }
 
         private void SetCoinText(int coin)
