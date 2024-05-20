@@ -3,15 +3,27 @@ using BubbleShooter.Scripts.Common.Enums;
 using Scripts.Service;
 
 [Serializable]
-public class GameData : SingletonClass<GameData>, IService
+public class GameData : SingletonClass<GameData>
 {
     public GameResourceData GameResourceData;
     public InGameBoosterData InGameBoosterData;
     public LevelProgressData LevelProgressData;
 
-    public void Initialize()
+    public void Initialize(GameData gameData)
     {
-        
+        if (gameData != null)
+        {
+            GameResourceData = gameData.GameResourceData;
+            InGameBoosterData = gameData.InGameBoosterData;
+            LevelProgressData = gameData.LevelProgressData;
+        }
+    }
+
+    public GameData()
+    {
+        GameResourceData = new();
+        InGameBoosterData = new(0, 0, 0);
+        LevelProgressData = new(new());
     }
 
     public void AddCoins(int amount)
