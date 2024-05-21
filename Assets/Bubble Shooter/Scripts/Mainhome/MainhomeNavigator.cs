@@ -11,6 +11,7 @@ using BubbleShooter.Scripts.Mainhome.TopComponents;
 using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Mainhome.Shop;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
 
 namespace BubbleShooter.Scripts.Mainhome
 {
@@ -22,6 +23,7 @@ namespace BubbleShooter.Scripts.Mainhome
         [SerializeField] private CameraController cameraController;
 
         private const string ShopPanelPath = "Popups/Shop";
+        private const string PlayGamePopupPath = "Popups/Play Game Popup";
         private const string SettingPopupPath = "Popups/Setting Popup";
 
         private CancellationToken _token;
@@ -38,6 +40,7 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void Start()
         {
+            PreloadPopups();
             BackHomeConfig.Current = new BackHomeConfig
             {
                 Level = 2 - 1, // Path node index is started from 0
@@ -45,6 +48,13 @@ namespace BubbleShooter.Scripts.Mainhome
             };
 
             OnStartMainhome();
+        }
+
+        private void PreloadPopups()
+        {
+            ShopPanel.Preload(ShopPanelPath);
+            PlayGamePopup.Preload(PlayGamePopupPath);
+            SettingPopup.Preload(SettingPopupPath);
         }
 
         private void OnStartMainhome()

@@ -87,6 +87,15 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
                 _boosterDisposable = Disposable.Combine(boosterDisposables.ToArray());
             }
+
+            PreloadBoosterPopups();
+        }
+
+        private void PreloadBoosterPopups()
+        {
+            IngameBoosterPopup.Preload(ColorfulBoxPath);
+            IngameBoosterPopup.Preload(AimBoosterBoxPath);
+            IngameBoosterPopup.Preload(ExtraBallBoxPath);
         }
 
         private void AddBooster(AddIngameBoosterMessage message)

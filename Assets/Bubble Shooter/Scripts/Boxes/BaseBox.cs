@@ -158,15 +158,30 @@ public abstract class BaseBox : MonoBehaviour
 
 public class BaseBox<T> : BaseBox where T : BaseBox
 {
-    public static string ResorcePath { get; }
+    private static string _resourcePath;
+    public static string ResourcePath => _resourcePath;
+
+    public static void Preload()
+    {
+        T instance = Create();
+        SimplePool.Despawn(instance.gameObject);
+    }
+
+    public static void Preload(string path)
+    {
+        T instance = Create(path);
+        SimplePool.Despawn(instance.gameObject);
+    }
 
     public static T Create()
     {
-        return Create($"Boxes/{typeof(T).FullName}");
+        _resourcePath = $"Boxes/{typeof(T).FullName}";
+        return Create(_resourcePath);
     }
     
     public static T Create(string path)
     {
+        _resourcePath = path;
         T prefab = Resources.Load<T>(path);
         T instance = SimplePool.Spawn(prefab);
         instance.gameObject.SetActive(true);

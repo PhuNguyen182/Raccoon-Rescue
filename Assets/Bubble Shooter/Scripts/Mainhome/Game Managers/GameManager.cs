@@ -9,9 +9,11 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
     {
         [SerializeField] private HeartTimeManager heartManager;
 
+        public HeartTimeManager HeartTime => heartManager;
+
         protected override void OnAwake()
         {
-            
+            DataManager.LoadData();
         }
 
         private void Start()
