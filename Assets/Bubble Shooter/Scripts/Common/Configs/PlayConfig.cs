@@ -9,7 +9,9 @@ namespace BubbleShooter.Scripts.Common.Configs
     {
         public static PlayConfig Current;
 
+        public bool IsTest;
         public LevelModel LevelModel;
+
         public bool UseColorful;
         public bool UseAiming;
         public bool UseExtraBall;

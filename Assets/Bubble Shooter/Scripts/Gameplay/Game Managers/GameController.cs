@@ -20,6 +20,7 @@ using BubbleShooter.Scripts.Gameplay.Inputs;
 using Newtonsoft.Json;
 using Scripts.Configs;
 using Scripts.Service;
+using BubbleShooter.Scripts.Common.Configs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {
@@ -125,8 +126,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void GetLevel()
         {
-            string levelData = Resources.Load<TextAsset>("Level Datas/level_0").text;
-            LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
+            if (PlayConfig.Current == null)
+                return;
+
+            if (PlayConfig.Current.LevelModel == null)
+                return;
+
+            LevelModel levelModel = PlayConfig.Current.LevelModel;
             GenerateLevel(levelModel);
 
             _ingameBoosterHandler.InitBooster(new()

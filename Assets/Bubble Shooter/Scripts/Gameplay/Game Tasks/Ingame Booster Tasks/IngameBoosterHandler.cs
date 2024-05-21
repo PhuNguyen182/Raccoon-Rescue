@@ -159,8 +159,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         public void Dispose()
         {
-            _messageDisposable.Dispose();
-            _boosterDisposable.Dispose();
+            _messageDisposable?.Dispose();
+            _boosterDisposable?.Dispose();
         }
     }
 }

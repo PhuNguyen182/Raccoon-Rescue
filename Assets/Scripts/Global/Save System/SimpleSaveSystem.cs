@@ -33,4 +33,14 @@ public static class SimpleSaveSystem<T>
             writer.WriteLine(json);
         }
     }
+
+    public static void DeleteData(string name)
+    {
+        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
+        
+        if (File.Exists(dataPath))
+        {
+            File.Delete(dataPath);
+        }
+    }
 }

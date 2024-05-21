@@ -178,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 76046966}
   - component: {fileID: 76046967}
+  - component: {fileID: 76046968}
   m_Layer: 0
   m_Name: Level Builder
   m_TagString: Untagged
@@ -233,6 +234,19 @@ MonoBehaviour:
     Color: 5
   - Coefficient: 1000
     Color: 2
+--- !u!114 &76046968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76046965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc134fcca30832f4da71c4363f0438b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelBuilder: {fileID: 76046967}
 --- !u!1 &581608896
 GameObject:
   m_ObjectHideFlags: 0
