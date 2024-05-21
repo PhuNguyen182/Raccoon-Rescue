@@ -28,5 +28,24 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         {
             DataManager.SaveData();
         }
+
+        private void OnApplicationQuit()
+        {
+            DataManager.SaveData();
+        }
+
+#if UNITY_ANDROID || UNITY_IOS
+        private void OnApplicationFocus(bool focus)
+        {
+            if(focus)
+                DataManager.SaveData();
+        }
+
+        private void OnApplicationPause(bool pause)
+        {
+            if(pause)
+                DataManager.SaveData();
+        }
+#endif
     }
 }
