@@ -2,37 +2,94 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using TMPro;
+using System;
 
 public class TestAsync : MonoBehaviour
 {
-    private int _count = 5;
+    public TMP_Text lifeText;
+    public TMP_Text timeText;
+    public Button button;
+
+    public int _count = 5;
+    private int life = 0;
+    private DateTime saveTime;
+    private TimeSpan diff;
     private CancellationToken _destroyToken;
 
     private void Awake()
     {
         _destroyToken = this.GetCancellationTokenOnDestroy();
+
+        button.onClick.AddListener(() =>
+        {
+            life -= 1;
+        });
     }
 
     private void Start()
     {
-        TestWaitUntil().Forget();
+        CalculateHeart();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        Tick();
+    }
+
+    private void Tick()
+    {
+        if(life < 5)
         {
-            _count = _count - 1;
+            var offset = DateTime.Now.Subtract(saveTime);
+            diff = TimeSpan.FromSeconds(15).Subtract(offset);
+
+            if(diff.TotalSeconds <= 0)
+            {
+                life += 1;
+                if(life >= 5)
+                {
+                    life = 5;
+                    saveTime = DateTime.Now;
+                }
+                else
+                {
+                    saveTime = saveTime.AddSeconds(15);
+                }
+            }
+
+            lifeText.text = $"Life: {life}";
+            timeText.text = $"{diff.Minutes:D2}:{diff.Seconds:D2}";
         }
     }
 
-    private async UniTask TestWaitUntil()
+    private void CalculateHeart()
     {
-        await UniTask.WaitUntil(() => _count == 0, cancellationToken: _destroyToken);
-        if (_destroyToken.IsCancellationRequested)
-            return;
+        saveTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(15 * _count));
+        diff = DateTime.Now.Subtract(saveTime);
+        Debug.Log(diff.TotalSeconds);
 
-        Debug.Log("Time out!");
+        do
+        {
+            diff = diff.Subtract(TimeSpan.FromSeconds(15));
+            Debug.Log(diff.TotalSeconds);
+
+            life = life + 1;
+            lifeText.text = $"Life: {life}";
+
+            if (life >= 5)
+            {
+                life = 5;
+                lifeText.text = $"Life: {life}";
+                saveTime = DateTime.Now;
+                break;
+            }
+            else
+            {
+                saveTime = saveTime.Add(TimeSpan.FromSeconds(15));
+            }
+        } while (diff.TotalSeconds > 0);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Dreamteck.Splines;
 
-namespace BubbleShooter.Scripts.Mainhome.ProgressMap
+namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 {
     public class PathFollower : MonoBehaviour
     {

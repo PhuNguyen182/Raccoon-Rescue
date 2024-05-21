@@ -10,9 +10,9 @@ using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
 using BubbleShooter.Scripts.Common.PlayDatas;
 using Sirenix.OdinInspector;
 
-namespace BubbleShooter.Scripts.Mainhome.ProgressMap
+namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 {
-    public class ProgressMapManager : MonoBehaviour
+    public class ProgressMap : MonoBehaviour
     {
         [SerializeField] private int minLevel = 1;
         [SerializeField] private int maxLevel = 100;

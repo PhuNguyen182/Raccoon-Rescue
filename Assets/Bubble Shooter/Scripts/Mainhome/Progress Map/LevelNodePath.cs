@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace BubbleShooter.Scripts.Mainhome.ProgressMap
+namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 {
     public class LevelNodePath : MonoBehaviour
     {

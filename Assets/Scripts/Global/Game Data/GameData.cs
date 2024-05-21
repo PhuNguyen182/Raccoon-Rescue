@@ -1,68 +1,92 @@
 using System;
 using BubbleShooter.Scripts.Common.Enums;
-using Scripts.Service;
 
 [Serializable]
 public class GameData : SingletonClass<GameData>
 {
-    public GameResourceData GameResourceData;
-    public InGameBoosterData InGameBoosterData;
-    public LevelProgressData LevelProgressData;
+    private GameResourceData _gameResourceData;
+    private InGameBoosterData _inGameBoosterData;
+    private LevelProgressData _levelProgressData;
 
     public void Initialize(GameData gameData)
     {
-        if (gameData != null)
-        {
-            GameResourceData = gameData.GameResourceData;
-            InGameBoosterData = gameData.InGameBoosterData;
-            LevelProgressData = gameData.LevelProgressData;
-        }
+        if (gameData == null)
+            return;
+
+        _gameResourceData = gameData._gameResourceData;
+        _inGameBoosterData = gameData._inGameBoosterData;
+        _levelProgressData = gameData._levelProgressData;
     }
 
     public GameData()
     {
-        GameResourceData = new();
-        InGameBoosterData = new(0, 0, 0);
-        LevelProgressData = new(new());
+        _gameResourceData = new();
+        _inGameBoosterData = new(0, 0, 0);
+        _levelProgressData = new(new());
     }
 
     public void AddCoins(int amount)
     {
-        GameResourceData.AddCoins(amount);
+        _gameResourceData.AddCoins(amount);
+    }
+
+    public int GetCoins()
+    {
+        return _gameResourceData.Coins;
     }
 
     public void SpendCoins(int amount)
     {
-        GameResourceData.AddCoins(-amount);
+        _gameResourceData.AddCoins(-amount);
     }
 
     public void AddHeart(int amount)
     {
-        GameResourceData.AddHeart(amount);
+        _gameResourceData.AddHeart(amount);
+    }
+
+    public int GetHeart()
+    {
+        return _gameResourceData.Heart;
+    }
+
+    public void SetHeart(int heart)
+    {
+        _gameResourceData.Heart = heart;
     }
 
     public void UseHeart(int amount)
     {
-        GameResourceData.AddHeart(-amount);
+        _gameResourceData.AddHeart(-amount);
     }
 
     public void AddBooster(IngameBoosterType boosterType, int amount)
     {
-        InGameBoosterData.AddBooster(boosterType, amount);
+        _inGameBoosterData.AddBooster(boosterType, amount);
     }
 
     public void UseBooster(IngameBoosterType boosterType, int amount)
     {
-        InGameBoosterData.AddBooster(boosterType, -amount);
+        _inGameBoosterData.AddBooster(boosterType, -amount);
     }
 
     public void AddLevelComplete(LevelProgress level)
     {
-        LevelProgressData.Append(level);
+        _levelProgressData.Append(level);
     }
 
     public LevelProgress GetLevelProgress(int level)
     {
-        return LevelProgressData.GetLevelProgress(level);
+        return _levelProgressData.GetLevelProgress(level);
+    }
+
+    public DateTime GetCurrentHeartTime()
+    {
+        return _gameResourceData.GetHeartTime();
+    }
+
+    public void SaveHeartTime(DateTime time)
+    {
+        _gameResourceData.SaveHeartTime(time);
     }
 }

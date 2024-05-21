@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Configs;
 using BubbleShooter.Scripts.Mainhome.PopupBoxes;
-using BubbleShooter.Scripts.Mainhome.ProgressMap;
+using BubbleShooter.Scripts.Mainhome.ProgressMaps;
 using BubbleShooter.Scripts.Mainhome.TopComponents;
 using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Mainhome.Shop;
@@ -18,7 +18,7 @@ namespace BubbleShooter.Scripts.Mainhome
     {
         [SerializeField] private Button settingButton;
         [SerializeField] private CoinHolder coinHolder;
-        [SerializeField] private ProgressMapManager progressMap;
+        [SerializeField] private ProgressMap progressMap;
         [SerializeField] private CameraController cameraController;
 
         private const string ShopPanelPath = "Popups/Shop";
