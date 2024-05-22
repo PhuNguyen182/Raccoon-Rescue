@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class LevelProgressData
 {
-    public List<LevelProgress> LevelProgresses { get; }
+    public int Level = 1;
+    public List<LevelProgress> LevelProgresses;
 
     public LevelProgressData(List<LevelProgress> levelProgresses)
     {
@@ -14,9 +16,14 @@ public class LevelProgressData
         LevelProgresses = levelProgresses;
     }
 
+    public LevelProgress GetLevelProgress(int level)
+    {
+        return LevelProgresses.FirstOrDefault(x => x.Level == level);
+    }
+
     public void Append(LevelProgress progress)
     {
-        if (LevelProgresses.Contains(progress))
+        if (LevelProgresses.Exists(p => p.IsComplete))
         {
             int index = LevelProgresses.IndexOf(progress);
             LevelProgresses[index] = progress;

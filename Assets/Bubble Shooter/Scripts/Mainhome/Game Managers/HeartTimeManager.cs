@@ -1,0 +1,65 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace BubbleShooter.Scripts.Mainhome.GameManagers
+{
+    public class HeartTimeManager : MonoBehaviour
+    {
+        private DateTime _savedHeartTime;
+        private TimeSpan _heartTimeDiff;
+        private static readonly int _heartCooldown = GameDataConstants.HeartCooldown;
+
+        public TimeSpan HeartTimeDiff => _heartTimeDiff;
+
+        public void UpdateHeartTime()
+        {
+            if (GameData.Instance.GetHeart() < 5)
+            {
+                _savedHeartTime = GameData.Instance.GetCurrentHeartTime();
+                TimeSpan offset = DateTime.Now.Subtract(_savedHeartTime);
+                _heartTimeDiff = TimeSpan.FromSeconds(_heartCooldown).Subtract(offset);
+
+                if (_heartTimeDiff.TotalSeconds <= 0)
+                {
+                    GameData.Instance.AddHeart(1);
+                    if (GameData.Instance.GetHeart() >= GameDataConstants.MaxHeart)
+                    {
+                        _savedHeartTime = DateTime.Now;
+                        GameData.Instance.SetHeart(GameDataConstants.MaxHeart);
+                        GameData.Instance.SaveHeartTime(_savedHeartTime);
+                    }
+                    else
+                    {
+                        _savedHeartTime = _savedHeartTime.AddSeconds(_heartCooldown);
+                    }
+                }
+            }
+        }
+
+        public void LoadHeartOnStart()
+        {
+            _savedHeartTime = GameData.Instance.GetCurrentHeartTime();
+            TimeSpan diff = DateTime.Now.Subtract(_savedHeartTime);
+
+            do
+            {
+                TimeSpan cooldown = TimeSpan.FromSeconds(_heartCooldown);
+                diff = diff.Subtract(cooldown);
+                GameData.Instance.AddHeart(1);
+
+                if (GameData.Instance.GetHeart() >= GameDataConstants.MaxHeart)
+                {
+                    _savedHeartTime = DateTime.Now;
+                    GameData.Instance.SetHeart(GameDataConstants.MaxHeart);
+                    GameData.Instance.SaveHeartTime(DateTime.Now);
+                    break;
+                }
+
+                else 
+                    _savedHeartTime = _savedHeartTime.Add(TimeSpan.FromSeconds(_heartCooldown));
+            } while (diff.TotalSeconds > 0);
+        }
+    }
+}

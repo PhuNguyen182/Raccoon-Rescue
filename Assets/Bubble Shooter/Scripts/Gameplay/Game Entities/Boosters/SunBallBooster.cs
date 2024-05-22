@@ -162,7 +162,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
         private void OnDestroy()
         {
-            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+            UpdateHandlerManager.Instance?.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

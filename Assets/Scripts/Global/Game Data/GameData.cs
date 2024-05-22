@@ -1,18 +1,92 @@
 using System;
-using System.Diagnostics;
-using Scripts.Service;
-using UnityEngine;
-using Debug = UnityEngine.Debug;
+using BubbleShooter.Scripts.Common.Enums;
 
 [Serializable]
-public class GameData : SingletonClass<GameData>, IService
+public class GameData : SingletonClass<GameData>
 {
-    public InGameBoosterData InGameBoosterData;
+    private GameResourceData _gameResourceData;
+    private InGameBoosterData _inGameBoosterData;
+    private LevelProgressData _levelProgressData;
 
-    public void Initialize()
+    public void Initialize(GameData gameData)
     {
-        // If there is no saved data, construct new data profiles
-        // otherwise the data will be loaded from saved position
-        Debug.Log("Game Data Constructor");
+        if (gameData == null)
+            return;
+
+        _gameResourceData = gameData._gameResourceData;
+        _inGameBoosterData = gameData._inGameBoosterData;
+        _levelProgressData = gameData._levelProgressData;
+    }
+
+    public GameData()
+    {
+        _gameResourceData = new();
+        _inGameBoosterData = new(0, 0, 0);
+        _levelProgressData = new(new());
+    }
+
+    public void AddCoins(int amount)
+    {
+        _gameResourceData.AddCoins(amount);
+    }
+
+    public int GetCoins()
+    {
+        return _gameResourceData.Coins;
+    }
+
+    public void SpendCoins(int amount)
+    {
+        _gameResourceData.AddCoins(-amount);
+    }
+
+    public void AddHeart(int amount)
+    {
+        _gameResourceData.AddHeart(amount);
+    }
+
+    public int GetHeart()
+    {
+        return _gameResourceData.Heart;
+    }
+
+    public void SetHeart(int heart)
+    {
+        _gameResourceData.Heart = heart;
+    }
+
+    public void UseHeart(int amount)
+    {
+        _gameResourceData.AddHeart(-amount);
+    }
+
+    public void AddBooster(IngameBoosterType boosterType, int amount)
+    {
+        _inGameBoosterData.AddBooster(boosterType, amount);
+    }
+
+    public void UseBooster(IngameBoosterType boosterType, int amount)
+    {
+        _inGameBoosterData.AddBooster(boosterType, -amount);
+    }
+
+    public void AddLevelComplete(LevelProgress level)
+    {
+        _levelProgressData.Append(level);
+    }
+
+    public LevelProgress GetLevelProgress(int level)
+    {
+        return _levelProgressData.GetLevelProgress(level);
+    }
+
+    public DateTime GetCurrentHeartTime()
+    {
+        return _gameResourceData.GetHeartTime();
+    }
+
+    public void SaveHeartTime(DateTime time)
+    {
+        _gameResourceData.SaveHeartTime(time);
     }
 }

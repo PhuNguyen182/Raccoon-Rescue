@@ -164,7 +164,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         private void OnDestroy()
         {
-            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
+            UpdateHandlerManager.Instance?.RemoveFixedUpdateBehaviour(this);
         }
     }
 }
