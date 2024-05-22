@@ -21,6 +21,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [Title("Level Data")]
         [SerializeField] private string inputLevel;
         [SerializeField] private string outputLevel;
+        [SerializeField] private string externalBuildPath;
 
         [Space(10)]
         [SerializeField] private int targetCount;
@@ -37,6 +38,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         private LevelImporter _levelImporter;
         private LevelExporter _levelExporter = new();
+
+        public string ExportLevelData => outputLevel;
 
         [Button]
         public void Clear()
