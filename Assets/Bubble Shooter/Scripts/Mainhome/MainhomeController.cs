@@ -42,6 +42,8 @@ namespace BubbleShooter.Scripts.Mainhome
         private void Start()
         {
             PreloadPopups();
+            SetInteractive(true);
+
             BackHomeConfig.Current = new BackHomeConfig
             {
                 Level = 2 - 1, // Path node index is started from 0
@@ -98,7 +100,7 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void ShowSettingPopup()
         {
-            SettingPopup.Create(SettingPopupPath);
+            SettingPopup.Create(SettingPopupPath).SetBackHomeButtonActive(false);
         }
 
         public void ShowShopPanel()

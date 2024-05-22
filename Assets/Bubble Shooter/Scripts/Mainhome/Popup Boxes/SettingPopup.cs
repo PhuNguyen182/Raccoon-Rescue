@@ -13,6 +13,7 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes
         [SerializeField] private Animator boxAnimator;
 
         [Header("Execute Buttons")]
+        [SerializeField] private Button homeButton;
         [SerializeField] private Button musicButton;
         [SerializeField] private Button soundButton;
         [SerializeField] private Button closeButton;
@@ -34,10 +35,13 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes
         private bool _soundToggle;
         private CancellationToken _token;
 
+        public Action OnBackHome;
+
         protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
 
+            homeButton.onClick.AddListener(BackHome);
             musicButton.onClick.AddListener(MusicButton);
             soundButton.onClick.AddListener(SoundButton);
             closeButton.onClick.AddListener(Close);
@@ -49,6 +53,16 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes
             _musicToggle = MusicManager.Instance.MusicVolume > 0;
             _soundToggle = MusicManager.Instance.SoundVolume > 0;
             CheckAudioButtons();
+        }
+
+        public void SetBackHomeButtonActive(bool active)
+        {
+            homeButton.gameObject.SetActive(active);
+        }
+
+        private void BackHome()
+        {
+            OnBackHome?.Invoke();
         }
 
         private void CheckAudioButtons()
