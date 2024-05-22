@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Mainhome.GameManagers;
 using Scripts.Configs;
 
 namespace Scripts.App
@@ -42,6 +43,7 @@ namespace Scripts.App
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
             Register<MusicManager>("Managers/Music Manager");
+            Register<GameManager>("Managers/Game Manager");
         }
 
         private static T Register<T>(string serviceName) where T : Component

@@ -13,7 +13,7 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 
         protected override void OnAwake()
         {
-            DataManager.LoadData();
+            DataManager.LoadData(); // Can be removed
         }
 
         private void Start()
@@ -24,17 +24,28 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         private void Update()
         {
             heartManager.UpdateHeartTime();
+            Delete();
         }
 
         private void OnDestroy()
         {
-            DataManager.SaveData();
+            //DataManager.SaveData();
         }
 
         private void OnApplicationQuit()
         {
-            DataManager.SaveData();
+            //DataManager.SaveData();
         }
+
+#if UNITY_EDITOR
+        private void Delete()
+        {
+            if(Input.GetKeyUp(KeyCode.D))
+            {
+                DataManager.DeleteData();
+            }
+        }
+#endif
 
 #if UNITY_ANDROID || UNITY_IOS
         private void OnApplicationFocus(bool focus)
