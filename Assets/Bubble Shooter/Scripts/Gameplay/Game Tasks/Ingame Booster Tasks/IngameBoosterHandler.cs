@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Pool;
 using BubbleShooter.Scripts.GameUI.IngameBooster;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.Scripts.Gameplay.Miscs;
@@ -27,7 +27,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         private bool _hasUsedBooster;
         private Dictionary<IngameBoosterType, ReactiveProperty<int>> _boosters;
-        private IDisposable _disposable;
+        private IDisposable _messageDisposable;
+        private IDisposable _boosterDisposable;
 
         private const string AimBoosterBoxPath = "Gameplay/Boxes/Ingame Boosters/Aim Booster Popup";
         private const string ColorfulBoxPath = "Gameplay/Boxes/Ingame Boosters/Colorful Booster Popup";
@@ -44,7 +45,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
             DisposableBagBuilder builder = MessagePipe.DisposableBag.CreateBuilder();
             _boosterSubscriber = GlobalMessagePipe.GetSubscriber<AddIngameBoosterMessage>();
             _boosterSubscriber.Subscribe(AddBooster).AddTo(builder);
-            _disposable = builder.Build();
+            _messageDisposable = builder.Build();
         }
 
         public void InitBooster(List<IngameBoosterModel> boosterModels)
@@ -60,24 +61,41 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
             if (!boosterModels.Exists(x => x.BoosterType == IngameBoosterType.ChangeBall))
                 boosterModels.Add(new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall });
 
-            _boosters = boosterModels.ToDictionary(booster => booster.BoosterType, booster =>
+            using (var disposableList = ListPool<IDisposable>.Get(out var boosterDisposables))
             {
-                ReactiveProperty<int> boosterAmount = new(0);
-                BoosterButton boosterButton = _boosterPanel.GetButtonByBooster(booster.BoosterType);
-                
-                boosterAmount.Subscribe(value => boosterButton.SetBoosterCount(value));
-                boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) && !value.IsActive && _inputProcessor.IsActive)
-                                             .Subscribe(value =>
-                                             {
-                                                 ExecuteBoosterAsync(booster.BoosterType).Forget();
-                                                 boosterButton.ShowInvincible().Forget();
-                                             });
-                
-                boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive && _inputProcessor.IsActive)
-                                             .Subscribe(value => ShowBuyBooster(booster.BoosterType));
-                boosterAmount.Value = booster.Amount;
-                return boosterAmount;
-            });
+                _boosters = boosterModels.ToDictionary(booster => booster.BoosterType, booster =>
+                {
+                    ReactiveProperty<int> boosterAmount = new(0);
+                    BoosterButton boosterButton = _boosterPanel.GetButtonByBooster(booster.BoosterType);
+
+                    boosterAmount.Subscribe(value => boosterButton.SetBoosterCount(value));
+                    IDisposable d1 = boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) && !value.IsActive && _inputProcessor.IsActive)
+                                                  .Subscribe(value =>
+                                                  {
+                                                      ExecuteBoosterAsync(booster.BoosterType).Forget();
+                                                      boosterButton.ShowInvincible().Forget();
+                                                  });
+
+                    IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive && _inputProcessor.IsActive)
+                                                  .Subscribe(value => ShowBuyBooster(booster.BoosterType));
+
+                    boosterDisposables.Add(d1);
+                    boosterDisposables.Add(d2);
+                    boosterAmount.Value = booster.Amount;
+                    return boosterAmount;
+                });
+
+                _boosterDisposable = Disposable.Combine(boosterDisposables.ToArray());
+            }
+
+            PreloadBoosterPopups();
+        }
+
+        private void PreloadBoosterPopups()
+        {
+            IngameBoosterPopup.Preload(ColorfulBoxPath);
+            IngameBoosterPopup.Preload(AimBoosterBoxPath);
+            IngameBoosterPopup.Preload(ExtraBallBoxPath);
         }
 
         private void AddBooster(AddIngameBoosterMessage message)
@@ -141,7 +159,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 
         public void Dispose()
         {
-            _disposable.Dispose();
+            _messageDisposable?.Dispose();
+            _boosterDisposable?.Dispose();
         }
     }
 }

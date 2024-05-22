@@ -34,14 +34,14 @@ namespace Scripts.App
 
         private static void RegisterServicesBeforeSceneLoad()
         {
-            Register<AppInitializer>("App/App Initializer");
-            Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
-            Register<MusicManager>("Managers/Music Manager");
+
         }
 
         private static void RegisterServicesAfterSceneLoad()
         {
-
+            Register<AppInitializer>("App/App Initializer");
+            Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
+            Register<MusicManager>("Managers/Music Manager");
         }
 
         private static T Register<T>(string serviceName) where T : Component

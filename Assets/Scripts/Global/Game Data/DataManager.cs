@@ -4,13 +4,14 @@ using UnityEngine;
 
 public static class DataManager
 {
-    public static void Load()
+    public static void LoadData()
     {
-        GameData.Instance.Initialize();
+        GameData gameData = SimpleSaveSystem<GameData>.LoadData("GameData");
+        GameData.Instance.Initialize(gameData);
     }
 
-    public static void Save()
+    public static void SaveData()
     {
-
+        SimpleSaveSystem<GameData>.SaveData("GameData", GameData.Instance);
     }
 }

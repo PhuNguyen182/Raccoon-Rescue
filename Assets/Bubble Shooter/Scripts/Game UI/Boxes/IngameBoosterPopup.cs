@@ -39,7 +39,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             closeButton.onClick.AddListener(Close);
         }
 
-        protected override void OnStart()
+        protected override void DoAppear()
         {
             SetObjectsActive(stage1Objects, true);
             SetObjectsActive(stage2Objects, false);

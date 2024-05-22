@@ -1,34 +1,33 @@
 using System;
+using BubbleShooter.Scripts.Common.Enums;
 
 [Serializable]
 public class InGameBoosterData
 {
-    private int _colorfullCount;
-    private int _targetAimCount;
-    private int _randomBallCount;
+    public int ColorfulCount;
+    public int TargetAimCount;
+    public int RandomBallCount;
 
     public InGameBoosterData(int colorfull, int targetAim, int randomBall)
     {
-        _colorfullCount = colorfull;
-        _targetAimCount = targetAim;
-        _randomBallCount = randomBall;
+        ColorfulCount = colorfull;
+        TargetAimCount = targetAim;
+        RandomBallCount = randomBall;
     }
 
-    public int ColorfulCount
+    public void AddBooster(IngameBoosterType boosterType, int amount)
     {
-        get => _colorfullCount;
-        set => _colorfullCount = value;
-    }
-
-    public int TargetAimCount
-    {
-        get => _targetAimCount;
-        set => _targetAimCount = value;
-    }
-
-    public int RandomBallCount
-    {
-        get => _randomBallCount;
-        set => _randomBallCount = value;
+        switch (boosterType)
+        {
+            case IngameBoosterType.Colorful:
+                ColorfulCount += amount;
+                break;
+            case IngameBoosterType.PreciseAimer:
+                TargetAimCount += amount;
+                break;
+            case IngameBoosterType.ChangeBall:
+                RandomBallCount += amount;
+                break;
+        }
     }
 }
