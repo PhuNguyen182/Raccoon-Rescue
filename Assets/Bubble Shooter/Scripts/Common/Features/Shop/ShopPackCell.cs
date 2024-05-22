@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BubbleShooter.Scripts.Mainhome.Shop
+namespace BubbleShooter.Scripts.Common.Features.Shop
 {
     public class ShopPackCell : MonoBehaviour
     {

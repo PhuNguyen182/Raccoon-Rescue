@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
-namespace BubbleShooter.Scripts.Mainhome.Shop
+namespace BubbleShooter.Scripts.Common.Features.Shop
 {
     public class ShopPanel : BaseBox<ShopPanel>
     {

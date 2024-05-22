@@ -5,7 +5,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Mainhome.GameManagers;
 using TMPro;
 
-namespace BubbleShooter.Scripts.Mainhome.TopComponents
+namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
 {
     public class HeartBox : MonoBehaviour
     {

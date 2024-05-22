@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using BubbleShooter.Scripts.Effects.Tweens;
 using TMPro;
 
-namespace BubbleShooter.Scripts.Mainhome.TopComponents
+namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
 {
     public class CoinHolder : MonoBehaviour
     {
@@ -24,7 +24,7 @@ namespace BubbleShooter.Scripts.Mainhome.TopComponents
 
         private void OpenShop()
         {
-            MainhomeNavigator.Instance.ShowShopPanel();
+            MainhomeController.Instance.ShowShopPanel();
         }
 
         private void SetCoinText(int coin)

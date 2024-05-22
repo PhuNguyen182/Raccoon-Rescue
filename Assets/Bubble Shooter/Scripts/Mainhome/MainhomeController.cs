@@ -7,20 +7,21 @@ using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Configs;
 using BubbleShooter.Scripts.Mainhome.PopupBoxes;
 using BubbleShooter.Scripts.Mainhome.ProgressMaps;
-using BubbleShooter.Scripts.Mainhome.TopComponents;
-using BubbleShooter.Scripts.Mainhome.Handlers;
-using BubbleShooter.Scripts.Mainhome.Shop;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
+using BubbleShooter.Scripts.Mainhome.UI.TopComponents;
+using BubbleShooter.Scripts.Mainhome.Handlers;
+using BubbleShooter.Scripts.Common.Features.Shop;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Mainhome
 {
-    public class MainhomeNavigator : MonoBehaviour
+    public class MainhomeController : MonoBehaviour
     {
         [SerializeField] private Button settingButton;
         [SerializeField] private CoinHolder coinHolder;
         [SerializeField] private ProgressMap progressMap;
         [SerializeField] private CameraController cameraController;
+        [SerializeField] private InteractiveController interactiveController;
 
         private const string ShopPanelPath = "Popups/Shop";
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
@@ -28,7 +29,7 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private CancellationToken _token;
 
-        public static MainhomeNavigator Instance { get; private set; }
+        public static MainhomeController Instance { get; private set; }
 
         private void Awake()
         {
@@ -103,6 +104,19 @@ namespace BubbleShooter.Scripts.Mainhome
         public void ShowShopPanel()
         {
             ShopPanel.Create(ShopPanelPath);
+        }
+
+        public void SetInteractive(bool interactable)
+        {
+            interactiveController.SetInteractive(interactable);
+        }
+
+        public void SetProgressMap(ProgressMap progressMap)
+        {
+            if(this.progressMap != null)
+                Destroy(this.progressMap); // Use addressable instead
+
+            this.progressMap = progressMap;
         }
     }
 }

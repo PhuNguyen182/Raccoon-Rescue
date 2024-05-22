@@ -19,6 +19,7 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
         private PointerEventData _eventDataCurrentPosition;
         #endregion
 
+        public bool IsActived { get; set; }
         public bool IsDragging { get; private set; }
         public Vector2 PointerPosition { get; private set; }
         public Vector2 Delta => _deltaTemp;
@@ -42,26 +43,37 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
 
         private void OnPointerDelta(InputAction.CallbackContext context)
         {
-            _delta = context.ReadValue<Vector2>();
-            _deltaTemp.x = _delta.x / Screen.width;
-            _deltaTemp.y = _delta.y / Screen.height;
+            if (IsActived)
+            {
+                _delta = context.ReadValue<Vector2>();
+                _deltaTemp.x = _delta.x / Screen.width;
+                _deltaTemp.y = _delta.y / Screen.height;
+            }
+
+            else
+                _deltaTemp = Vector2.zero;
         }
 
         private void OnPointerDrag(InputAction.CallbackContext context)
         {
-            IsDragging = context.ReadValueAsButton();
+            IsDragging = IsActived ? context.ReadValueAsButton() : false;
         }
 
         private void OnPointerPosition(InputAction.CallbackContext context)
         {
-            _pointerPosition = context.ReadValue<Vector2>();
-            PointerPosition = inputObserverCamera.ScreenToWorldPoint(_pointerPosition);
+            if (IsActived)
+            {
+                _pointerPosition = context.ReadValue<Vector2>();
+                PointerPosition = inputObserverCamera.ScreenToWorldPoint(_pointerPosition);
+            }
+            else
+                PointerPosition = Vector2.zero;
         }
 
         public bool IsPointerOverlapUI()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
-            return EventSystem.current.IsPointerOverGameObject();
+            return EventSystem.current == null ? false : EventSystem.current.IsPointerOverGameObject();
 #elif UNITY_ANDROID || UNITY_IOS
             return IsPointerOverUIObject();
 #endif
@@ -69,6 +81,9 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
 
         public bool IsPointerOverUIObject()
         {
+            if(EventSystem.current == null) 
+                return false;
+            
             _results.Clear();
             _eventDataCurrentPosition = new(EventSystem.current);
             _eventDataCurrentPosition.position = new(PointerPosition.x, PointerPosition.y);
