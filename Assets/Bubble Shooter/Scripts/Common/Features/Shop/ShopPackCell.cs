@@ -17,7 +17,7 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
 
         private void OnPurchaseClick()
         {
-
+            GameData.Instance.ShopProfiler.BuyProduct(productID);
         }
     }
 }

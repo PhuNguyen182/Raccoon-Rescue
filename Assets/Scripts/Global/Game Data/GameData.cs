@@ -1,5 +1,6 @@
 using System;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Mainhome.Player;
 
 [Serializable]
 public class GameData : SingletonClass<GameData>
@@ -7,6 +8,8 @@ public class GameData : SingletonClass<GameData>
     private GameResourceData _gameResourceData;
     private InGameBoosterData _inGameBoosterData;
     private LevelProgressData _levelProgressData;
+
+    public ShopProfiler ShopProfiler { get; private set; }
 
     public void Initialize(GameData gameData)
     {
@@ -23,6 +26,8 @@ public class GameData : SingletonClass<GameData>
         _gameResourceData = new();
         _inGameBoosterData = new(0, 0, 0);
         _levelProgressData = new(new());
+
+        ShopProfiler = new();
     }
 
     public void AddCoins(int amount)
