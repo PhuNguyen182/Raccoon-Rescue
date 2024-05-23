@@ -11,11 +11,6 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 
         public HeartTimeManager HeartTime => heartManager;
 
-        protected override void OnAwake()
-        {
-            DataManager.LoadData(); // Can be removed
-        }
-
         private void Start()
         {
             heartManager.LoadHeartOnStart();
@@ -29,13 +24,15 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 
         private void OnDestroy()
         {
-            //DataManager.SaveData();
+            DataManager.SaveData();
         }
 
+#if !UNITY_EDITOR
         private void OnApplicationQuit()
         {
-            //DataManager.SaveData();
+            DataManager.SaveData();
         }
+#endif
 
 #if UNITY_EDITOR
         private void Delete()
@@ -47,7 +44,7 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         }
 #endif
 
-#if UNITY_ANDROID || UNITY_IOS
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
         private void OnApplicationFocus(bool focus)
         {
             if(focus)

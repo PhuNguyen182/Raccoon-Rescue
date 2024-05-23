@@ -12,13 +12,13 @@ namespace Scripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoad()
         {
-            GameSetup();
             RegisterServicesBeforeSceneLoad();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
+            GameSetup();
             RegisterServicesAfterSceneLoad();
         }
 
@@ -28,15 +28,9 @@ namespace Scripts.App
             RegisterServicesBeforeSplashScene();
         }
 
-        private static void RegisterServicesBeforeSplashScene()
-        {
+        private static void RegisterServicesBeforeSceneLoad() { }
 
-        }
-
-        private static void RegisterServicesBeforeSceneLoad()
-        {
-
-        }
+        private static void RegisterServicesBeforeSplashScene() { }
 
         private static void RegisterServicesAfterSceneLoad()
         {
@@ -56,7 +50,7 @@ namespace Scripts.App
 
         private static void GameSetup()
         {
-            Application.targetFrameRate = GameSetupConstants.NormalTargetFramerate;
+            DataManager.LoadData();
         }
     }
 }

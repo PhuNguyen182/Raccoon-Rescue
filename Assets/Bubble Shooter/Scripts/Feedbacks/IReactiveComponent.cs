@@ -6,7 +6,7 @@ namespace BubbleShooter.Scripts.Feedbacks
     public interface IReactiveComponent 
     {
         public string InstanceID { get; }
-        public UniTask OnReactive();
+        public UniTask OnReactive(UniTask task);
         public void SetCompletionSource(UniTaskCompletionSource tcs);
     }
 

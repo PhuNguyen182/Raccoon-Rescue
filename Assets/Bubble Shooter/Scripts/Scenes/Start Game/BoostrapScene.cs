@@ -6,7 +6,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Scripts.SceneUtils;
 
-namespace BubbleShooter.Scripts.StartGame
+namespace BubbleShooter.Scripts.Scenes.StartGame
 {
     public class BoostrapScene : MonoBehaviour
     {
@@ -20,7 +20,6 @@ namespace BubbleShooter.Scripts.StartGame
 
         private async UniTask OnBoostrapScene()
         {
-            DataManager.LoadData();
             await LoadToLoadingScene();
         }
 

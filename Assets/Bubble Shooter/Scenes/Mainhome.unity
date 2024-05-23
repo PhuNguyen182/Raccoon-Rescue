@@ -1643,6 +1643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdee7ec28eeec1343a2ca840161de23f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  elementID: CoinHolder
   coinText: {fileID: 121091538}
   shopButton: {fileID: 1228345377}
   coinTween: {fileID: 1464885228}

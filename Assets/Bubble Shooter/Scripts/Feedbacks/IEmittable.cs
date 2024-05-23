@@ -8,7 +8,7 @@ namespace BubbleShooter.Scripts.Feedbacks
 {
     public interface IEmittable
     {
-        public UniTask Emit(string id, Action action);
+        public UniTask Emit(string id);
         public void Subscribe(IReactiveComponent component);
         public void Unsubscribe(IReactiveComponent component);
     }

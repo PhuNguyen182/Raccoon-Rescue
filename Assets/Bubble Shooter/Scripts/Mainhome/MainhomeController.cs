@@ -12,6 +12,7 @@ using BubbleShooter.Scripts.Mainhome.UI.TopComponents;
 using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Common.Features.Shop;
 using Cysharp.Threading.Tasks;
+using Scripts.Configs;
 
 namespace BubbleShooter.Scripts.Mainhome
 {
@@ -101,6 +102,11 @@ namespace BubbleShooter.Scripts.Mainhome
         private void ShowSettingPopup()
         {
             SettingPopup.Create(SettingPopupPath).SetBackHomeButtonActive(false);
+        }
+
+        private void SetupScene()
+        {
+            Application.targetFrameRate = GameSetupConstants.NormalTargetFramerate;
         }
 
         public void ShowShopPanel()

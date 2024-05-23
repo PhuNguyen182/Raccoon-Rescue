@@ -12,18 +12,17 @@ namespace BubbleShooter.Scripts.Feedbacks
         private Dictionary<string, IReactiveComponent> _receivers;
 
         public Action<string> OnComplete;
-        public static Emittable Default => _instance ?? (_instance = new());
+        public static Emittable Default => _instance ??= new();
 
         public Emittable()
         {
             _receivers = new();
         }
 
-        public async UniTask Emit(string id, Action action)
+        public async UniTask Emit(string id)
         {
             if (_receivers.ContainsKey(id))
             {
-                action?.Invoke();
                 UniTaskCompletionSource tcs = new();
                 _receivers[id].SetCompletionSource(tcs);
 
