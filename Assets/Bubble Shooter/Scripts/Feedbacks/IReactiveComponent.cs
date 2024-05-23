@@ -1,7 +1,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-namespace BubbleShooter.Scripts.Feels
+namespace BubbleShooter.Scripts.Feedbacks
 {
     public interface IReactiveComponent 
     {
