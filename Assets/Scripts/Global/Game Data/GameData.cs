@@ -2,7 +2,6 @@ using System;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Mainhome.Player;
 
-[Serializable]
 public class GameData : SingletonClass<GameData>
 {
     private GameResourceData _gameResourceData;
@@ -22,6 +21,7 @@ public class GameData : SingletonClass<GameData>
 
     public void LoadData()
     {
+        // The component data should be saved individually because GameData class doesn't support serialize
         _gameResourceData = SimpleSaveSystem<GameResourceData>.LoadData(GameResourceDataKey) ?? new();
         _inGameBoosterData = SimpleSaveSystem<InGameBoosterData>.LoadData(InGameBoosterDataKey) ?? new(0, 0, 0);
         _levelProgressData = SimpleSaveSystem<LevelProgressData>.LoadData(LevelProgressDataKey) ?? new(new());
