@@ -41,6 +41,11 @@ public class GameData : SingletonClass<GameData>
         SimpleSaveSystem<LevelProgressData>.DeleteData(LevelProgressDataKey);
     }
 
+    public int GetCurrentLevel()
+    {
+        return _levelProgressData.Level;
+    }
+
     public void AddCoins(int amount)
     {
         _gameResourceData.AddCoins(amount);
@@ -86,9 +91,14 @@ public class GameData : SingletonClass<GameData>
         _inGameBoosterData.AddBooster(boosterType, -amount);
     }
 
-    public void AddLevelComplete(LevelProgress level)
+    public void AddLevelProgress(LevelProgress level)
     {
         _levelProgressData.Append(level);
+    }
+
+    public bool IsLevelComplete(int level)
+    {
+        return _levelProgressData.IsLevelComplete(level);
     }
 
     public LevelProgress GetLevelProgress(int level)

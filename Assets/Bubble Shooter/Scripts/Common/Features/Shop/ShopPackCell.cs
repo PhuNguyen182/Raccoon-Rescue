@@ -1,9 +1,9 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Feedbacks;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Common.Features.Shop
 {

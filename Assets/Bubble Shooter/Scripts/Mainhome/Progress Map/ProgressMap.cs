@@ -68,11 +68,12 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 
         private void InitProgressLevel()
         {
+            int currentLevel = GameData.Instance.GetCurrentLevel();
             using (var listpool = ListPool<IDisposable>.Get(out var disposables))
             {
                 _nodePathDict = nodePaths.ToDictionary(node => node.Level, node =>
                 {
-                    node.SetAvailableState(true);
+                    node.SetAvailableState(currentLevel >= node.Level);
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
                                         .Subscribe(value => OnNodeButtonClick(value.Level, value.Star));
                     disposables.Add(d);

@@ -13,6 +13,7 @@ using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Common.Features.Shop;
 using Cysharp.Threading.Tasks;
 using Scripts.Configs;
+using UnityEngine.Jobs;
 
 namespace BubbleShooter.Scripts.Mainhome
 {
@@ -42,14 +43,9 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void Start()
         {
+            SetupScene();
             PreloadPopups();
             SetInteractive(true);
-
-            BackHomeConfig.Current = new BackHomeConfig
-            {
-                Level = 2 - 1, // Path node index is started from 0
-                Star = 3
-            };
 
             OnStartMainhome();
         }
@@ -71,11 +67,10 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private void ShowCurrentMainhome()
         {
-            int level = 1; // test level
-            int star = 2; // test star
+            int level = GameData.Instance.GetCurrentLevel();
             LevelNodePath levelNode = progressMap.GetLevelNode(level);
             cameraController.TranslateTo(levelNode.transform.position);
-            levelNode.SetIdleState(star, false);
+            levelNode.SetIdleState(0, false);
         }
 
         private async UniTask OnBackHome()
