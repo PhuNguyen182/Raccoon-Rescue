@@ -9,6 +9,8 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
     {
         [SerializeField] private HeartTimeManager heartManager;
 
+        private bool _isDeleted = false;
+
         public HeartTimeManager HeartTime => heartManager;
 
         private void Start()
@@ -24,7 +26,8 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 
         private void OnDestroy()
         {
-            DataManager.SaveData();
+            if (!_isDeleted)
+                DataManager.SaveData();
         }
 
 #if !UNITY_EDITOR
@@ -35,10 +38,12 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 #endif
 
 #if UNITY_EDITOR
+        // This function is used for testing only
         private void Delete()
         {
             if(Input.GetKeyUp(KeyCode.D))
             {
+                _isDeleted = true;
                 DataManager.DeleteData();
             }
         }

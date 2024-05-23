@@ -37,7 +37,7 @@ namespace BubbleShooter.Scripts.Mainhome.Player
             if (_onPackBuyCallback.ContainsKey(productID))
                 _onPackBuyCallback[productID].Invoke();
 
-            InAppPurchaseController.Instance.BuyProduct(productID);
+            //InAppPurchaseController.Instance.BuyProduct(productID);
         }
 
         public void Initialize()

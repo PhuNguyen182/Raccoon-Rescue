@@ -7,7 +7,6 @@ using BubbleShooter.Scripts.Feedbacks;
 using BubbleShooter.Scripts.Effects.Tweens;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using System;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
 {
@@ -30,6 +29,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
         private void Awake()
         {
             shopButton.onClick.AddListener(OpenShop);
+            _coinReactive.Value = GameData.Instance.GetCoins();
             coinTween.BindInt(_coinReactive, SetCoinText);
         }
 
@@ -48,7 +48,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
             coinText.text = $"{coin}";
         }
 
-        public void UpdateCoin(int coin)
+        private void UpdateCoin(int coin)
         {
             _coinReactive.Value = coin;
         }
@@ -59,6 +59,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
             {
                 await task;
                 _tcs.TrySetResult();
+                UpdateCoin(GameData.Instance.GetCoins());
             }
         }
 

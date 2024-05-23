@@ -18,7 +18,6 @@ namespace Scripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
-            GameSetup();
             RegisterServicesAfterSceneLoad();
         }
 
@@ -46,11 +45,6 @@ namespace Scripts.App
             T instance = Object.Instantiate(service);
             Object.DontDestroyOnLoad(instance);
             return service;
-        }
-
-        private static void GameSetup()
-        {
-            DataManager.LoadData();
         }
     }
 }

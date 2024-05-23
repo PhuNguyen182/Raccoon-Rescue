@@ -9,25 +9,36 @@ public class GameData : SingletonClass<GameData>
     private InGameBoosterData _inGameBoosterData;
     private LevelProgressData _levelProgressData;
 
+    private const string GameResourceDataKey = "GameResourceData";
+    private const string InGameBoosterDataKey = "InGameBoosterData";
+    private const string LevelProgressDataKey = "LevelProgressData";
+
     public ShopProfiler ShopProfiler { get; private set; }
-
-    public void Initialize(GameData gameData)
-    {
-        if (gameData == null)
-            return;
-
-        _gameResourceData = gameData._gameResourceData;
-        _inGameBoosterData = gameData._inGameBoosterData;
-        _levelProgressData = gameData._levelProgressData;
-    }
 
     public GameData()
     {
-        _gameResourceData = new();
-        _inGameBoosterData = new(0, 0, 0);
-        _levelProgressData = new(new());
-
         ShopProfiler = new();
+    }
+
+    public void LoadData()
+    {
+        _gameResourceData = SimpleSaveSystem<GameResourceData>.LoadData(GameResourceDataKey) ?? new();
+        _inGameBoosterData = SimpleSaveSystem<InGameBoosterData>.LoadData(InGameBoosterDataKey) ?? new(0, 0, 0);
+        _levelProgressData = SimpleSaveSystem<LevelProgressData>.LoadData(LevelProgressDataKey) ?? new(new());
+    }
+
+    public void SaveData()
+    {
+        SimpleSaveSystem<GameResourceData>.SaveData(GameResourceDataKey, _gameResourceData);
+        SimpleSaveSystem<InGameBoosterData>.SaveData(InGameBoosterDataKey, _inGameBoosterData);
+        SimpleSaveSystem<LevelProgressData>.SaveData(LevelProgressDataKey, _levelProgressData);
+    }
+
+    public void DeleteData()
+    {
+        SimpleSaveSystem<GameResourceData>.DeleteData(GameResourceDataKey);
+        SimpleSaveSystem<InGameBoosterData>.DeleteData(InGameBoosterDataKey);
+        SimpleSaveSystem<LevelProgressData>.DeleteData(LevelProgressDataKey);
     }
 
     public void AddCoins(int amount)

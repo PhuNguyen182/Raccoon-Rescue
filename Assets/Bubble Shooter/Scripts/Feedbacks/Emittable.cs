@@ -12,7 +12,7 @@ namespace BubbleShooter.Scripts.Feedbacks
         private Dictionary<string, IReactiveComponent> _receivers;
 
         public Action<string> OnComplete;
-        public static Emittable Default => _instance ??= new();
+        public static Emittable Default => _instance ?? (_instance = new());
 
         public Emittable()
         {
@@ -33,7 +33,7 @@ namespace BubbleShooter.Scripts.Feedbacks
 
         public void Subscribe(IReactiveComponent component)
         {
-            if (_receivers.ContainsKey(component.InstanceID))
+            if (!_receivers.ContainsKey(component.InstanceID))
                 _receivers.Add(component.InstanceID, component);
         }
 

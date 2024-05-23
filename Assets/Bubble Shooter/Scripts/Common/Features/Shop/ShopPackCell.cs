@@ -1,7 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Feedbacks;
 
 namespace BubbleShooter.Scripts.Common.Features.Shop
 {
@@ -18,6 +20,7 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
         private void OnPurchaseClick()
         {
             GameData.Instance.ShopProfiler.BuyProduct(productID);
+            Emittable.Default.Emit("CoinHolder").Forget();
         }
     }
 }
