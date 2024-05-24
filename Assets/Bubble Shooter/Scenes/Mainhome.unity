@@ -1396,6 +1396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heartCount: {fileID: 2123916045}
   timerText: {fileID: 1836317161}
+  heartButton: {fileID: 473281466}
 --- !u!1 &1228345374
 GameObject:
   m_ObjectHideFlags: 0

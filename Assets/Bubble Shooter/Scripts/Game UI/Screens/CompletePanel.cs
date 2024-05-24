@@ -57,7 +57,8 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         public void SetLevel(int level)
         {
-            levelText.text = $"{level}";
+            _level = level;
+            levelText.text = $"LEVEL {level}";
         }
 
         private void OnNext()

@@ -132,6 +132,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 return;
 
             LevelModel levelModel = PlayConfig.Current.LevelModel;
+            mainScreen.EndGameScreen.CompletePanel.SetLevel(PlayConfig.Current.Level);
             GenerateLevel(levelModel);
 
             _ingameBoosterHandler.InitBooster(new()
