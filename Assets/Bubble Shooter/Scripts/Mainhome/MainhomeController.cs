@@ -20,6 +20,7 @@ namespace BubbleShooter.Scripts.Mainhome
     public class MainhomeController : MonoBehaviour
     {
         [SerializeField] private Button settingButton;
+        [SerializeField] private HeartBox heartBox;
         [SerializeField] private CoinHolder coinHolder;
         [SerializeField] private ProgressMap progressMap;
         [SerializeField] private CameraController cameraController;
@@ -33,6 +34,7 @@ namespace BubbleShooter.Scripts.Mainhome
 
         private CancellationToken _token;
 
+        public HeartBox HeartBox => heartBox;
         public LevelPlayInfo LevelPlayInfo { get; private set; }
         public static MainhomeController Instance { get; private set; }
 
