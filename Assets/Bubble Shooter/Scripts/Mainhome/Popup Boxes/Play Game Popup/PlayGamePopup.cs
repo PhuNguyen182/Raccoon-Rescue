@@ -8,7 +8,11 @@ using UnityEngine.UI;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Common.PlayDatas;
 using BubbleShooter.Scripts.Common.Configs;
+using BubbleShooter.Scripts.Gameplay.Models;
+using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Scripts.SceneUtils;
+using Newtonsoft.Json;
 using TMPro;
 
 namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
@@ -39,6 +43,7 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
         private bool _useColorful;
         private bool _useAiming;
         private bool _useExtraBall;
+        private bool _isPlayPressed;
 
         private CancellationToken _token;
 
@@ -48,11 +53,6 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
 
             RegisterButtons();
             InitBoosterToggle();
-        }
-
-        protected override void DoAppear()
-        {
-            PlayConfig.Current = new();
         }
 
         private void RegisterButtons()
@@ -81,6 +81,41 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
             builder.RegisterTo(_token);
         }
 
+        private void OnPlayGameButton()
+        {
+            int heart = GameData.Instance.GetHeart();
+            
+            if (heart > 0) 
+                PlayGame().Forget();
+            
+            else 
+                CloseAndShowLifePopup().Forget();
+        }
+
+        private async UniTask PlayGame()
+        {
+            _isPlayPressed = true;
+            string levelData = await MainhomeController.Instance.LevelPlayInfo.GetLevelData(_level);
+            LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
+
+            PlayConfig.Current = new PlayConfig
+            {
+                IsTest = false,
+                Level = _level,
+                LevelModel = levelModel,
+                UseAiming = _useAiming,
+                UseColorful = _useColorful,
+                UseExtraBall = _useExtraBall
+            };
+
+            TransitionConfig.Current = new TransitionConfig
+            {
+                SceneName = SceneName.Gameplay
+            };
+
+            await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+        }
+
         private void AddBooster(bool isUsed, IngameBoosterType boosterType)
         {
             switch (boosterType)
@@ -102,18 +137,18 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
             CloseDelayed().Forget();
         }
 
-        private async UniTaskVoid CloseDelayed()
+        private async UniTask CloseAndShowLifePopup()
+        {
+            await CloseDelayed();
+            await UniTask.Delay(TimeSpan.FromSeconds(0.15f), cancellationToken: _token);
+            MainhomeController.Instance.ShowLifePopup();
+        }
+
+        private async UniTask CloseDelayed()
         {
             boxAnimator.SetTrigger(_disappearHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
             base.DoClose();
-        }
-
-        private void OnPlayGameButton()
-        {
-            PlayConfig.Current.UseColorful = _useColorful;
-            PlayConfig.Current.UseAiming = _useAiming;
-            PlayConfig.Current.UseExtraBall = _useExtraBall;
         }
 
         public void SetLevelBoxData(LevelBoxData boxData)
@@ -131,9 +166,10 @@ namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
 
         protected override void OnDisable()
         {
-            PlayConfig.Current = null;
-            _useColorful = _useAiming = _useExtraBall = false;
+            if(!_isPlayPressed)
+                PlayConfig.Current = null;
 
+            _useColorful = _useAiming = _useExtraBall = false;
             boxAnimator.ResetTrigger(_disappearHash);
             base.OnDisable();
         }

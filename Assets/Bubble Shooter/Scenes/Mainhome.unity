@@ -1072,6 +1072,7 @@ MonoBehaviour:
   progressMap: {fileID: 623159678}
   cameraController: {fileID: 698601491}
   interactiveController: {fileID: 828621519}
+  levelStreakData: {fileID: 11400000, guid: 3e3b8693ae0ee3d41b12fe48f49fbed8, type: 2}
 --- !u!4 &784582030
 Transform:
   m_ObjectHideFlags: 0

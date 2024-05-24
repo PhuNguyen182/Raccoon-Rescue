@@ -48,21 +48,19 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                                          .ConvertGridToWorldFunction
                                          .Invoke(_sampleCeilPosition);
 
-            // If the ceil is close, don't move it
-            if(Mathf.Abs(sampleCeilPosition.y - StopHeight) <= 0.01)
+            // If the ceil is close, don't move the game view
+            if (Mathf.Abs(sampleCeilPosition.y - StopHeight) > 0.01)
             {
-                _inputProcessor.IsActive = true;
-                return;
+                _cameraController.SetPosition(new Vector3(0, sampleCeilPosition.y - StopHeight, -10));
+                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _cancellationToken);
+                await _cameraController.MoveToZero(Vector3.back * 10);
             }
-
-            _cameraController.SetPosition(new Vector3(0, sampleCeilPosition.y - StopHeight, -10));
-            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _cancellationToken);
-            await _cameraController.MoveToZero(Vector3.back * 10);
 
             int targetCount = _checkTargetTask.TargetCount;
             string notice = targetCount > 2 ? $"Rescues {targetCount} baby raccoons!"
                                             : $"Rescues {targetCount} baby raccoon!";
 
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _cancellationToken);
             await _notificationPanel.SetNotificationInfo(notice);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _cancellationToken);
 

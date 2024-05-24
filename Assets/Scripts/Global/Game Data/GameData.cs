@@ -13,10 +13,12 @@ public class GameData : SingletonClass<GameData>
     private const string LevelProgressDataKey = "LevelProgressData";
 
     public ShopProfiler ShopProfiler { get; private set; }
+    public GameInventory GameInventory { get; private set; }
 
     public GameData()
     {
         ShopProfiler = new();
+        GameInventory = new();
     }
 
     public void LoadData()

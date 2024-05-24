@@ -11,9 +11,9 @@ using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
 using BubbleShooter.Scripts.Mainhome.UI.TopComponents;
 using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Common.Features.Shop;
+using BubbleShooter.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
 using Scripts.Configs;
-using UnityEngine.Jobs;
 
 namespace BubbleShooter.Scripts.Mainhome
 {
@@ -24,13 +24,16 @@ namespace BubbleShooter.Scripts.Mainhome
         [SerializeField] private ProgressMap progressMap;
         [SerializeField] private CameraController cameraController;
         [SerializeField] private InteractiveController interactiveController;
+        [SerializeField] private LevelStreakData levelStreakData;
 
         private const string ShopPanelPath = "Popups/Shop";
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
         private const string SettingPopupPath = "Popups/Setting Popup";
+        private const string LifePopupPath = "Popups/Life Popup";
 
         private CancellationToken _token;
 
+        public LevelPlayInfo LevelPlayInfo { get; private set; }
         public static MainhomeController Instance { get; private set; }
 
         private void Awake()
@@ -39,6 +42,7 @@ namespace BubbleShooter.Scripts.Mainhome
             _token = this.GetCancellationTokenOnDestroy();
 
             RegisterButtons();
+            CreateHandlers();
         }
 
         private void Start()
@@ -46,7 +50,6 @@ namespace BubbleShooter.Scripts.Mainhome
             SetupScene();
             PreloadPopups();
             SetInteractive(true);
-
             OnStartMainhome();
         }
 
@@ -55,14 +58,22 @@ namespace BubbleShooter.Scripts.Mainhome
             ShopPanel.Preload(ShopPanelPath);
             PlayGamePopup.Preload(PlayGamePopupPath);
             SettingPopup.Preload(SettingPopupPath);
+            LifePopup.Preload(LifePopupPath);
         }
 
         private void OnStartMainhome()
         {
             if (BackHomeConfig.Current != null)
-                OnBackHome().Forget();
-            else
-                ShowCurrentMainhome();
+            {
+                if(BackHomeConfig.Current.IsWin)
+                    OnBackHome().Forget();
+                
+                else
+                    ShowCurrentMainhome();
+            }
+
+            else ShowCurrentMainhome();
+            BackHomeConfig.Current = null;
         }
 
         private void ShowCurrentMainhome()
@@ -86,7 +97,11 @@ namespace BubbleShooter.Scripts.Mainhome
 
             await UniTask.Delay(TimeSpan.FromSeconds(1.75f), cancellationToken: _token);
             await progressMap.Move(level - 1, level);
-            BackHomeConfig.Current = null;
+        }
+
+        private void CreateHandlers()
+        {
+            LevelPlayInfo = new(levelStreakData);
         }
 
         private void RegisterButtons()
@@ -102,6 +117,11 @@ namespace BubbleShooter.Scripts.Mainhome
         private void SetupScene()
         {
             Application.targetFrameRate = GameSetupConstants.NormalTargetFramerate;
+        }
+
+        public void ShowLifePopup()
+        {
+            LifePopup.Create(LifePopupPath);
         }
 
         public void ShowShopPanel()

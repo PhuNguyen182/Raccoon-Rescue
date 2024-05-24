@@ -46,17 +46,19 @@ namespace Scripts.SceneUtils
                         break;
                 }
             }
+
+            TransitionConfig.Current = null;
         }
 
         private async UniTask LoadMainhomeScene()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single);
         }
 
         private async UniTask LoadGameplayScene()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Gameplay, LoadSceneMode.Single);
         }
     }

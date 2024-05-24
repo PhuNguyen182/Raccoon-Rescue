@@ -17,10 +17,9 @@ using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Inputs;
-using Newtonsoft.Json;
+using BubbleShooter.Scripts.Common.Configs;
 using Scripts.Configs;
 using Scripts.Service;
-using BubbleShooter.Scripts.Common.Configs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {

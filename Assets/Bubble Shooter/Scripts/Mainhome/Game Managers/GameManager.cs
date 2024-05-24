@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Feedbacks;
 
 namespace BubbleShooter.Scripts.Mainhome.GameManagers
 {
@@ -28,6 +29,8 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         {
             if (!_isDeleted)
                 DataManager.SaveData();
+
+            Emittable.Default.Dispose();
         }
 
 #if !UNITY_EDITOR

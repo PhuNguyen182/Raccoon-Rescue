@@ -64,7 +64,9 @@ namespace BubbleShooter.Scripts.Mainhome.Inputs
             if (IsActived)
             {
                 _pointerPosition = context.ReadValue<Vector2>();
-                PointerPosition = inputObserverCamera.ScreenToWorldPoint(_pointerPosition);
+                
+                if(inputObserverCamera != null)
+                    PointerPosition = inputObserverCamera.ScreenToWorldPoint(_pointerPosition);
             }
             else
                 PointerPosition = Vector2.zero;
