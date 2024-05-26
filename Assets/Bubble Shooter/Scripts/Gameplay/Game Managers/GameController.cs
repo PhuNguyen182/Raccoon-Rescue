@@ -135,12 +135,36 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             mainScreen.EndGameScreen.CompletePanel.SetLevel(PlayConfig.Current.Level);
             GenerateLevel(levelModel);
 
-            _ingameBoosterHandler.InitBooster(new()
+            if (PlayConfig.Current.IsTest)
             {
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 10 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
-            });
+                _ingameBoosterHandler.InitBooster(new()
+                {
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 1000 },
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 1000 },
+                });
+            }
+            else
+            {
+                _ingameBoosterHandler.InitBooster(new()
+                {
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.Colorful, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.Colorful) 
+                    },
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.PreciseAimer, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.PreciseAimer) 
+                    },
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.ChangeBall, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.ChangeBall) 
+                    },
+                });
+            }
         }
 
         private void GenerateLevel(LevelModel levelModel)

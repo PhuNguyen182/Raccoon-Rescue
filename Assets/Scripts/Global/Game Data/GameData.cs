@@ -93,6 +93,17 @@ public class GameData : SingletonClass<GameData>
         _inGameBoosterData.AddBooster(boosterType, -amount);
     }
 
+    public int GetBooster(IngameBoosterType boosterType)
+    {
+        return boosterType switch
+        {
+            IngameBoosterType.Colorful => _inGameBoosterData.ColorfulCount,
+            IngameBoosterType.PreciseAimer => _inGameBoosterData.TargetAimCount,
+            IngameBoosterType.ChangeBall => _inGameBoosterData.RandomBallCount,
+            _ => 0
+        };
+    }
+
     public void AddLevelProgress(LevelProgress level)
     {
         _levelProgressData.Append(level);

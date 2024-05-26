@@ -30,6 +30,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         [SerializeField] private GameObject[] stage2Objects;
 
         private int _stage = 0;
+        private int _price = 0;
         private CancellationToken _token;
         private IPublisher<AddIngameBoosterMessage> _boosterPublisher;
         private ReactiveProperty<int> _coinReactive = new(0);
@@ -61,6 +62,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
                 DoNextStage().Forget();
                 BuyBooster();
                 // Do purchase
+                GameData.Instance.SpendCoins(_price);
+                _coinReactive.Value = GameData.Instance.GetCoins();
             }
 
             else if(_stage == 1)
@@ -83,11 +86,13 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         private void SetCoin()
         {
             int coin = GameData.Instance.GetCoins();
-            int price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
+            _price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
 
             _coinReactive.Value = coin;
             coinAmount.text = $"{coin}";
-            boosterPrice.text = $"{price}";
+            boosterPrice.text = $"{_price}";
+
+            purchaseButton.interactable = coin >= _price;
         }
 
         private void BuyBooster()
@@ -97,6 +102,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
                 Amount = 1,
                 BoosterType = boosterType
             });
+
+            GameData.Instance.AddBooster(boosterType, 1);
         }
 
         protected override void DoClose()

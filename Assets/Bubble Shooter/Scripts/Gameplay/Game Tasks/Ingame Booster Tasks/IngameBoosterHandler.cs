@@ -13,6 +13,7 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.GameUI.Boxes;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using BubbleShooter.Scripts.Common.Configs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {
@@ -125,6 +126,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
             BoosterButton button = _boosterPanel.GetButtonByBooster(booster);
             button.SetBoosterActive(true);
             _boosters[booster].Value--;
+            
+            if(!PlayConfig.Current.IsTest)
+                GameData.Instance.UseBooster(booster, 1);
         }
 
         public void AfterUseBooster()
