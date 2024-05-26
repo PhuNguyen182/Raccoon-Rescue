@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using UnityEngine.AddressableAssets;
 using TMPro;
 using System;
 
@@ -18,6 +19,7 @@ public class TestAsync : MonoBehaviour
     private DateTime saveTime;
     private TimeSpan diff;
     private CancellationToken _destroyToken;
+    private UniTaskCompletionSource _tcs = new();
 
     private void Awake()
     {
@@ -31,12 +33,17 @@ public class TestAsync : MonoBehaviour
 
     private void Start()
     {
-        CalculateHeart();
+        //CalculateHeart();
+        TestTCS().Forget();
     }
 
     private void Update()
     {
-        Tick();
+        if (Input.GetMouseButtonDown(0))
+        {
+            _tcs.TrySetResult();
+            TestTCS().Forget();
+        }
     }
 
     private void Tick()
@@ -91,5 +98,16 @@ public class TestAsync : MonoBehaviour
                 saveTime = saveTime.Add(TimeSpan.FromSeconds(15));
             }
         } while (diff.TotalSeconds > 0);
+    }
+
+    private async UniTask TestTCS()
+    {
+        await _tcs.Task;
+        Debug.Log("Mouse click!");
+    }
+
+    private async UniTask AddressableTest()
+    {
+        var x = await Addressables.LoadAssetAsync<GameObject>("");
     }
 }
