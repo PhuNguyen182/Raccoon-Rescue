@@ -25,11 +25,10 @@ namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
 
         public bool IsPause { get; set; }
-        public Transform Heart => heartIcon.transform;
 
         public HeartBox Receiver => this;
 
-        public Vector3 Position => transform.position;
+        public Vector3 Position => heartIcon.position;
 
         public string InstanceID => elementID;
 

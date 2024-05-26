@@ -7,14 +7,14 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Mainhome.Effects;
 using BubbleShooter.Scripts.Feedbacks;
-using TMPro;
 using DG.Tweening;
+using TMPro;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
     public class LifePopup : BaseBox<LifePopup>
     {
-        [SerializeField] private MovementUIObject heart;
+        [SerializeField] private UIObjectEffect heart;
         [SerializeField] private Button buyButton;
         [SerializeField] private Button closeButton;
         [SerializeField] private Button backgroundButton;
@@ -70,16 +70,18 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 
         private async UniTask DoFlyHeart()
         {
+            MainhomeController.Instance.SetInteractive(false);
             var flyHeart = SimplePool.Spawn(heart, UIEffectContainer.Transform
                                             , transform.position, Quaternion.identity);
             
             flyHeart.transform.localScale = Vector3.zero;
             await flyHeart.transform.DOScale(1, 0.3f).SetEase(Ease.OutBack);
             await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: _token);
-            Transform toPoint = MainhomeController.Instance.HeartBox.Heart;
+            Vector3 toPoint = MainhomeController.Instance.HeartBox.Position;
 
-            await flyHeart.MoveSeparatedWithScale(toPoint.position, 0.75f);
+            await flyHeart.MoveSeparatedWithScale(toPoint, 0.75f);
             SimplePool.Despawn(flyHeart.gameObject);
+            MainhomeController.Instance.SetInteractive(true);
         }
 
         private async UniTask CloseAndOpenShop()

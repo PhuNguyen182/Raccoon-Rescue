@@ -12,6 +12,7 @@ using BubbleShooter.Scripts.Mainhome.UI.TopComponents;
 using BubbleShooter.Scripts.Mainhome.Handlers;
 using BubbleShooter.Scripts.Common.Features.Shop;
 using BubbleShooter.Scripts.Common.Databases;
+using BubbleShooter.Scripts.Mainhome.Effects;
 using Cysharp.Threading.Tasks;
 using Scripts.Configs;
 
@@ -26,6 +27,7 @@ namespace BubbleShooter.Scripts.Mainhome
         [SerializeField] private CameraController cameraController;
         [SerializeField] private InteractiveController interactiveController;
         [SerializeField] private LevelStreakData levelStreakData;
+        [SerializeField] private UIEffectManager effectManager;
 
         private const string ShopPanelPath = "Popups/Shop";
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
@@ -33,9 +35,12 @@ namespace BubbleShooter.Scripts.Mainhome
         private const string LifePopupPath = "Popups/Life Popup";
 
         private CancellationToken _token;
+        private ShopPanel _shopPanel;
 
+        public CoinHolder Coin => coinHolder;
         public HeartBox HeartBox => heartBox;
         public LevelPlayInfo LevelPlayInfo { get; private set; }
+        public UIEffectManager UIEffectManager => effectManager;
         public static MainhomeController Instance { get; private set; }
 
         private void Awake()
@@ -128,7 +133,12 @@ namespace BubbleShooter.Scripts.Mainhome
 
         public void ShowShopPanel()
         {
-            ShopPanel.Create(ShopPanelPath);
+            _shopPanel = ShopPanel.Create(ShopPanelPath);
+        }
+
+        public void CloseShopPanel()
+        {
+            _shopPanel.Close();
         }
 
         public void SetInteractive(bool interactable)

@@ -1048,6 +1048,7 @@ GameObject:
   m_Component:
   - component: {fileID: 784582030}
   - component: {fileID: 784582029}
+  - component: {fileID: 784582031}
   m_Layer: 0
   m_Name: Mainhome Controller
   m_TagString: Untagged
@@ -1074,6 +1075,7 @@ MonoBehaviour:
   cameraController: {fileID: 698601491}
   interactiveController: {fileID: 828621519}
   levelStreakData: {fileID: 11400000, guid: 3e3b8693ae0ee3d41b12fe48f49fbed8, type: 2}
+  effectManager: {fileID: 784582031}
 --- !u!4 &784582030
 Transform:
   m_ObjectHideFlags: 0
@@ -1091,6 +1093,19 @@ Transform:
   - {fileID: 698601492}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &784582031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784582028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01f49d4f461ce3408c2301307e6db93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinPrefab: {fileID: 1352339604571642584, guid: b7dded2128ce238489a98eae64cab5a8, type: 3}
 --- !u!1 &828621516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,7 +1649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a33bfbfbdc7d9941b266120d6e7b31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.3
+  duration: 0.5
   ease: 6
 --- !u!114 &1464885229
 MonoBehaviour:
@@ -1652,6 +1667,7 @@ MonoBehaviour:
   coinText: {fileID: 121091538}
   shopButton: {fileID: 1228345377}
   coinTween: {fileID: 1464885228}
+  coinIcon: {fileID: 1838944463}
 --- !u!1 &1820797040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1746,7 +1762,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: -1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -1425101629
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1820797045
 RectTransform:

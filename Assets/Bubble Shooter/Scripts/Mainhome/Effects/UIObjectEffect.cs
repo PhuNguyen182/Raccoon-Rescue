@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine.UI;
 
 namespace BubbleShooter.Scripts.Mainhome.Effects
 {
-    public class MovementUIObject : MonoBehaviour
+    public class UIObjectEffect : MonoBehaviour
     {
+        [SerializeField] private Image objectImage;
+
         [Header("Linear Move")]
         [SerializeField] private Ease moveEase;
         [SerializeField] private float moveDuration;
@@ -28,7 +31,24 @@ namespace BubbleShooter.Scripts.Mainhome.Effects
             _destroyToken = this.GetCancellationTokenOnDestroy();
         }
 
-        public UniTask MoveTo(Vector3 toPosition)
+        public void SetFade(float fade)
+        {
+            Color c = objectImage.color;
+            c.a = fade;
+            objectImage.color = c;
+        }
+
+        public UniTask FadeIn(float duration)
+        {
+            return objectImage.DOFade(1, duration).SetEase(Ease.InOutSine).ToUniTask();
+        }
+
+        public UniTask FadeOut(float duration)
+        {
+            return objectImage.DOFade(0, duration).SetEase(Ease.InOutSine).ToUniTask();
+        }
+
+        public UniTask MoveTo(Vector3 toPosition, Action onComplete = null)
         {
             _moveTween ??= CreateMoveTween(toPosition);
             _moveTween.ChangeStartValue(transform.position);
@@ -36,6 +56,7 @@ namespace BubbleShooter.Scripts.Mainhome.Effects
             _moveTween.Rewind();
             _moveTween.Play();
 
+            _moveTween.OnComplete(() => onComplete?.Invoke());
             return UniTask.Delay(TimeSpan.FromSeconds(_moveTween.Duration())
                                 , cancellationToken: _destroyToken);
         }
@@ -52,7 +73,8 @@ namespace BubbleShooter.Scripts.Mainhome.Effects
             sequence.Rewind();
             sequence.PlayForward();
 
-            return sequence.AwaitForComplete(TweenCancelBehaviour.Complete);
+            return UniTask.Delay(TimeSpan.FromSeconds(sequence.Duration())
+                                , cancellationToken: _destroyToken);
         }
 
         public UniTask MoveSeparated(Vector3 toPosition)
