@@ -1,21 +1,25 @@
+using R3;
 using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Effects.Tweens;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 using TMPro;
-using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.GameUI.Boxes
 {
     public class IngameBoosterPopup : BaseBox<IngameBoosterPopup>
     {
         [SerializeField] private TMP_Text coinAmount;
+        [SerializeField] private TMP_Text boosterPrice;
         [SerializeField] private IngameBoosterType boosterType;
+        [SerializeField] private TweenValueEffect coinTween;
 
         [SerializeField] private Button closeButton;
         [SerializeField] private Button purchaseButton;
@@ -28,6 +32,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         private int _stage = 0;
         private CancellationToken _token;
         private IPublisher<AddIngameBoosterMessage> _boosterPublisher;
+        private ReactiveProperty<int> _coinReactive = new(0);
 
         private static readonly int _appearHash = Animator.StringToHash("Appear");
         private static readonly int _disappearHash = Animator.StringToHash("Disappear");
@@ -37,10 +42,12 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             _token = this.GetCancellationTokenOnDestroy();
             purchaseButton.onClick.AddListener(Purchase);
             closeButton.onClick.AddListener(Close);
+            coinTween.BindInt(_coinReactive, value => coinAmount.text = $"{value}");
         }
 
         protected override void DoAppear()
         {
+            SetCoin();
             SetObjectsActive(stage1Objects, true);
             SetObjectsActive(stage2Objects, false);
 
@@ -73,9 +80,14 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             boxAnimator.SetTrigger(_appearHash);
         }
 
-        private void SetCoint(int coin)
+        private void SetCoin()
         {
+            int coin = GameData.Instance.GetCoins();
+            int price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
+
+            _coinReactive.Value = coin;
             coinAmount.text = $"{coin}";
+            boosterPrice.text = $"{price}";
         }
 
         private void BuyBooster()
