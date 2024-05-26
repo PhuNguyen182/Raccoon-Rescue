@@ -15,7 +15,7 @@ using Scripts.SceneUtils;
 using Newtonsoft.Json;
 using TMPro;
 
-namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
+namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
 {
     public class PlayGamePopup : BaseBox<PlayGamePopup>
     {

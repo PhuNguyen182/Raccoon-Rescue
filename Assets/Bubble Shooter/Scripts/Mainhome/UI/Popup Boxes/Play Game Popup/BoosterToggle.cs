@@ -5,7 +5,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Common.Enums;
 using UnityEngine.UI;
 
-namespace BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup
+namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
 {
     public class BoosterToggle : MonoBehaviour
     {

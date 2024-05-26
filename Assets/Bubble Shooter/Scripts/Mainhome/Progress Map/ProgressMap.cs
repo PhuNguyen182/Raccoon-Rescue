@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
+using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup;
 using BubbleShooter.Scripts.Common.PlayDatas;
 using Sirenix.OdinInspector;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Mainhome.GameManagers;
-using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
+using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup;
 using BubbleShooter.Scripts.Common.PlayDatas;
 using TMPro;
 

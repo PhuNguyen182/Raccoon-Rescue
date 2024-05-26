@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
-namespace BubbleShooter.Scripts.Mainhome.PopupBoxes
+namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
     public class SettingPopup : BaseBox<SettingPopup>
     {

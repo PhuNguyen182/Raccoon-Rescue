@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Feedbacks;
 using TMPro;
 
-namespace BubbleShooter.Scripts.Mainhome.PopupBoxes
+namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
     public class LifePopup : BaseBox<LifePopup>
     {
