@@ -3,26 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using BubbleShooter.Scripts.Mainhome.GameManagers;
+using BubbleShooter.Scripts.Feedbacks;
 using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup;
+using BubbleShooter.Scripts.Mainhome.GameManagers;
 using BubbleShooter.Scripts.Common.PlayDatas;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
 {
-    public class HeartBox : MonoBehaviour
+    public class HeartBox : MonoBehaviour, IReactiveComponent<HeartBox>
     {
+        [SerializeField] private string elementID;
+        [SerializeField] private Transform heartIcon;
         [SerializeField] private TMP_Text heartCount;
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private Button heartButton;
 
+        private UniTaskCompletionSource _tcs;
         private const string PlayGamePopupPath = "Popups/Play Game Popup";
 
         public bool IsPause { get; set; }
+        public Transform Heart => heartIcon.transform;
+
+        public HeartBox Receiver => this;
+
+        public Vector3 Position => transform.position;
+
+        public string InstanceID => elementID;
 
         private void Awake()
         {
             heartButton.onClick.AddListener(OnHeartButton);
+        }
+
+        private void Start()
+        {
+            Emittable.Default.Subscribe(this);
         }
 
         private void Update()
@@ -64,6 +82,29 @@ namespace BubbleShooter.Scripts.Mainhome.UI.TopComponents
             }
 
             else MainhomeController.Instance.ShowLifePopup();
+        }
+
+        public async UniTask OnReactive(UniTask task)
+        {
+            await transform.DOPunchScale(Vector3.one * 0.1f, 0.25f, 1, 1)
+                           .SetEase(Ease.InOutSine);
+            _tcs.TrySetResult();
+        }
+
+        public void SetCompletionSource(UniTaskCompletionSource tcs)
+        {
+            _tcs = tcs;
+            OnReactive(DoSomething()).Forget();
+        }
+
+        private UniTask DoSomething()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        private void OnDestroy()
+        {
+            Emittable.Default.Unsubscribe(this);
         }
     }
 }

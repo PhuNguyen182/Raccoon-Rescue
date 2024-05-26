@@ -5,13 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Mainhome.Effects;
 using BubbleShooter.Scripts.Feedbacks;
 using TMPro;
+using DG.Tweening;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
     public class LifePopup : BaseBox<LifePopup>
     {
+        [SerializeField] private MovementUIObject heart;
         [SerializeField] private Button buyButton;
         [SerializeField] private Button closeButton;
         [SerializeField] private Button backgroundButton;
@@ -42,7 +45,8 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
             int currentCoin = GameData.Instance.GetCoins();
             if(currentCoin >= _price)
             {
-                BuyAndAddHearts();
+                GameData.Instance.SpendCoins(_price);
+                BuyAndAddHearts().Forget();
             }
             else
             {
@@ -50,14 +54,32 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
             }
         }
 
-        private void BuyAndAddHearts()
+        private async UniTask BuyAndAddHearts()
         {
-            GameData.Instance.SpendCoins(_price);
+            await CloseDelayed();
             Emittable.Default.Emit("CoinHolder").Forget();
 
+            MainhomeController.Instance.HeartBox.IsPause = true;
             int hearts = GameData.Instance.GameInventory.GetMaxHeart();
             GameData.Instance.AddHeart(hearts);
-            CloseDelayed().Forget();
+            
+            await DoFlyHeart();
+            Emittable.Default.Emit("HeartBox").Forget();
+            MainhomeController.Instance.HeartBox.IsPause = false;
+        }
+
+        private async UniTask DoFlyHeart()
+        {
+            var flyHeart = SimplePool.Spawn(heart, UIEffectContainer.Transform
+                                            , transform.position, Quaternion.identity);
+            
+            flyHeart.transform.localScale = Vector3.zero;
+            await flyHeart.transform.DOScale(1, 0.3f).SetEase(Ease.OutBack);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: _token);
+            Transform toPoint = MainhomeController.Instance.HeartBox.Heart;
+
+            await flyHeart.MoveSeparatedWithScale(toPoint.position, 0.75f);
+            SimplePool.Despawn(flyHeart.gameObject);
         }
 
         private async UniTask CloseAndOpenShop()

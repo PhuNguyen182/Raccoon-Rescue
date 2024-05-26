@@ -402,6 +402,7 @@ MonoBehaviour:
   IsPopup: 1
   IsNotStack: 0
   isAnim: 1
+  heart: {fileID: 2495207788036744352, guid: 99ed610e1682904438ac28477c898c8a, type: 3}
   buyButton: {fileID: 3005137294650220721}
   closeButton: {fileID: 3066615813538040942}
   backgroundButton: {fileID: 3294325271161768002}
