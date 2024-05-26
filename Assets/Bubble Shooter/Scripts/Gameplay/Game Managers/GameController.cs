@@ -151,17 +151,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                     new IngameBoosterModel() 
                     { 
                         BoosterType = IngameBoosterType.Colorful, 
-                        Amount = GameData.Instance.GetBooster(IngameBoosterType.Colorful) 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.Colorful)
                     },
                     new IngameBoosterModel() 
                     { 
                         BoosterType = IngameBoosterType.PreciseAimer, 
-                        Amount = GameData.Instance.GetBooster(IngameBoosterType.PreciseAimer) 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.PreciseAimer)
                     },
                     new IngameBoosterModel() 
                     { 
                         BoosterType = IngameBoosterType.ChangeBall, 
-                        Amount = GameData.Instance.GetBooster(IngameBoosterType.ChangeBall) 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.ChangeBall)
                     },
                 });
             }

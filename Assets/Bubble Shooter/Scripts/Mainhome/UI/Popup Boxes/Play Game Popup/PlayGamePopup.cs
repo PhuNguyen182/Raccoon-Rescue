@@ -108,6 +108,14 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
                 UseExtraBall = _useExtraBall
             };
 
+            int addColorful = _useColorful ? 1 : 0;
+            int addPreciseAim = _useAiming ? 1 : 0;
+            int addExtraBall = _useExtraBall ? 1 : 0;
+
+            GameData.Instance.AddBooster(IngameBoosterType.Colorful, addColorful);
+            GameData.Instance.AddBooster(IngameBoosterType.PreciseAimer, addPreciseAim);
+            GameData.Instance.AddBooster(IngameBoosterType.ChangeBall, addExtraBall);
+
             TransitionConfig.Current = new TransitionConfig
             {
                 SceneName = SceneName.Gameplay
