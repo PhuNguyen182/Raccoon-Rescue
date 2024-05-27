@@ -84,12 +84,9 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
         private void OnPlayGameButton()
         {
             int heart = GameData.Instance.GetHeart();
-            
-            if (heart > 0) 
-                PlayGame().Forget();
-            
-            else 
-                CloseAndShowLifePopup().Forget();
+            UniTask onPlayTask = heart > 0 ? PlayGame() 
+                                 : CloseAndShowLifePopup();
+            onPlayTask.Forget();
         }
 
         private async UniTask PlayGame()
@@ -97,6 +94,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
             _isPlayPressed = true;
             string levelData = await MainhomeController.Instance.LevelPlayInfo.GetLevelData(_level);
             LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
+            GameData.Instance.UseHeart(1);
 
             PlayConfig.Current = new PlayConfig
             {

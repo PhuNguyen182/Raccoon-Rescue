@@ -2953,6 +2953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 714363327000740254, guid: fd1da0dea832be347bc968f184f17fb9, type: 3}
   ballProvider: {fileID: 2085312156}
+  lineMaterial: {fileID: 2100000, guid: 6ffca62ed6487a14e87e16d1ed4c0b7a, type: 2}
   blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
   green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
   orange: {fileID: 958189355520590498, guid: c5027cbc52a0ffe4f8c7358d0b4903b7, type: 3}
