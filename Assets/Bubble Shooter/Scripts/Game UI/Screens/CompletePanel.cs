@@ -94,6 +94,12 @@ namespace BubbleShooter.Scripts.GameUI.Screens
                     Star = _tier
                 };
 
+                GameData.Instance.AddLevelProgress(new LevelProgress
+                {
+                    Level = _level,
+                    Star = _tier
+                });
+
                 TransitionConfig.Current = new TransitionConfig
                 {
                     SceneName = SceneName.Mainhome

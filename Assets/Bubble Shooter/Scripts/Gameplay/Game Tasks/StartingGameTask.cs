@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.GameManagers;
 using Cysharp.Threading.Tasks;
-using UnityEngine.InputSystem;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
 {

@@ -74,6 +74,15 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
                 _nodePathDict = nodePaths.ToDictionary(node => node.Level, node =>
                 {
                     node.SetAvailableState(currentLevel >= node.Level);
+                    bool isLevelComplete = GameData.Instance.IsLevelComplete(node.Level);
+                    
+                    // Check less than node.Level to ensure all completed level are in idle state without animation
+                    if (isLevelComplete && currentLevel < node.Level) 
+                    {
+                        var levelNode = GameData.Instance.GetLevelProgress(node.Level);
+                        node.SetIdleState(levelNode.Star, false);
+                    }
+
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
                                         .Subscribe(value => OnNodeButtonClick(value.Level, value.Star));
                     disposables.Add(d);
