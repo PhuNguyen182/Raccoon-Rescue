@@ -823,6 +823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentPanel: {fileID: 0}
+  popupCanvas: {fileID: 0}
   mainPanel: {fileID: 0}
   IsPopup: 0
   IsNotStack: 0
@@ -1306,7 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productID: 
+  productID: coin1
   purchaseButton: {fileID: 173055484436795187}
 --- !u!1 &3781405653322704108
 GameObject:
@@ -1935,7 +1936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productID: 
+  productID: coin3
   purchaseButton: {fileID: 5842970683343459462}
 --- !u!1 &5847399998532559918
 GameObject:
@@ -2028,7 +2029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productID: 
+  productID: coin2
   purchaseButton: {fileID: 5126579906357336930}
 --- !u!1 &6115013075401862520
 GameObject:
@@ -2264,7 +2265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productID: 
+  productID: coin4
   purchaseButton: {fileID: 1286682799309003639}
 --- !u!1 &7009289894059373623
 GameObject:

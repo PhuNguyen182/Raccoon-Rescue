@@ -21,9 +21,14 @@ public class LevelProgressData
         return LevelProgresses.FirstOrDefault(x => x.Level == level);
     }
 
+    public bool IsLevelComplete(int level)
+    {
+        return LevelProgresses.Exists(x => x.Level == level);
+    }
+
     public void Append(LevelProgress progress)
     {
-        if (LevelProgresses.Exists(p => p.IsComplete))
+        if (LevelProgresses.Exists(p => p.Level == progress.Level))
         {
             int index = LevelProgresses.IndexOf(progress);
             LevelProgresses[index] = progress;

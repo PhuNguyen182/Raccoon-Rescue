@@ -1,21 +1,25 @@
+using R3;
 using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Effects.Tweens;
+using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 using TMPro;
-using BubbleShooter.Scripts.Common.Messages;
 
 namespace BubbleShooter.Scripts.GameUI.Boxes
 {
     public class IngameBoosterPopup : BaseBox<IngameBoosterPopup>
     {
         [SerializeField] private TMP_Text coinAmount;
+        [SerializeField] private TMP_Text boosterPrice;
         [SerializeField] private IngameBoosterType boosterType;
+        [SerializeField] private TweenValueEffect coinTween;
 
         [SerializeField] private Button closeButton;
         [SerializeField] private Button purchaseButton;
@@ -26,8 +30,10 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         [SerializeField] private GameObject[] stage2Objects;
 
         private int _stage = 0;
+        private int _price = 0;
         private CancellationToken _token;
         private IPublisher<AddIngameBoosterMessage> _boosterPublisher;
+        private ReactiveProperty<int> _coinReactive = new(0);
 
         private static readonly int _appearHash = Animator.StringToHash("Appear");
         private static readonly int _disappearHash = Animator.StringToHash("Disappear");
@@ -37,10 +43,12 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             _token = this.GetCancellationTokenOnDestroy();
             purchaseButton.onClick.AddListener(Purchase);
             closeButton.onClick.AddListener(Close);
+            coinTween.BindInt(_coinReactive, value => coinAmount.text = $"{value}");
         }
 
         protected override void DoAppear()
         {
+            SetCoin();
             SetObjectsActive(stage1Objects, true);
             SetObjectsActive(stage2Objects, false);
 
@@ -53,7 +61,6 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             {
                 DoNextStage().Forget();
                 BuyBooster();
-                // Do purchase
             }
 
             else if(_stage == 1)
@@ -73,9 +80,16 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             boxAnimator.SetTrigger(_appearHash);
         }
 
-        private void SetCoint(int coin)
+        private void SetCoin()
         {
+            int coin = GameData.Instance.GetCoins();
+            _price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
+
             coinAmount.text = $"{coin}";
+            boosterPrice.text = $"{_price}";
+            _coinReactive.Value = coin;
+
+            purchaseButton.interactable = coin >= _price;
         }
 
         private void BuyBooster()
@@ -85,6 +99,10 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
                 Amount = 1,
                 BoosterType = boosterType
             });
+
+            GameData.Instance.SpendCoins(_price);
+            GameData.Instance.AddBooster(boosterType, 1);
+            _coinReactive.Value = GameData.Instance.GetCoins();
         }
 
         protected override void DoClose()

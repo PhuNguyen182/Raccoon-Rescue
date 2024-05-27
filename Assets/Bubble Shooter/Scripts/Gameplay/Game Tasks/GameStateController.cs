@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Miscs;
+using BubbleShooter.Scripts.Common.Configs;
+using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Scripts.SceneUtils;
 using Stateless;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -75,7 +79,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                              .Permit(Trigger.Quit, State.Quit);
 
             _gameStateMachine.Configure(State.Quit)
-                             .OnEntry(OnQuitGame);
+                             .OnEntry(() => OnQuitGame().Forget());
 
             _gameStateMachine.Activate();
         }
@@ -159,9 +163,29 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void OnQuitGame()
+        private async UniTask OnQuitGame()
         {
-            Debug.Log("Quit game");
+            if (!PlayConfig.Current.IsTest)
+            {
+                GameData.Instance.UseHeart(1);
+
+                TransitionConfig.Current = new TransitionConfig
+                {
+                    SceneName = SceneName.Mainhome
+                };
+
+                BackHomeConfig.Current = new BackHomeConfig
+                {
+                    IsWin = false,
+                    Level = PlayConfig.Current.Level,
+                    Star = _checkScoreTask.Tier
+                };
+
+                PlayConfig.Current = null;
+                await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+            }
+
+            QuitMessage();
         }
 
         private void QuitGame()
@@ -170,6 +194,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 _gameStateMachine.Fire(Trigger.Quit);
             }
+        }
+
+        private void QuitMessage()
+        {
+#if UNITY_EDITOR
+            Debug.Log("On Back To Main Home");
+#endif
         }
 
         public void Dispose()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Common.UpdateHandlerPattern;
+using BubbleShooter.Scripts.Mainhome.GameManagers;
 using Scripts.Configs;
 
 namespace Scripts.App
@@ -11,7 +12,6 @@ namespace Scripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoad()
         {
-            GameSetup();
             RegisterServicesBeforeSceneLoad();
         }
 
@@ -27,21 +27,16 @@ namespace Scripts.App
             RegisterServicesBeforeSplashScene();
         }
 
-        private static void RegisterServicesBeforeSplashScene()
-        {
+        private static void RegisterServicesBeforeSceneLoad() { }
 
-        }
-
-        private static void RegisterServicesBeforeSceneLoad()
-        {
-
-        }
+        private static void RegisterServicesBeforeSplashScene() { }
 
         private static void RegisterServicesAfterSceneLoad()
         {
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
             Register<MusicManager>("Managers/Music Manager");
+            Register<GameManager>("Managers/Game Manager");
         }
 
         private static T Register<T>(string serviceName) where T : Component
@@ -50,11 +45,6 @@ namespace Scripts.App
             T instance = Object.Instantiate(service);
             Object.DontDestroyOnLoad(instance);
             return service;
-        }
-
-        private static void GameSetup()
-        {
-            Application.targetFrameRate = GameSetupConstants.NormalTargetFramerate;
         }
     }
 }

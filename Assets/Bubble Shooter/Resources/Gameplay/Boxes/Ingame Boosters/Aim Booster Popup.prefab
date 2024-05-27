@@ -1739,6 +1739,7 @@ GameObject:
   - component: {fileID: 1430015546921888972}
   - component: {fileID: 4666680205169225983}
   - component: {fileID: 3855405834692135838}
+  - component: {fileID: 1206717148894897662}
   m_Layer: 5
   m_Name: Aim Booster Popup
   m_TagString: Untagged
@@ -1843,12 +1844,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentPanel: {fileID: 0}
+  popupCanvas: {fileID: 0}
   mainPanel: {fileID: 0}
   IsPopup: 1
   IsNotStack: 0
   isAnim: 1
   coinAmount: {fileID: 5161916972073230717}
+  boosterPrice: {fileID: 6981208581115296205}
   boosterType: 2
+  coinTween: {fileID: 1206717148894897662}
   closeButton: {fileID: 825371784620557313}
   purchaseButton: {fileID: 9011588747577337479}
   boxAnimator: {fileID: 4666680205169225983}
@@ -1894,6 +1898,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1206717148894897662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596544352945914373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a33bfbfbdc7d9941b266120d6e7b31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  ease: 6
 --- !u!1 &8405994053696844242
 GameObject:
   m_ObjectHideFlags: 0

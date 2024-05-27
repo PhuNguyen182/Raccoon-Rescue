@@ -1,28 +1,51 @@
 using System;
 using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Mainhome.Player;
 
-[Serializable]
 public class GameData : SingletonClass<GameData>
 {
     private GameResourceData _gameResourceData;
     private InGameBoosterData _inGameBoosterData;
     private LevelProgressData _levelProgressData;
 
-    public void Initialize(GameData gameData)
-    {
-        if (gameData == null)
-            return;
+    private const string GameResourceDataKey = "GameResourceData";
+    private const string InGameBoosterDataKey = "InGameBoosterData";
+    private const string LevelProgressDataKey = "LevelProgressData";
 
-        _gameResourceData = gameData._gameResourceData;
-        _inGameBoosterData = gameData._inGameBoosterData;
-        _levelProgressData = gameData._levelProgressData;
-    }
+    public ShopProfiler ShopProfiler { get; private set; }
+    public GameInventory GameInventory { get; private set; }
 
     public GameData()
     {
-        _gameResourceData = new();
-        _inGameBoosterData = new(0, 0, 0);
-        _levelProgressData = new(new());
+        ShopProfiler = new();
+        GameInventory = new();
+    }
+
+    public void LoadData()
+    {
+        // The component data should be saved individually because GameData class doesn't support serialize
+        _gameResourceData = SimpleSaveSystem<GameResourceData>.LoadData(GameResourceDataKey) ?? new();
+        _inGameBoosterData = SimpleSaveSystem<InGameBoosterData>.LoadData(InGameBoosterDataKey) ?? new(0, 0, 0);
+        _levelProgressData = SimpleSaveSystem<LevelProgressData>.LoadData(LevelProgressDataKey) ?? new(new());
+    }
+
+    public void SaveData()
+    {
+        SimpleSaveSystem<GameResourceData>.SaveData(GameResourceDataKey, _gameResourceData);
+        SimpleSaveSystem<InGameBoosterData>.SaveData(InGameBoosterDataKey, _inGameBoosterData);
+        SimpleSaveSystem<LevelProgressData>.SaveData(LevelProgressDataKey, _levelProgressData);
+    }
+
+    public void DeleteData()
+    {
+        SimpleSaveSystem<GameResourceData>.DeleteData(GameResourceDataKey);
+        SimpleSaveSystem<InGameBoosterData>.DeleteData(InGameBoosterDataKey);
+        SimpleSaveSystem<LevelProgressData>.DeleteData(LevelProgressDataKey);
+    }
+
+    public int GetCurrentLevel()
+    {
+        return _levelProgressData.Level;
     }
 
     public void AddCoins(int amount)
@@ -70,9 +93,25 @@ public class GameData : SingletonClass<GameData>
         _inGameBoosterData.AddBooster(boosterType, -amount);
     }
 
-    public void AddLevelComplete(LevelProgress level)
+    public int GetBooster(IngameBoosterType boosterType)
+    {
+        return boosterType switch
+        {
+            IngameBoosterType.Colorful => _inGameBoosterData.ColorfulCount,
+            IngameBoosterType.PreciseAimer => _inGameBoosterData.TargetAimCount,
+            IngameBoosterType.ChangeBall => _inGameBoosterData.RandomBallCount,
+            _ => 0
+        };
+    }
+
+    public void AddLevelProgress(LevelProgress level)
     {
         _levelProgressData.Append(level);
+    }
+
+    public bool IsLevelComplete(int level)
+    {
+        return _levelProgressData.IsLevelComplete(level);
     }
 
     public LevelProgress GetLevelProgress(int level)
