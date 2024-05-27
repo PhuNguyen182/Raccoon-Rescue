@@ -29,7 +29,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         {
             skipButton.onClick.AddListener(Skip);
             backButton.onClick.AddListener(Back);
-            quitButton.onClick.AddListener(Quit);
+            quitButton.onClick.AddListener(() => Quit().Forget());
             addMoveButton.onClick.AddListener(OnAddMove);
             _token = this.GetCancellationTokenOnDestroy();
         }
@@ -69,12 +69,13 @@ namespace BubbleShooter.Scripts.GameUI.Screens
             failedMessage.SetActive(true);
         }
 
-        private void Quit()
+        private async UniTask Quit()
         {
+            await Close();
             _completionSource?.TrySetResult(false);
         }
 
-        public async UniTaskVoid Close()
+        public async UniTask Close()
         {
             animator.Play(_disappearHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);

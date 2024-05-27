@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Cysharp.Threading.Tasks;
-using BubbleShooter.Scripts.Mainhome.PopupBoxes.PlayGamePopup;
+using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup;
 using BubbleShooter.Scripts.Common.PlayDatas;
 using Sirenix.OdinInspector;
 
@@ -68,11 +68,21 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 
         private void InitProgressLevel()
         {
+            int currentLevel = GameData.Instance.GetCurrentLevel();
             using (var listpool = ListPool<IDisposable>.Get(out var disposables))
             {
                 _nodePathDict = nodePaths.ToDictionary(node => node.Level, node =>
                 {
-                    node.SetAvailableState(true);
+                    node.SetAvailableState(currentLevel >= node.Level);
+                    bool isLevelComplete = GameData.Instance.IsLevelComplete(node.Level);
+                    
+                    // Check less than node.Level to ensure all completed level are in idle state without animation
+                    if (isLevelComplete && currentLevel < node.Level) 
+                    {
+                        var levelNode = GameData.Instance.GetLevelProgress(node.Level);
+                        node.SetIdleState(levelNode.Star, false);
+                    }
+
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
                                         .Subscribe(value => OnNodeButtonClick(value.Level, value.Star));
                     disposables.Add(d);

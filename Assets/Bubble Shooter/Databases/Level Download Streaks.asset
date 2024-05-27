@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf47af90c0c9f6f46912c73a108138ef, type: 3}
+  m_Name: Level Download Streaks
+  m_EditorClassIdentifier: 
+  levelRanges:
+  - MinValue: 101
+    MaxValue: 200
+  - MinValue: 201
+    MaxValue: 300
+  - MinValue: 301
+    MaxValue: 400
+  - MinValue: 401
+    MaxValue: 500
+  - MinValue: 501
+    MaxValue: 600
+  - MinValue: 601
+    MaxValue: 700
+  - MinValue: 701
+    MaxValue: 800
+  - MinValue: 801
+    MaxValue: 900
+  - MinValue: 901
+    MaxValue: 1000

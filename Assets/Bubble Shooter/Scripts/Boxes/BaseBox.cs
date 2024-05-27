@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class BaseBox : MonoBehaviour
 {
     public RectTransform ContentPanel;
+    [SerializeField] protected Canvas popupCanvas;
     [SerializeField] protected RectTransform mainPanel;
 
     [Header("Config Box")]
@@ -14,7 +15,6 @@ public abstract class BaseBox : MonoBehaviour
 
     private bool _isApplicationQuitting; 
 
-    protected Canvas popupCanvas;
     protected Action actionOpenSaveBox;
 
     protected virtual string IDPopup => $"{GetType()}{gameObject.GetInstanceID()}";
@@ -27,9 +27,9 @@ public abstract class BaseBox : MonoBehaviour
 
     private void Awake()
     {
-        popupCanvas = GetComponent<Canvas>();
+        bool isCanvasValid = TryGetComponent(out popupCanvas);
 
-        if (popupCanvas != null && IsPopup)
+        if (isCanvasValid && IsPopup)
         {
             popupCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             popupCanvas.worldCamera = Camera.main;

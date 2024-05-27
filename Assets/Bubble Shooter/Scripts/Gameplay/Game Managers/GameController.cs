@@ -17,10 +17,9 @@ using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Gameplay.Miscs;
 using BubbleShooter.Scripts.GameUI.Screens;
 using BubbleShooter.Scripts.Gameplay.Inputs;
-using Newtonsoft.Json;
+using BubbleShooter.Scripts.Common.Configs;
 using Scripts.Configs;
 using Scripts.Service;
-using BubbleShooter.Scripts.Common.Configs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameManagers
 {
@@ -43,6 +42,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [Header("GUI")]
         [SerializeField] private MainScreenManager mainScreen;
 
+        [Header("Tutorials")]
+        [SerializeField] private GameplayTutorialManager tutorialManager;
+
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
         [SerializeField] private CameraController cameraController;
@@ -59,6 +61,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private CheckScoreTask _checkScoreTask;
         private IngameBoosterHandler _ingameBoosterHandler;
         private MoveGameViewTask _moveGameViewTask;
+        private StartingGameTask _startingGameTask;
         private GameTaskManager _gameTaskManager;
 
         public GameDecorator GameDecorator => gameDecorator;
@@ -113,6 +116,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                                     , mainScreen.NotificationPanel, _checkTargetTask);
             _moveGameViewTask.AddTo(ref builder);
 
+            _startingGameTask = new(_inputProcessor, _moveGameViewTask, tutorialManager);
+            _startingGameTask.AddTo(ref builder);
+
             _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
             _ingameBoosterHandler.AddTo(ref builder);
 
@@ -132,18 +138,44 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             if (PlayConfig.Current.LevelModel == null)
                 return;
 
+            gameDecorator.SetBackground(PlayConfig.Current.Level);
             LevelModel levelModel = PlayConfig.Current.LevelModel;
-            GenerateLevel(levelModel);
+            mainScreen.EndGameScreen.CompletePanel.SetLevel(PlayConfig.Current.Level);
+            GenerateLevel(levelModel, PlayConfig.Current.Level, PlayConfig.Current.IsTest);
 
-            _ingameBoosterHandler.InitBooster(new()
+            if (PlayConfig.Current.IsTest)
             {
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 10 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
-                new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 100 },
-            });
+                _ingameBoosterHandler.InitBooster(new()
+                {
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.Colorful, Amount = 1000 },
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.PreciseAimer, Amount = 1000 },
+                    new IngameBoosterModel() { BoosterType = IngameBoosterType.ChangeBall, Amount = 1000 },
+                });
+            }
+            else
+            {
+                _ingameBoosterHandler.InitBooster(new()
+                {
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.Colorful, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.Colorful)
+                    },
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.PreciseAimer, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.PreciseAimer)
+                    },
+                    new IngameBoosterModel() 
+                    { 
+                        BoosterType = IngameBoosterType.ChangeBall, 
+                        Amount = GameData.Instance.GetBooster(IngameBoosterType.ChangeBall)
+                    },
+                });
+            }
         }
 
-        private void GenerateLevel(LevelModel levelModel)
+        private void GenerateLevel(LevelModel levelModel, int level, bool isTest)
         {
             GenerateGridCell(levelModel);
             GenerateEntities(levelModel);
@@ -154,8 +186,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();
 
-            _moveGameViewTask.CalculateFirstItemHeight();
-            _moveGameViewTask.MoveViewOnStart().Forget();
+            if (!isTest)
+            {
+                _startingGameTask.OnStartGame(level).Forget();
+            }
+
+            else
+            {
+                _moveGameViewTask.CalculateFirstItemHeight();
+                _moveGameViewTask.MoveViewOnStart().Forget();
+            }
         }
 
         private void GenerateGridCell(LevelModel levelModel)

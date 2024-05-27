@@ -9,13 +9,15 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
     {
         private DateTime _savedHeartTime;
         private TimeSpan _heartTimeDiff;
+
+        private static readonly int _maxHeart = GameDataConstants.MaxHeart;
         private static readonly int _heartCooldown = GameDataConstants.HeartCooldown;
 
         public TimeSpan HeartTimeDiff => _heartTimeDiff;
 
         public void UpdateHeartTime()
         {
-            if (GameData.Instance.GetHeart() < 5)
+            if (GameData.Instance.GetHeart() < _maxHeart)
             {
                 _savedHeartTime = GameData.Instance.GetCurrentHeartTime();
                 TimeSpan offset = DateTime.Now.Subtract(_savedHeartTime);
@@ -24,10 +26,10 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                 if (_heartTimeDiff.TotalSeconds <= 0)
                 {
                     GameData.Instance.AddHeart(1);
-                    if (GameData.Instance.GetHeart() >= GameDataConstants.MaxHeart)
+                    if (GameData.Instance.GetHeart() >= _maxHeart)
                     {
                         _savedHeartTime = DateTime.Now;
-                        GameData.Instance.SetHeart(GameDataConstants.MaxHeart);
+                        GameData.Instance.SetHeart(_maxHeart);
                         GameData.Instance.SaveHeartTime(_savedHeartTime);
                     }
                     else
@@ -49,10 +51,10 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                 diff = diff.Subtract(cooldown);
                 GameData.Instance.AddHeart(1);
 
-                if (GameData.Instance.GetHeart() >= GameDataConstants.MaxHeart)
+                if (GameData.Instance.GetHeart() >= _maxHeart)
                 {
                     _savedHeartTime = DateTime.Now;
-                    GameData.Instance.SetHeart(GameDataConstants.MaxHeart);
+                    GameData.Instance.SetHeart(_maxHeart);
                     GameData.Instance.SaveHeartTime(DateTime.Now);
                     break;
                 }
