@@ -11,9 +11,13 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private Transform groundPointContainer;
         [SerializeField] private BoxCollider2D groundingArea;
         [SerializeField] private MainCharacter mainCharacter;
+        [SerializeField] private SpriteRenderer background;
 
         [Header("Reflect Walls")]
         [SerializeField] private SideWall[] reflectWalls;
+
+        [Header("Backgrounds")]
+        [SerializeField] private Sprite[] backgrounds;
 
         public MainCharacter Character => mainCharacter;
         public Transform GroundPointContainer => groundPointContainer;
@@ -36,6 +40,13 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             {
                 reflectWalls[i].ShowReflectWall(active);
             }
+        }
+
+        public void SetBackground(int level)
+        {
+            int backgroundIndex = level / 20;
+            backgroundIndex = Mathf.Clamp(backgroundIndex, 0, 5);
+            background.sprite = backgrounds[backgroundIndex];
         }
     }
 }

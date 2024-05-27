@@ -42,6 +42,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         [Header("GUI")]
         [SerializeField] private MainScreenManager mainScreen;
 
+        [Header("Tutorials")]
+        [SerializeField] private GameplayTutorialManager tutorialManager;
+
         [Header("Miscs")]
         [SerializeField] private GameDecorator gameDecorator;
         [SerializeField] private CameraController cameraController;
@@ -58,6 +61,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private CheckScoreTask _checkScoreTask;
         private IngameBoosterHandler _ingameBoosterHandler;
         private MoveGameViewTask _moveGameViewTask;
+        private StartingGameTask _startingGameTask;
         private GameTaskManager _gameTaskManager;
 
         public GameDecorator GameDecorator => gameDecorator;
@@ -112,6 +116,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                                     , mainScreen.NotificationPanel, _checkTargetTask);
             _moveGameViewTask.AddTo(ref builder);
 
+            _startingGameTask = new(_inputProcessor, _moveGameViewTask, tutorialManager);
+            _startingGameTask.AddTo(ref builder);
+
             _ingameBoosterHandler = new(mainScreen.BoosterPanel, ballProvider, ballShooter, _inputProcessor);
             _ingameBoosterHandler.AddTo(ref builder);
 
@@ -131,9 +138,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             if (PlayConfig.Current.LevelModel == null)
                 return;
 
+            gameDecorator.SetBackground(PlayConfig.Current.Level);
             LevelModel levelModel = PlayConfig.Current.LevelModel;
             mainScreen.EndGameScreen.CompletePanel.SetLevel(PlayConfig.Current.Level);
-            GenerateLevel(levelModel);
+            GenerateLevel(levelModel, PlayConfig.Current.Level, PlayConfig.Current.IsTest);
 
             if (PlayConfig.Current.IsTest)
             {
@@ -167,7 +175,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             }
         }
 
-        private void GenerateLevel(LevelModel levelModel)
+        private void GenerateLevel(LevelModel levelModel, int level, bool isTest)
         {
             GenerateGridCell(levelModel);
             GenerateEntities(levelModel);
@@ -178,8 +186,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             SetShootSequence(levelModel);
             _fillBoardTask.Fill();
 
-            _moveGameViewTask.CalculateFirstItemHeight();
-            _moveGameViewTask.MoveViewOnStart().Forget();
+            if (!isTest)
+            {
+                _startingGameTask.OnStartGame(level).Forget();
+            }
+
+            else
+            {
+                _moveGameViewTask.CalculateFirstItemHeight();
+                _moveGameViewTask.MoveViewOnStart().Forget();
+            }
         }
 
         private void GenerateGridCell(LevelModel levelModel)

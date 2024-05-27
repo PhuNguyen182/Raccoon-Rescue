@@ -85,20 +85,23 @@ namespace BubbleShooter.Scripts.GameUI.Screens
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
             gameObject.SetActive(false);
 
-            BackHomeConfig.Current = new BackHomeConfig
+            if (!PlayConfig.Current.IsTest)
             {
-                IsWin = true,
-                Level = _level,
-                Star = _tier
-            };
+                BackHomeConfig.Current = new BackHomeConfig
+                {
+                    IsWin = true,
+                    Level = _level,
+                    Star = _tier
+                };
 
-            TransitionConfig.Current = new TransitionConfig
-            {
-                SceneName = SceneName.Mainhome
-            };
+                TransitionConfig.Current = new TransitionConfig
+                {
+                    SceneName = SceneName.Mainhome
+                };
 
-            PlayConfig.Current = null;
-            await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+                PlayConfig.Current = null;
+                await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+            }
         }
     }
 }

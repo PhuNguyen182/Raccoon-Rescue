@@ -20,12 +20,18 @@ namespace BubbleShooter.Scripts.Mainhome
 {
     public class MainhomeController : MonoBehaviour
     {
+        [SerializeField] private InteractiveController interactiveController;
+
+        [Header("Common UI Elements")]
         [SerializeField] private Button settingButton;
         [SerializeField] private HeartBox heartBox;
         [SerializeField] private CoinHolder coinHolder;
+
+        [Header("Progress Map")]
         [SerializeField] private ProgressMap progressMap;
         [SerializeField] private CameraController cameraController;
-        [SerializeField] private InteractiveController interactiveController;
+
+        [Header("Miscs")] 
         [SerializeField] private LevelStreakData levelStreakData;
         [SerializeField] private UIEffectManager effectManager;
 
