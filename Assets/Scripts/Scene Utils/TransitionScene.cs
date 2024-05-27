@@ -30,6 +30,9 @@ namespace Scripts.SceneUtils
 
         private async UniTask LoadScene()
         {
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
+            transition.SetTrigger(_fadeHash);
+
             if (TransitionConfig.Current != null)
             {
                 SceneName sceneName = TransitionConfig.Current.SceneName;
@@ -43,21 +46,19 @@ namespace Scripts.SceneUtils
                         break;
                 }
             }
+
+            TransitionConfig.Current = null;
         }
 
         private async UniTask LoadMainhomeScene()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
-            transition.SetTrigger(_fadeHash);
-            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single);
         }
 
         private async UniTask LoadGameplayScene()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
-            transition.SetTrigger(_fadeHash);
-            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Gameplay, LoadSceneMode.Single);
         }
     }

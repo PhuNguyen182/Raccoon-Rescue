@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.Common.Configs
     {
         public static PlayConfig Current;
 
+        public int Level;
         public bool IsTest;
         public LevelModel LevelModel;
 

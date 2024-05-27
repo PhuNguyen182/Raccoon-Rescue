@@ -7,6 +7,13 @@ public class GameResourceData
     public int Coins;
     public long HeartTime;
 
+    public GameResourceData()
+    {
+        Coins = 0;
+        Heart = GameDataConstants.MaxHeart;
+        HeartTime = TimeUtils.DatetimeToBinary(DateTime.MinValue);
+    }
+
     public void AddCoins(int amount)
     {
         Coins += amount;
@@ -19,11 +26,11 @@ public class GameResourceData
 
     public void SaveHeartTime(DateTime time)
     {
-        HeartTime = TimeUtils.DateTimeToUnixMiliseconds(time);
+        HeartTime = TimeUtils.DatetimeToBinary(time);
     }
 
     public DateTime GetHeartTime()
     {
-        return TimeUtils.UnixMilisecondsToDateTime(HeartTime);
+        return TimeUtils.BinaryToDatetime(HeartTime);
     }
 }

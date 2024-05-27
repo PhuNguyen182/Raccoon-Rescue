@@ -18,6 +18,7 @@ namespace Scripts.Service
         {
             _messageBroker = new();
             _messageBroker.InitializeMessages();
+            DataManager.LoadData();
         }
     }
 }

@@ -57,7 +57,9 @@ namespace BubbleShooter.Scripts.Gameplay.Inputs
         private void OnMovePerform(InputAction.CallbackContext context)
         {
             Position = context.ReadValue<Vector2>();
-            Pointer = mainCamera.ScreenToWorldPoint(Position);
+
+            if (mainCamera != null)
+                Pointer = mainCamera.ScreenToWorldPoint(Position);
         }
 
         private bool GetReleaseState()
