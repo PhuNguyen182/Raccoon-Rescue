@@ -61,9 +61,6 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             {
                 DoNextStage().Forget();
                 BuyBooster();
-                // Do purchase
-                GameData.Instance.SpendCoins(_price);
-                _coinReactive.Value = GameData.Instance.GetCoins();
             }
 
             else if(_stage == 1)
@@ -88,9 +85,9 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             int coin = GameData.Instance.GetCoins();
             _price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
 
-            _coinReactive.Value = coin;
             coinAmount.text = $"{coin}";
             boosterPrice.text = $"{_price}";
+            _coinReactive.Value = coin;
 
             purchaseButton.interactable = coin >= _price;
         }
@@ -103,7 +100,9 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
                 BoosterType = boosterType
             });
 
+            GameData.Instance.SpendCoins(_price);
             GameData.Instance.AddBooster(boosterType, 1);
+            _coinReactive.Value = GameData.Instance.GetCoins();
         }
 
         protected override void DoClose()

@@ -165,20 +165,27 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private async UniTask OnQuitGame()
         {
-            TransitionConfig.Current = new TransitionConfig
+            if (!PlayConfig.Current.IsTest)
             {
-                SceneName = SceneName.Mainhome
-            };
+                GameData.Instance.UseHeart(1);
 
-            BackHomeConfig.Current = new BackHomeConfig
-            {
-                IsWin = false,
-                Level = PlayConfig.Current.Level,
-                Star = _checkScoreTask.Tier
-            };
+                TransitionConfig.Current = new TransitionConfig
+                {
+                    SceneName = SceneName.Mainhome
+                };
 
-            PlayConfig.Current = null;
-            await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+                BackHomeConfig.Current = new BackHomeConfig
+                {
+                    IsWin = false,
+                    Level = PlayConfig.Current.Level,
+                    Star = _checkScoreTask.Tier
+                };
+
+                PlayConfig.Current = null;
+                await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+            }
+
+            QuitMessage();
         }
 
         private void QuitGame()
@@ -187,6 +194,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             {
                 _gameStateMachine.Fire(Trigger.Quit);
             }
+        }
+
+        private void QuitMessage()
+        {
+#if UNITY_EDITOR
+            Debug.Log("On Back To Main Home");
+#endif
         }
 
         public void Dispose()
