@@ -74,9 +74,11 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _CastShadows: 0
+    - _ColorfulToggle: 0
     - _Cull: 2
     - _DstBlend: 10
     - _EnableExternalAlpha: 0
+    - _Gradient_Time: 1.5
     - _QueueControl: 0
     - _QueueOffset: 0
     - _SrcBlend: 5

@@ -14,11 +14,11 @@ using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Constants;
 using BubbleShooter.Scripts.Gameplay.GameBoard;
+using BubbleShooter.Scripts.Gameplay.GameTasks;
 using BubbleShooter.Scripts.Gameplay.Inputs;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using MessagePipe;
-using BubbleShooter.Scripts.Gameplay.GameTasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 {
@@ -26,6 +26,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
     {
         [SerializeField] private CommonBall prefab;
         [SerializeField] private BallProvider ballProvider;
+        [SerializeField] private Material lineMaterial;
 
         [Header("Dummy Balls")]
         [FoldoutGroup("Ball Colors")]
@@ -103,6 +104,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
+        private static readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulToggle");
 
         public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
@@ -287,6 +289,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 _ => default
             };
 
+            lineMaterial.SetInteger(_colorfulToggleHash, ballColor == EntityType.ColorfulBall ? 1 : 0);
             return color;
         }
 
@@ -376,6 +379,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         {
             float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg - 90f;
             _limitAngleSine = Mathf.Sin((angle + 90f) / Mathf.Rad2Deg);
+        }
+
+        private void OnDestroy()
+        {
+            lineMaterial.SetInteger(_colorfulToggleHash, 0);
         }
     }
 }
