@@ -76,7 +76,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
 
         private void Start()
         {
-            GetLevel();
+            CreateLevel();
         }
 
         private void Setup()
@@ -130,7 +130,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             builder.RegisterTo(this.destroyCancellationToken);
         }
 
-        private void GetLevel()
+        private void CreateLevel()
         {
             if (PlayConfig.Current == null)
                 return;
