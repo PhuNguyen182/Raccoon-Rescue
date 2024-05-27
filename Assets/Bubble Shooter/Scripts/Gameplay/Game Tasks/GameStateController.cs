@@ -167,8 +167,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             if (!PlayConfig.Current.IsTest)
             {
-                GameData.Instance.UseHeart(1);
-
                 TransitionConfig.Current = new TransitionConfig
                 {
                     SceneName = SceneName.Mainhome
