@@ -27,6 +27,11 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private Animator panelAnimator;
         [SerializeField] private TweenValueEffect scoreTween;
 
+        [Header("Audios")]
+        [SerializeField] private AudioSource popupAudio;
+        [SerializeField] private AudioClip starClip;
+        [SerializeField] private AudioClip scoreClip;
+
         private CancellationToken _token;
         private ReactiveProperty<int> _reactiveScore = new(0);
 
@@ -75,8 +80,10 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         {
             background.SetActive(true);
             await UniTask.Delay(TimeSpan.FromSeconds(appearClip.length), cancellationToken: _token);
+
             panelAnimator.SetInteger(_tierHash, _tier);
             _reactiveScore.Value = _score;
+            await PlayScoreAudio();
         }
 
         public async UniTask Close()
@@ -108,6 +115,21 @@ namespace BubbleShooter.Scripts.GameUI.Screens
                 PlayConfig.Current = null;
                 await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
             }
+        }
+
+        private async UniTask PlayScoreAudio()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.07f), cancellationToken: _token);
+                popupAudio.PlayOneShot(scoreClip);
+            }
+        }
+
+        // Play in animation clip keyframe
+        public void PlayStarAudio()
+        {
+            popupAudio.PlayOneShot(starClip);
         }
     }
 }

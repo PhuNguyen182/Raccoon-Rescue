@@ -14,12 +14,16 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics, IBallEffect, IBallPlayBoosterEffect
+    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics, IBallEffect, IBallPlayBoosterEffect, IBallPlayAudio
     {
         [SerializeField] protected LayerMask destroyerLayer;
         [SerializeField] protected BallMovement ballMovement;
         [SerializeField] protected EntityGraphics entityGraphics;
         [SerializeField] protected EntityAudio entityAudio;
+
+        [Header("Common Audio Clips")]
+        [SerializeField] protected AudioClip fallPopClip;
+        [SerializeField] protected AudioClip[] popClips;
 
         [Header("Booster Effects")]
         [FoldoutGroup("Booster Effects")]
@@ -144,6 +148,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 if (IsFallen)
                 {
+                    entityAudio.PlaySound(fallPopClip);
                     PlayBlastEffect(true);
                     DestroyOnFallen();
                 }
@@ -189,6 +194,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 obj.transform.SetParent(EffectContainer.Transform);
                 SimplePool.Despawn(obj);
             }
+        }
+
+        public void PlayPopSound(int level)
+        {
+            int index = Mathf.Clamp(level, 0, popClips.Length);
+            entityAudio.PlaySound(popClips[index]);
         }
 
         protected virtual void OnDisable()

@@ -24,5 +24,10 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
             _isLocked = isLocked;
             lockState.SetActive(_isLocked);
         }
+
+        private void OnDisable()
+        {
+            boosterToggle.isOn = false;
+        }
     }
 }

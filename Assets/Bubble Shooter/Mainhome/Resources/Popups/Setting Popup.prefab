@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 743363306432960530}
   - component: {fileID: 2448036565753388136}
   - component: {fileID: 5160912783163953596}
+  - component: {fileID: 3365286134423705790}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -352,6 +353,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3365286134423705790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802859547200005427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2448036565753388136}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &5562343810665802091
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +381,7 @@ GameObject:
   - component: {fileID: 7014876922734281142}
   - component: {fileID: 1278377608063138984}
   - component: {fileID: 9103979443439624028}
+  - component: {fileID: 5563235608454371179}
   m_Layer: 5
   m_Name: Music Button
   m_TagString: Untagged
@@ -494,6 +511,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5563235608454371179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562343810665802091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1278377608063138984}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &6122188366389132003
 GameObject:
   m_ObjectHideFlags: 0
@@ -917,6 +949,7 @@ GameObject:
   - component: {fileID: 231991818063789531}
   - component: {fileID: 4655464188299798198}
   - component: {fileID: 4199985382762297603}
+  - component: {fileID: 3609422146276071941}
   m_Layer: 5
   m_Name: Sound Button
   m_TagString: Untagged
@@ -1046,6 +1079,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3609422146276071941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7987137706656622372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4655464188299798198}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &8443057706861768226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,6 +1250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentPanel: {fileID: 242119432562431554}
+  popupCanvas: {fileID: 0}
   mainPanel: {fileID: 242119432562431554}
   IsPopup: 0
   IsNotStack: 0
@@ -1264,6 +1313,7 @@ GameObject:
   - component: {fileID: 8367631271311221728}
   - component: {fileID: 5885839361783011984}
   - component: {fileID: 495777355905499775}
+  - component: {fileID: 8038872274218319512}
   m_Layer: 5
   m_Name: Home Button
   m_TagString: Untagged
@@ -1393,3 +1443,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8038872274218319512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734230569218330603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 5885839361783011984}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}

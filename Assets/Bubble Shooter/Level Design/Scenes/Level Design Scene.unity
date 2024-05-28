@@ -219,6 +219,7 @@ MonoBehaviour:
   tileDatabase: {fileID: 11400000, guid: 430c3825efc17c44490a5aaf7708de7f, type: 2}
   inputLevel: 
   outputLevel: 
+  externalBuildPath: 
   targetCount: 4
   moveCount: 25
   maxScore: 0
@@ -6396,7 +6397,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!212 &1183006483
 SpriteRenderer:
@@ -6460,7 +6461,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 1000, y: 1000, z: 1000}
+  m_LocalScale: {x: 1000000, y: 1000000, z: 1000000}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1289264863}

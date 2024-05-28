@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
+        [SerializeField] private AudioClip snapBallClip;
         [SerializeField] private EntityType ballColor;
 
         [Header("Ball Colors")]
@@ -204,6 +205,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void OnSnapped()
         {
+            entityAudio.PlaySound(snapBallClip);
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 

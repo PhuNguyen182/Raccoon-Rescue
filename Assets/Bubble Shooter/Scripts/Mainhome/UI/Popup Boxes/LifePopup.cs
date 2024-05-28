@@ -14,6 +14,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
     public class LifePopup : BaseBox<LifePopup>
     {
+        [SerializeField] private AudioClip coinClip;
         [SerializeField] private UIObjectEffect heart;
         [SerializeField] private Button buyButton;
         [SerializeField] private Button closeButton;
@@ -46,6 +47,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
             if(currentCoin >= _price)
             {
                 GameData.Instance.SpendCoins(_price);
+                MusicManager.Instance.PlaySoundEffect(coinClip, 0.6f);
                 BuyAndAddHearts().Forget();
             }
             else

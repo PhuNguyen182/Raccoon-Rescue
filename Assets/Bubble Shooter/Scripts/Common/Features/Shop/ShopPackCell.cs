@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using BubbleShooter.Scripts.Feedbacks;
-using Cysharp.Threading.Tasks;
 using BubbleShooter.Scripts.Mainhome;
+using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Common.Features.Shop
 {
     public class ShopPackCell : MonoBehaviour
     {
+        [SerializeField] private AudioClip coinClip;
         [SerializeField] private string productID;
         [SerializeField] private Button purchaseButton;
 
@@ -24,6 +24,7 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
 
         private void OnPurchaseClick()
         {
+            MusicManager.Instance.PlaySoundEffect(coinClip, 0.6f);
             GameData.Instance.ShopProfiler.BuyProduct(productID);
             DoShopEffect().Forget();
         }

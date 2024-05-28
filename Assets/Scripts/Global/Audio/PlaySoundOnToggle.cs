@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
-public class PlaySoundOnClick : MonoBehaviour
+[RequireComponent(typeof(Toggle))]
+public class PlaySoundOnToggle : MonoBehaviour
 {
-    [SerializeField] private Button button;
+    [SerializeField] private Toggle toggle;
     [SerializeField] private float volumeScale = 0.6f;
     [SerializeField] private AudioClip clip;
 
     private void Awake()
     {
-        button.onClick.AddListener(() =>
+        toggle.onValueChanged.AddListener(isOn =>
         {
             Vibration.Vibrate(80);
             MusicManager.Instance.PlaySoundEffect(clip, volumeScale);
@@ -22,7 +22,7 @@ public class PlaySoundOnClick : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        button ??= GetComponent<Button>();
+        toggle ??= GetComponent<Toggle>();
     }
 #endif
 }

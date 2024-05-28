@@ -227,6 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   message: {fileID: 7767974991702406734}
   panelAnimator: {fileID: 7308280351430048475}
+  swapClip: {fileID: 8300000, guid: 83fc2ee5ba6f42a49adbad716eb2ba6f, type: 3}
   moveIn: {fileID: 7400000, guid: 6707b3df40876254eb8ba56494901ae8, type: 2}
   moveOut: {fileID: 7400000, guid: 57f43b4b00d8ed74ebc4e2977c9fbdec, type: 2}
 --- !u!95 &7308280351430048475
@@ -484,6 +485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   message: {fileID: 0}
   panelAnimator: {fileID: 4641538359941389524}
+  swapClip: {fileID: 8300000, guid: 4b32a873f368c8140a782efbbd7d1243, type: 3}
   moveIn: {fileID: 7400000, guid: 6707b3df40876254eb8ba56494901ae8, type: 2}
   moveOut: {fileID: 7400000, guid: 57f43b4b00d8ed74ebc4e2977c9fbdec, type: 2}
 --- !u!1 &7962806026444958378
