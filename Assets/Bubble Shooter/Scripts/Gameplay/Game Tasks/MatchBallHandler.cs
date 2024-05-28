@@ -203,6 +203,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 if (_isMatchWithColorful && cluster[i].BallEntity is IBallEffect effect)
                     effect.PlayColorfulEffect();
 
+                if (cluster[i].BallEntity is IBallPlayAudio ballAudio)
+                    ballAudio.PlayPopSound(i);
+
                 totalScore += cluster[i].BallEntity.Score;
                 await _breakGridTask.Break(cluster[i]);
             }

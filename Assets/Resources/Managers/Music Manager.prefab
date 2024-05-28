@@ -44,9 +44,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -1321195365031903026, guid: be18ee391b3e347139deacb5d68f036f, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -172,7 +172,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -3720156111931349495, guid: be18ee391b3e347139deacb5d68f036f, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -305,3 +305,4 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: be18ee391b3e347139deacb5d68f036f, type: 2}
   musicSource: {fileID: 7109419181385242040}
   sfxSource: {fileID: 904845769269694182}
+  soundEffects: {fileID: 11400000, guid: cd3a6f1ccf5e51d489a4b053ae46329d, type: 2}

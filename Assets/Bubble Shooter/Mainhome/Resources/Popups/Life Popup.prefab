@@ -402,6 +402,7 @@ MonoBehaviour:
   IsPopup: 1
   IsNotStack: 0
   isAnim: 1
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   heart: {fileID: 2495207788036744352, guid: 99ed610e1682904438ac28477c898c8a, type: 3}
   buyButton: {fileID: 3005137294650220721}
   closeButton: {fileID: 3066615813538040942}
@@ -421,6 +422,7 @@ GameObject:
   - component: {fileID: 5363453652359468637}
   - component: {fileID: 3005137294650220721}
   - component: {fileID: 2896088493362956486}
+  - component: {fileID: 2834065367137409401}
   m_Layer: 5
   m_Name: Buy Button
   m_TagString: Untagged
@@ -552,6 +554,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2834065367137409401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3702392817349284888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3005137294650220721}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &5341599106506179828
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,6 +1132,7 @@ GameObject:
   - component: {fileID: 8282174135392297950}
   - component: {fileID: 3066615813538040942}
   - component: {fileID: 5120417135507872237}
+  - component: {fileID: 5160869950503856245}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -1244,3 +1262,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5160869950503856245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137855785719865123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3066615813538040942}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}

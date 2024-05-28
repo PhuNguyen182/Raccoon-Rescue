@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 1044052196421655550}
   - component: {fileID: 2769846614390555207}
   - component: {fileID: 7652801737879614001}
+  - component: {fileID: 7447531804668928042}
   m_Layer: 5
   m_Name: Change Ball Booster
   m_TagString: Untagged
@@ -391,6 +392,21 @@ MonoBehaviour:
   boosterType: 3
   boosterToggle: {fileID: 1044052196421655550}
   lockState: {fileID: 1131942868613853659}
+--- !u!114 &7447531804668928042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684531949346698200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f17966a4f73e44db4b67aca92138c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggle: {fileID: 1044052196421655550}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 4d1225e854f4143249c45a616b42acb2, type: 3}
 --- !u!1 &979154854189576851
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +693,7 @@ GameObject:
   - component: {fileID: 402595635833293819}
   - component: {fileID: 2153469561110414333}
   - component: {fileID: 4021476908454120032}
+  - component: {fileID: 6795650463095785050}
   m_Layer: 5
   m_Name: Aiming Booster
   m_TagString: Untagged
@@ -828,6 +845,21 @@ MonoBehaviour:
   boosterType: 2
   boosterToggle: {fileID: 402595635833293819}
   lockState: {fileID: 679269482412448457}
+--- !u!114 &6795650463095785050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547507619629579618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f17966a4f73e44db4b67aca92138c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggle: {fileID: 402595635833293819}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 4d1225e854f4143249c45a616b42acb2, type: 3}
 --- !u!1 &1925597945789977074
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,6 +1954,7 @@ GameObject:
   - component: {fileID: 1187117926902196460}
   - component: {fileID: 2962899562857048845}
   - component: {fileID: 1623676407618680994}
+  - component: {fileID: 1663463971588166148}
   m_Layer: 5
   m_Name: Colorful Booster
   m_TagString: Untagged
@@ -2073,6 +2106,21 @@ MonoBehaviour:
   boosterType: 1
   boosterToggle: {fileID: 1187117926902196460}
   lockState: {fileID: 5446264675752980083}
+--- !u!114 &1663463971588166148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6759499822910100590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f17966a4f73e44db4b67aca92138c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggle: {fileID: 1187117926902196460}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 4d1225e854f4143249c45a616b42acb2, type: 3}
 --- !u!1 &7155294397679712843
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,10 +2240,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentPanel: {fileID: 7062449770982787415}
+  popupCanvas: {fileID: 0}
   mainPanel: {fileID: 7062449770982787415}
   IsPopup: 0
   IsNotStack: 0
   isAnim: 1
+  alertClip: {fileID: 8300000, guid: 9d6bda5e5d29b9641804f58f3eef660a, type: 3}
   boxAnimator: {fileID: 1211479339840917862}
   stars:
   - {fileID: 4069454207536138598}
@@ -2254,6 +2304,7 @@ GameObject:
   - component: {fileID: 2614445510305087480}
   - component: {fileID: 8720929297178876933}
   - component: {fileID: 7064272286333944625}
+  - component: {fileID: 6861656866673360858}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -2383,6 +2434,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6861656866673360858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7294491622733373001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 8720929297178876933}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &8259607696624018871
 GameObject:
   m_ObjectHideFlags: 0
@@ -2627,6 +2693,7 @@ GameObject:
   - component: {fileID: 6219479125041940409}
   - component: {fileID: 927709464404845010}
   - component: {fileID: 7936015380760398147}
+  - component: {fileID: 973909170908049810}
   m_Layer: 5
   m_Name: Play Button
   m_TagString: Untagged
@@ -2757,6 +2824,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &973909170908049810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8684723269512959141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 927709464404845010}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &8972355885961452890
 GameObject:
   m_ObjectHideFlags: 0

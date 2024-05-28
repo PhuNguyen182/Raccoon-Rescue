@@ -21,6 +21,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         [SerializeField] private IngameBoosterType boosterType;
         [SerializeField] private TweenValueEffect coinTween;
 
+        [Space(10)]
+        [SerializeField] private AudioClip coinClip;
         [SerializeField] private Button closeButton;
         [SerializeField] private Button purchaseButton;
         [SerializeField] private Animator boxAnimator;
@@ -103,6 +105,7 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             GameData.Instance.SpendCoins(_price);
             GameData.Instance.AddBooster(boosterType, 1);
             _coinReactive.Value = GameData.Instance.GetCoins();
+            MusicManager.Instance.PlaySoundEffect(coinClip, 0.6f);
         }
 
         protected override void DoClose()
