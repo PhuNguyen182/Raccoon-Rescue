@@ -952,6 +952,7 @@ GameObject:
   - component: {fileID: 8805882751262141352}
   - component: {fileID: 173055484436795187}
   - component: {fileID: 620576908908836025}
+  - component: {fileID: 1196778635062687512}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -1082,6 +1083,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1196778635062687512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468821327341059165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 173055484436795187}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
 --- !u!1 &3662174382610268642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,6 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   productID: coin1
   purchaseButton: {fileID: 173055484436795187}
 --- !u!1 &3781405653322704108
@@ -1936,6 +1953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   productID: coin3
   purchaseButton: {fileID: 5842970683343459462}
 --- !u!1 &5847399998532559918
@@ -2029,6 +2047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   productID: coin2
   purchaseButton: {fileID: 5126579906357336930}
 --- !u!1 &6115013075401862520
@@ -2044,6 +2063,7 @@ GameObject:
   - component: {fileID: 2642496335934506071}
   - component: {fileID: 1286682799309003639}
   - component: {fileID: 1423320724928880635}
+  - component: {fileID: 5071597059870737138}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -2174,6 +2194,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5071597059870737138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6115013075401862520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1286682799309003639}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
 --- !u!1 &6382709741306635357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2265,6 +2300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e6a63196fdfd4e94fadb56ff02390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   productID: coin4
   purchaseButton: {fileID: 1286682799309003639}
 --- !u!1 &7009289894059373623
@@ -2489,6 +2525,7 @@ GameObject:
   - component: {fileID: 345722218794478760}
   - component: {fileID: 5842970683343459462}
   - component: {fileID: 7754052622181698865}
+  - component: {fileID: 1324424741251031275}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -2619,6 +2656,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1324424741251031275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272944990424610008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 5842970683343459462}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
 --- !u!1 &8691842837903393806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2708,6 +2760,7 @@ GameObject:
   - component: {fileID: 2958970836792597947}
   - component: {fileID: 3164762023931595036}
   - component: {fileID: 1024174742246868796}
+  - component: {fileID: 6805311274976783701}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -2837,6 +2890,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6805311274976783701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815201791012097931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3164762023931595036}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &8968939002379345797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2984,6 +3052,7 @@ GameObject:
   - component: {fileID: 605642246502670575}
   - component: {fileID: 5126579906357336930}
   - component: {fileID: 7071892859815016485}
+  - component: {fileID: 2050269233761940549}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -3114,3 +3183,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2050269233761940549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035038347794513591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 5126579906357336930}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}

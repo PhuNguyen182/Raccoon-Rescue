@@ -558,6 +558,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68595944dc3cbe749bcc076e52b25d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainhomeMusic: {fileID: 8300000, guid: e41bf9fcf72ec5942993e0dde4ce026a, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: 6e2e52ed4cc5b4a628202aaaa1f03128, type: 3}
   transition: {fileID: 1128727129}
 --- !u!1 &1128727127
 GameObject:

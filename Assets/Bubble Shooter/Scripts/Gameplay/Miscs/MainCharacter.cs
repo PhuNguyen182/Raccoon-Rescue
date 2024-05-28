@@ -7,6 +7,11 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
     public class MainCharacter : MonoBehaviour
     {
         [SerializeField] private Animator characterAnimator;
+        [SerializeField] private AudioSource characterAudio;
+
+        [Header("Character Clips")]
+        [SerializeField] private AudioClip shootClip;
+        [SerializeField] private AudioClip[] characterClips;
 
         private static readonly int _shootHash = Animator.StringToHash("Shot");
         private static readonly int _loseHash = Animator.StringToHash("Lose");
@@ -14,6 +19,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         public void Shoot()
         {
+            characterAudio.PlayOneShot(shootClip);
             characterAnimator.SetTrigger(_shootHash);
         }
 
@@ -24,6 +30,8 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         public void Continue()
         {
+            int rand = Random.Range(0, 3);
+            characterAudio.PlayOneShot(characterClips[rand]);
             characterAnimator.SetTrigger(_continueHash);
         }
 

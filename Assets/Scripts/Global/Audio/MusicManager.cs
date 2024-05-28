@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using BubbleShooter.Scripts.Common.Databases;
+using BubbleShooter.Scripts.Common.Enums;
+using BubbleShooter.Scripts.Common.PlayDatas;
 
 public class MusicManager : Singleton<MusicManager>
 {
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private SoundEffectDatabase soundEffects;
 
     public static event Action<float> OnMasterChange;
     public static event Action<float> OnMusicChange;
@@ -74,6 +78,14 @@ public class MusicManager : Singleton<MusicManager>
         musicSource.Play();
     }
 
+    public void PlaySoundEffect(SoundEffectEnum soundEffect, float volumeScale = 1, bool loop = false)
+    {
+        SoundEffect sound = soundEffects.GetSoundEffect(soundEffect);
+
+        if (sound != null)
+            PlaySoundEffect(sound.EffectClip, volumeScale, loop);
+    }
+
     public void PlaySoundEffect(AudioClip soundClip, float volumeScale = 1, bool loop = false)
     {
         if (soundClip == null || sfxSource == null)
@@ -83,13 +95,14 @@ public class MusicManager : Singleton<MusicManager>
         sfxSource.PlayOneShot(soundClip, volumeScale);
     }
 
-    public void SetBackGroundMusic(AudioClip music, bool loop = true)
+    public void SetBackGroundMusic(AudioClip music, bool loop = true, float volume = 1)
     {
         if (music == null || musicSource == null)
             return;
 
         musicSource.Stop();
         musicSource.loop = loop;
+        musicSource.volume = volume;
         musicSource.clip = music;
         musicSource.Play();
     }

@@ -14,12 +14,16 @@ using MessagePipe;
 
 namespace BubbleShooter.Scripts.Gameplay.GameEntities
 {
-    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics, IBallEffect, IBallPlayBoosterEffect
+    public abstract class BaseEntity : BaseBallEntity, IBallEntity, IBallGraphics, IBallEffect, IBallPlayBoosterEffect, IBallPlayAudio
     {
         [SerializeField] protected LayerMask destroyerLayer;
         [SerializeField] protected BallMovement ballMovement;
         [SerializeField] protected EntityGraphics entityGraphics;
         [SerializeField] protected EntityAudio entityAudio;
+
+        [Header("Common Audio Clips")]
+        [SerializeField] protected AudioClip fallPopClip;
+        [SerializeField] protected AudioClip[] popClips;
 
         [Header("Booster Effects")]
         [FoldoutGroup("Booster Effects")]
@@ -144,8 +148,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 if (IsFallen)
                 {
-                    PlayBlastEffect(true);
-                    DestroyOnFallen();
+                    OnBallDestroyOnFallen().Forget();
                 }
             }
         }
@@ -189,6 +192,20 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                 obj.transform.SetParent(EffectContainer.Transform);
                 SimplePool.Despawn(obj);
             }
+        }
+
+        public void PlayPopSound(int level)
+        {
+            int index = Mathf.Clamp(level, 0, popClips.Length - 1);
+            entityAudio.PlaySound(popClips[index], 0.6f);
+        }
+
+        private async UniTask OnBallDestroyOnFallen()
+        {
+            entityAudio.PlaySound(fallPopClip, 0.6f);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.12f), cancellationToken: destroyCancellationToken);
+            PlayBlastEffect(true);
+            DestroyOnFallen();
         }
 
         protected virtual void OnDisable()
