@@ -634,6 +634,7 @@ GameObject:
   - component: {fileID: 473281467}
   - component: {fileID: 473281466}
   - component: {fileID: 473281465}
+  - component: {fileID: 473281469}
   m_Layer: 5
   m_Name: Plus Icon
   m_TagString: Untagged
@@ -763,6 +764,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 473281463}
   m_CullTransparentMesh: 1
+--- !u!114 &473281469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473281463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 473281466}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &501044771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1068,12 +1084,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fb32954a57834459ed43b8db48ed6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactiveController: {fileID: 828621519}
   settingButton: {fileID: 2004058379}
   heartBox: {fileID: 1146648656}
   coinHolder: {fileID: 1464885229}
   progressMap: {fileID: 623159678}
   cameraController: {fileID: 698601491}
-  interactiveController: {fileID: 828621519}
   levelStreakData: {fileID: 11400000, guid: 3e3b8693ae0ee3d41b12fe48f49fbed8, type: 2}
   effectManager: {fileID: 784582031}
 --- !u!4 &784582030
@@ -1428,6 +1444,7 @@ GameObject:
   - component: {fileID: 1228345378}
   - component: {fileID: 1228345377}
   - component: {fileID: 1228345376}
+  - component: {fileID: 1228345380}
   m_Layer: 5
   m_Name: Plus Icon
   m_TagString: Untagged
@@ -1557,6 +1574,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228345374}
   m_CullTransparentMesh: 1
+--- !u!114 &1228345380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228345374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1228345377}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &1464885224
 GameObject:
   m_ObjectHideFlags: 0
@@ -2005,6 +2037,7 @@ GameObject:
   - component: {fileID: 2004058380}
   - component: {fileID: 2004058379}
   - component: {fileID: 2004058378}
+  - component: {fileID: 2004058382}
   m_Layer: 5
   m_Name: Setting Button
   m_TagString: Untagged
@@ -2134,6 +2167,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2004058376}
   m_CullTransparentMesh: 1
+--- !u!114 &2004058382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004058376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2004058379}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &2123916043
 GameObject:
   m_ObjectHideFlags: 0
