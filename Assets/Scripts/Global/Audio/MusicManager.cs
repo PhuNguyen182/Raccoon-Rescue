@@ -95,13 +95,14 @@ public class MusicManager : Singleton<MusicManager>
         sfxSource.PlayOneShot(soundClip, volumeScale);
     }
 
-    public void SetBackGroundMusic(AudioClip music, bool loop = true)
+    public void SetBackGroundMusic(AudioClip music, bool loop = true, float volume = 1)
     {
         if (music == null || musicSource == null)
             return;
 
         musicSource.Stop();
         musicSource.loop = loop;
+        musicSource.volume = volume;
         musicSource.clip = music;
         musicSource.Play();
     }
