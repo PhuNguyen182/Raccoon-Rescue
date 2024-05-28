@@ -66,7 +66,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         public bool Break()
         {
             PlayBlastEffect(false);
-            entityAudio.PlaySound(woodenBreak);
+            entityAudio.PlaySoundOneShot(woodenBreak);
 
             if (_hp > 0)
             {

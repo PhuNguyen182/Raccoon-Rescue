@@ -148,9 +148,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 if (IsFallen)
                 {
-                    entityAudio.PlaySound(fallPopClip);
-                    PlayBlastEffect(true);
-                    DestroyOnFallen();
+                    OnBallDestroyOnFallen().Forget();
                 }
             }
         }
@@ -198,8 +196,16 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         public void PlayPopSound(int level)
         {
-            int index = Mathf.Clamp(level, 0, popClips.Length);
-            entityAudio.PlaySound(popClips[index]);
+            int index = Mathf.Clamp(level, 0, popClips.Length - 1);
+            entityAudio.PlaySound(popClips[index], 0.6f);
+        }
+
+        private async UniTask OnBallDestroyOnFallen()
+        {
+            entityAudio.PlaySound(fallPopClip, 0.6f);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.12f), cancellationToken: destroyCancellationToken);
+            PlayBlastEffect(true);
+            DestroyOnFallen();
         }
 
         protected virtual void OnDisable()
