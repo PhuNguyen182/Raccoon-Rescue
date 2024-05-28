@@ -8,11 +8,21 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
     {
         [SerializeField] private AudioSource soundPlayer;
 
-        public void PlaySound(AudioClip audioClip, float volumeScale = 1)
+        public void PlaySoundOneShot(AudioClip audioClip, float volumeScale = 1)
         {
             if(soundPlayer != null && audioClip != null)
             {
                 soundPlayer.PlayOneShot(audioClip, volumeScale);
+            }
+        }
+
+        public void PlaySound(AudioClip audioClip, float volumeScale = 1)
+        {
+            if (soundPlayer != null && audioClip != null)
+            {
+                soundPlayer.clip = audioClip;
+                soundPlayer.volume = volumeScale;
+                soundPlayer.Play();
             }
         }
     }

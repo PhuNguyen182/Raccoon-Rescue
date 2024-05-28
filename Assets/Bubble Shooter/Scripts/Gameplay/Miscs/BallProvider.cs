@@ -16,6 +16,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 {
     public class BallProvider : MonoBehaviour
     {
+        [SerializeField] private AudioClip cannonClip;
         [SerializeField] private Transform toPoint;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private BallShooter ballShooter;
@@ -74,6 +75,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             await DummyBall.SwapTo(ballShooter.ShotPoint.position);
 
             ballShooter.SetColorModel(_firstModel, true);
+            MusicManager.Instance.PlaySoundEffect(cannonClip, 0.6f);
             SetBallColor(true, _secondModel.BallColor, DummyBallState.Create);
         }
 

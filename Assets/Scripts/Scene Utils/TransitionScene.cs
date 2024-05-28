@@ -12,6 +12,8 @@ namespace Scripts.SceneUtils
 {
     public class TransitionScene : MonoBehaviour
     {
+        [SerializeField] private AudioClip mainhomeMusic;
+        [SerializeField] private AudioClip gameplayMusic;
         [SerializeField] private Animator transition;
 
         private static readonly int _fadeHash = Animator.StringToHash("Fade");
@@ -53,13 +55,19 @@ namespace Scripts.SceneUtils
         private async UniTask LoadMainhomeScene()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
-            await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single);
+            await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single).ContinueWith(() =>
+            {
+                MusicManager.Instance.SetBackGroundMusic(mainhomeMusic, true, 0.6f);
+            });
         }
 
         private async UniTask LoadGameplayScene()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
-            await SceneLoader.LoadScene(SceneConstants.Gameplay, LoadSceneMode.Single);
+            await SceneLoader.LoadScene(SceneConstants.Gameplay, LoadSceneMode.Single).ContinueWith(() =>
+            {
+                MusicManager.Instance.SetBackGroundMusic(gameplayMusic, true, 0.6f);
+            });
         }
     }
 }

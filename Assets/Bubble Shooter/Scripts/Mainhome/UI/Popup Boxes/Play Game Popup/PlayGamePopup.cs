@@ -19,6 +19,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
 {
     public class PlayGamePopup : BaseBox<PlayGamePopup>
     {
+        [SerializeField] private AudioClip alertClip;
         [SerializeField] private Animator boxAnimator;
         [SerializeField] private GameObject[] stars;
 
@@ -119,6 +120,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
                 SceneName = SceneName.Gameplay
             };
 
+            MusicManager.Instance.PlaySoundEffect(alertClip, 0.6f);
             await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
         }
 

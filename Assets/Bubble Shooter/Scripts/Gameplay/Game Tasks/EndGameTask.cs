@@ -61,7 +61,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public async UniTask OnWinGame()
         {
             await UniTask.NextFrame(_cancellationToken);
-            
+
+            MusicManager.Instance.PlaySoundEffect(SoundEffectEnum.Complete);
             var fixedBalls = _metaBallManager.GetFixedEntities();
             _fallBallCount = fixedBalls.Count + _checkTargetTask.MoveCount;
 
@@ -86,12 +87,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             await UniTask.WaitUntil(IsOutOfBall, cancellationToken: _cancellationToken);
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _cancellationToken);
             if (_cancellationToken.IsCancellationRequested) return;
+            MusicManager.Instance.PlaySoundEffect(SoundEffectEnum.Cheer);
         }
 
         public async UniTask OnLoseGame()
         {
-            // Turn off current ball
             _ballShooter.SetColorModel(new BallShootModel { }, false);
+            MusicManager.Instance.PlaySoundEffect(SoundEffectEnum.Creak);
+
             await UniTask.Delay(TimeSpan.FromSeconds(0.8f), cancellationToken: _cancellationToken);
             await _notificationPanel.ShowLosePanel();
 
@@ -102,6 +105,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }).SetEase(Ease.InOutSine);
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _cancellationToken);
+            MusicManager.Instance.PlaySoundEffect(SoundEffectEnum.GameOver);
         }
 
         public void SetMaterial(Material material)

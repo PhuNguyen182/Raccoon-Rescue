@@ -12,6 +12,7 @@ namespace BubbleShooter.Scripts.GameUI.Notifications
     {
         [SerializeField] private TMP_Text message;
         [SerializeField] private Animator panelAnimator;
+        [SerializeField] private AudioClip swapClip;
 
         [Header("Animation Clips")]
         [SerializeField] private AnimationClip moveIn;
@@ -33,10 +34,12 @@ namespace BubbleShooter.Scripts.GameUI.Notifications
 
         public async UniTask ShowNotification()
         {
+            MusicManager.Instance.PlaySoundEffect(swapClip, 0.6f);
             panelAnimator.SetBool(_moveHash, true);
             await UniTask.Delay(TimeSpan.FromSeconds(moveIn.length + 1.25f), cancellationToken: _token);
 
             panelAnimator.SetBool(_moveHash, false);
+            MusicManager.Instance.PlaySoundEffect(swapClip, 0.6f);
             await UniTask.Delay(TimeSpan.FromSeconds(moveOut.length + 0.25f), cancellationToken: _token);
         }
     }

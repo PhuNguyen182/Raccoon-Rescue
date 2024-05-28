@@ -50,8 +50,8 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 
         protected override void DoAppear()
         {
-            _musicToggle = MusicManager.Instance.MusicVolume > 0;
-            _soundToggle = MusicManager.Instance.SoundVolume > 0;
+            _musicToggle = MusicManager.Instance.MusicVolume > 0.5f;
+            _soundToggle = MusicManager.Instance.SoundVolume > 0.5f;
             CheckAudioButtons();
         }
 
@@ -73,17 +73,17 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 
         private void MusicButton()
         {
-            float volume = _musicToggle ? 0 : 1;
+            float volume = _musicToggle ? 0.0001f : 1;
             MusicManager.Instance.MusicVolume = volume;
-            _musicToggle = MusicManager.Instance.MusicVolume > 0;
+            _musicToggle = MusicManager.Instance.MusicVolume > 0.5f;
             CheckAudioButtons();
         }
 
         private void SoundButton()
         {
-            float volume = _soundToggle ? 0 : 1;
+            float volume = _soundToggle ? 0.0001f : 1;
             MusicManager.Instance.SoundVolume = volume;
-            _soundToggle = MusicManager.Instance.SoundVolume > 0;
+            _soundToggle = MusicManager.Instance.SoundVolume > 0.5f;
             CheckAudioButtons();
         }
 

@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 6520867899222973867}
-  clip: {fileID: 8300000, guid: 0f261be6ffef9c24991793ba7263a99a, type: 3}
+  clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &1016516449569117467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,6 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb482433d437ac41b164e17241442c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followParticle: {fileID: 0}
   ballShooter: {fileID: 0}
   fireBall: {fileID: 4351324906395011264, guid: 781f3fcc712857e469cc04d0465c834f, type: 3}
   leafBall: {fileID: 1963609293033873895, guid: d5c80b9e105aa3f49a1a687ca38076f0, type: 3}
@@ -798,7 +799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 7895450835170922476}
-  clip: {fileID: 8300000, guid: 0f261be6ffef9c24991793ba7263a99a, type: 3}
+  clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &3423700639496403924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1488,7 +1489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 4959124488538776326}
-  clip: {fileID: 8300000, guid: 0f261be6ffef9c24991793ba7263a99a, type: 3}
+  clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &1268724601314251759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1757,7 +1758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 5408984287034170506}
-  clip: {fileID: 8300000, guid: 0f261be6ffef9c24991793ba7263a99a, type: 3}
+  clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &2308006282794392748
 MonoBehaviour:
   m_ObjectHideFlags: 0

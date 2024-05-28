@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 298398977209416590}
   - component: {fileID: 6141514470037463675}
   - component: {fileID: 3783708041042073407}
+  - component: {fileID: 1320246980090261085}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
@@ -143,6 +144,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1320246980090261085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556790154104078751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 6141514470037463675}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &1357330177372620803
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,6 +967,7 @@ GameObject:
   - component: {fileID: 8827821375501999604}
   - component: {fileID: 4520384137608172061}
   - component: {fileID: 4420780082140050541}
+  - component: {fileID: 2487071146013858918}
   m_Layer: 5
   m_Name: Skip Button
   m_TagString: Untagged
@@ -1081,6 +1098,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2487071146013858918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4904119204702936001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4520384137608172061}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &4960281219475623243
 GameObject:
   m_ObjectHideFlags: 0
@@ -1419,6 +1451,7 @@ GameObject:
   - component: {fileID: 8527925911575256481}
   - component: {fileID: 303394454929551367}
   - component: {fileID: 304109848772937912}
+  - component: {fileID: 1468273231642579199}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -1549,6 +1582,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1468273231642579199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660491712664195399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 303394454929551367}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &7683177361016941699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1755,6 +1803,7 @@ GameObject:
   - component: {fileID: 2006651944409973131}
   - component: {fileID: 4495850649158589486}
   - component: {fileID: 4124810584344568042}
+  - component: {fileID: 5989651887443523291}
   m_Layer: 5
   m_Name: Add Move Button
   m_TagString: Untagged
@@ -1885,6 +1934,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5989651887443523291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8784769752264745741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4495850649158589486}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &9128010742551958706
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ namespace BubbleShooter.Scripts.Scenes.LoadingScene
 {
     public class LoadScene : MonoBehaviour
     {
+        [SerializeField] private AudioClip mainhomeMusic;
         [SerializeField] private TMP_Text threeDots;
 
         private int _number = -1;
@@ -25,7 +26,14 @@ namespace BubbleShooter.Scripts.Scenes.LoadingScene
         private void Start()
         {
             PlayThreeDots().Forget();
+            DelayPlayBackground().Forget();
             LoadMainhome().Forget();
+        }
+
+        private async UniTask DelayPlayBackground()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
+            MusicManager.Instance.SetBackGroundMusic(mainhomeMusic, true, 0.6f);
         }
 
         private async UniTask PlayThreeDots()

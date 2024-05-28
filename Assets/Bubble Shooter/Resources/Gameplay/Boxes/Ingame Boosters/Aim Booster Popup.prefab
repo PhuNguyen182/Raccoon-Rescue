@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 7695562721888522452}
   - component: {fileID: 825371784620557313}
   - component: {fileID: 6213725257693404624}
+  - component: {fileID: 6293901229040711854}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -217,6 +218,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6293901229040711854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265824086556663352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 825371784620557313}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &594880848594822569
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,6 +1004,7 @@ GameObject:
   - component: {fileID: 3190331003915701537}
   - component: {fileID: 9011588747577337479}
   - component: {fileID: 8048138104398550181}
+  - component: {fileID: 174651965395211383}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -1119,6 +1136,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &174651965395211383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2876953372399897797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 9011588747577337479}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 16598aabbfb24124697edae5df3b4c8e, type: 3}
 --- !u!1 &3040497599844614962
 GameObject:
   m_ObjectHideFlags: 0
@@ -1853,6 +1885,7 @@ MonoBehaviour:
   boosterPrice: {fileID: 6981208581115296205}
   boosterType: 2
   coinTween: {fileID: 1206717148894897662}
+  coinClip: {fileID: 8300000, guid: 3dd3baaae647dea4f8b14de0b619b923, type: 3}
   closeButton: {fileID: 825371784620557313}
   purchaseButton: {fileID: 9011588747577337479}
   boxAnimator: {fileID: 4666680205169225983}
