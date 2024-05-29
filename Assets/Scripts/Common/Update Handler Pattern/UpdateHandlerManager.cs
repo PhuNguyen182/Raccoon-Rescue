@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,14 +30,6 @@ namespace Scripts.Common.UpdateHandlerPattern
             foreach (IFixedUpdateHandler fixedUpdateHandler in _fixedUpdateHandlers)
             {
                 fixedUpdateHandler.OnFixedUpdate();
-            }
-        }
-
-        private void LateUpdate()
-        {
-            foreach (ILateUpdateHandler lateUpdateHandler in _lateUpdateHandlers)
-            {
-                lateUpdateHandler.OnLateUpdate(Time.deltaTime);
             }
         }
 

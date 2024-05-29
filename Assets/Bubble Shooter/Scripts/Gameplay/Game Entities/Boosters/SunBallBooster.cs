@@ -138,7 +138,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
         public override void OnSnapped()
         {
             IsIgnored = true;
-            
+            entityAudio.PlaySound(snapBallClip);
+
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {
                 Position = GridPosition

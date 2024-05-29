@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.Effects
     public class EffectManager : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private BallSoundEffect ballSoundEffect;
         [SerializeField] private ParticleSystem ballPopEffect;
         [SerializeField] private ParticleSystem colorfulEffect;
         [SerializeField] private ParticleSystem woodenEffect;
@@ -27,9 +28,16 @@ namespace BubbleShooter.Scripts.Effects
 
         private void PreloadEffect()
         {
+            SimplePool.PoolPreLoad(ballSoundEffect.gameObject, 20, EffectContainer.Transform);
             SimplePool.PoolPreLoad(ballPopEffect.gameObject, 20, EffectContainer.Transform);
             SimplePool.PoolPreLoad(colorfulEffect.gameObject, 20, EffectContainer.Transform);
             SimplePool.PoolPreLoad(textPopEffect.gameObject, 20, EffectContainer.Transform);
+        }
+
+        public void SpawnAndPlayBallSoundEffect(AudioClip clip)
+        {
+            BallSoundEffect soundEffect = SimplePool.Spawn(ballSoundEffect, EffectContainer.Transform, Vector3.zero, Quaternion.identity);
+            soundEffect.PlaySound(clip);
         }
 
         public FlyTextEffect SpawnFlyText(Vector3 position, Quaternion rotation)

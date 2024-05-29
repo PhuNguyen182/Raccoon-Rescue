@@ -4,7 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Common.Configs;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Common.Enums;
+using Scripts.SceneUtils;
+using UnityEngine.SceneManagement;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 {
@@ -35,8 +39,6 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
         private bool _soundToggle;
         private CancellationToken _token;
 
-        public Action OnBackHome;
-
         protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
@@ -62,7 +64,27 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
 
         private void BackHome()
         {
-            OnBackHome?.Invoke();
+            BackHomeAsync().Forget();
+        }
+
+        private async UniTask BackHomeAsync()
+        {
+            int level = GameData.Instance.GetCurrentLevel();
+            LevelProgress star = GameData.Instance.GetLevelProgress(level);
+
+            BackHomeConfig.Current = new BackHomeConfig
+            {
+                IsWin = false,
+                Level = level,
+                Star = star != null ? star.Star : 0
+            };
+
+            TransitionConfig.Current = new TransitionConfig
+            {
+                SceneName = SceneName.Mainhome
+            };
+
+            await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single);
         }
 
         private void CheckAudioButtons()
