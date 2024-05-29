@@ -29,6 +29,11 @@ public class AutoDespawn : MonoBehaviour, IUpdateHandler
         }
     }
 
+    public void SetDuration(float duration)
+    {
+        this.duration = duration;
+    }
+
     private void OnDestroy()
     {
         UpdateHandlerManager.Instance?.RemoveUpdateBehaviour(this);

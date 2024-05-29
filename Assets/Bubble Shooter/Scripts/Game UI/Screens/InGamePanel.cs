@@ -1,20 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using BubbleShooter.Scripts.GameUI.IngameElements;
-using TMPro;
 using DG.Tweening;
+using TMPro;
+using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes;
 
 namespace BubbleShooter.Scripts.GameUI.Screens
 {
     public class InGamePanel : MonoBehaviour
     {
+        [SerializeField] private Button pauseButton;
         [SerializeField] private TMP_Text moveText;
         [SerializeField] private ScorePanel scorePanel;
         [SerializeField] private TargetHolder targetHolder;
 
+        private const string SettingPopupPath = "Popups/Setting Popup";
+
         public Transform TargetPoint => targetHolder.TargetPoint;
         public TargetHolder TargetHolder => targetHolder;
+
+        private void Awake()
+        {
+            pauseButton.onClick.AddListener(OpenSetting);
+        }
 
         public void SetMoveCount(int move)
         {
@@ -36,6 +46,11 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         public void SetScore(int score, int maxScore)
         {
             scorePanel.SetScore(score, maxScore);
+        }
+
+        private void OpenSetting()
+        {
+            SettingPopup.Create(SettingPopupPath).SetBackHomeButtonActive(true);
         }
     }
 }

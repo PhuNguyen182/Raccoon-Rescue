@@ -203,6 +203,7 @@ MonoBehaviour:
   ballMovement: {fileID: 7647399022295147429}
   entityGraphics: {fileID: 6693005758185591431}
   entityAudio: {fileID: 7400663637397387306}
+  snapBallClip: {fileID: 8300000, guid: 602014043e7399f49a5169ec234d89da, type: 3}
   fallPopClip: {fileID: 8300000, guid: a038593a3caacda4cb7484546b7e81ab, type: 3}
   popClips:
   - {fileID: 8300000, guid: 05210afa8a31af248a52f445aaf7cf4f, type: 3}

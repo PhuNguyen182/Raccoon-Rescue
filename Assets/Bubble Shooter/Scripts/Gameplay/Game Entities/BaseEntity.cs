@@ -22,6 +22,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         [SerializeField] protected EntityAudio entityAudio;
 
         [Header("Common Audio Clips")]
+        [SerializeField] protected AudioClip snapBallClip;
         [SerializeField] protected AudioClip fallPopClip;
         [SerializeField] protected AudioClip[] popClips;
 
@@ -197,7 +198,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         public void PlayPopSound(int level)
         {
             int index = Mathf.Clamp(level, 0, popClips.Length - 1);
-            entityAudio.PlaySound(popClips[index], 0.6f);
+            EffectManager.Instance.SpawnAndPlayBallSoundEffect(popClips[index]);
         }
 
         private async UniTask OnBallDestroyOnFallen()

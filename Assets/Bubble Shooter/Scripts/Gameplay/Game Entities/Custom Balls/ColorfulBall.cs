@@ -139,6 +139,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 
         public override void OnSnapped()
         {
+            entityAudio.PlaySound(snapBallClip);
             _checkMatchPublisher.Publish(new CheckMatchMessage { Position = GridPosition });
         }
 
