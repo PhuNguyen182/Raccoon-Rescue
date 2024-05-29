@@ -16,7 +16,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
 {
     public class CommonBall : BaseEntity, IFixedUpdateHandler, IBallMovement, IBallPhysics, IBreakable
     {
-        [SerializeField] private AudioClip snapBallClip;
         [SerializeField] private EntityType ballColor;
 
         [Header("Ball Colors")]
