@@ -223,8 +223,8 @@ MonoBehaviour:
   targetCount: 5
   moveCount: 30
   maxScore: 2600
-  tierOneScore: 1700
-  tierTwoScore: 200
+  tierOneScore: 1000
+  tierTwoScore: 1700
   tierThreeScore: 2300
   colorProportions:
   - Coefficient: 1000
