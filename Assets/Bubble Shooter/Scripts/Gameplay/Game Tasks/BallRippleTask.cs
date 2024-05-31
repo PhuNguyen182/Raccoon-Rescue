@@ -30,6 +30,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             IGridCell currentCell = _gridCellManager.Get(position);
             IBallEntity currentBall = currentCell.BallEntity;
 
+            if (currentBall == null)
+                return;
+
             currentBall.RippleIgnore = true;
             _affectedBalls.Add(currentBall);
 

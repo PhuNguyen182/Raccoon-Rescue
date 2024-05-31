@@ -203,13 +203,14 @@ MonoBehaviour:
   ballMovement: {fileID: 6324382987147095321}
   entityGraphics: {fileID: 7393648386679340297}
   entityAudio: {fileID: 6014331376056225527}
+  snapBallClip: {fileID: 0}
   fallPopClip: {fileID: 8300000, guid: a038593a3caacda4cb7484546b7e81ab, type: 3}
   popClips:
   - {fileID: 8300000, guid: 05210afa8a31af248a52f445aaf7cf4f, type: 3}
   - {fileID: 8300000, guid: 2978d97f7485db24db5bb0f8defefd8b, type: 3}
   - {fileID: 8300000, guid: e7a52ea5c73626e4fb7afcf9caf17eef, type: 3}
-  leafEffect: {fileID: 0}
-  waterEffect: {fileID: 0}
+  leafEffect: {fileID: 7474055565188371299, guid: a39ed9b8a647b7e4aa579584ae12e069, type: 3}
+  waterEffect: {fileID: 4658626098209746007, guid: f9c4f488935b40941bab19ae63bf3ac6, type: 3}
   textColor: {r: 0.5176471, g: 0.18823531, b: 0.043137256, a: 1}
   woodenBreak: {fileID: 8300000, guid: 5d94f37b554104bbaa5688fa8243ce77, type: 3}
   hpStates:

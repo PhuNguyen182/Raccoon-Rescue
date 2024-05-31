@@ -4,6 +4,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Constants;
+using BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -13,10 +14,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         
+        private BoosterHandleTask _boosterHandleTask;
+        
         public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+        }
+
+        public void SetBoosterHandleTask(BoosterHandleTask boosterHandleTask)
+        {
+            _boosterHandleTask = boosterHandleTask;
         }
 
         public void CheckFreeCluster()
@@ -50,6 +58,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     continue;
 
                 IBallEntity ball = neighbors[i].BallEntity;
+
+                if (ball is IBallBooster)
+                    await _boosterHandleTask.ActiveBooster(ball.GridPosition);
 
                 if (ball is IBreakable breakable)
                 {

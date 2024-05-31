@@ -169,7 +169,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
                     break;
                 case EntityType.WaterBall:
                     EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: destroyCancellationToken);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.02f), cancellationToken: destroyCancellationToken);
                     break;
                 case EntityType.SunBall:
                     await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: destroyCancellationToken);
