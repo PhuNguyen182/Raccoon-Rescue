@@ -104,7 +104,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
-        private static readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulToggle");
+        private static readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulValue");
 
         public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
@@ -289,7 +289,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 _ => default
             };
 
-            lineMaterial.SetInteger(_colorfulToggleHash, ballColor == EntityType.ColorfulBall ? 1 : 0);
+            lineMaterial.SetFloat(_colorfulToggleHash, ballColor == EntityType.ColorfulBall ? 1 : 0);
             return color;
         }
 
@@ -383,7 +383,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void OnDestroy()
         {
-            lineMaterial.SetInteger(_colorfulToggleHash, 0);
+            lineMaterial.SetFloat(_colorfulToggleHash, 0);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 IBallEntity ball = neighbors[i].BallEntity;
 
                 if (ball is IBallBooster)
-                    await _boosterHandleTask.ActiveBooster(ball.GridPosition);
+                    await _boosterHandleTask.ActivateBooster(ball.GridPosition, false);
 
                 if (ball is IBreakable breakable)
                 {

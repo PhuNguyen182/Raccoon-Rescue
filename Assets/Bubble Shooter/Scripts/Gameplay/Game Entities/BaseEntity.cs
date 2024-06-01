@@ -165,7 +165,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             switch (booster)
             {
                 case EntityType.FireBall:
-                    await UniTask.CompletedTask;
                     break;
                 case EntityType.WaterBall:
                     EffectManager.Instance.SpawnBoosterEffect(EntityType.WaterBall, transform.position, Quaternion.identity);
