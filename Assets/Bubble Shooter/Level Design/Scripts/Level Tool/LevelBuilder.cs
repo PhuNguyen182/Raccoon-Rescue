@@ -23,15 +23,15 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [SerializeField] private string outputLevel;
         [SerializeField] private string externalBuildPath;
 
-        [Space(10)]
+        [Header("Level Goals")]
         [SerializeField] private int targetCount;
         [SerializeField] private int moveCount;
 
         [Header("Scores")]
         [SerializeField] private int maxScore;
-        [SerializeField] private int tierOneScore;
-        [SerializeField] private int tierTwoScore;
-        [SerializeField] private int tierThreeScore;
+        [SerializeField] private int tier1Score;
+        [SerializeField] private int tier2Score;
+        [SerializeField] private int tier3Score;
 
         [Header("Random Fill Color Proportion")]
         [SerializeField] private List<ColorProportion> colorProportions;
@@ -41,17 +41,25 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         public string ExportLevelData => outputLevel;
 
+        [HorizontalGroup(GroupID = "Map Clear")]
         [Button]
-        public void Clear()
+        public void ClearAll()
         {
             targetCount = 0;
-            tierOneScore = 0;
-            tierTwoScore = 0;
-            tierThreeScore = 0;
+            tier1Score = 0;
+            tier2Score = 0;
+            tier3Score = 0;
 
             colorProportions.Clear();
             boardTilemap.ClearAllTiles();
             ceilTilemap.ClearAllTiles();
+            entityTilemap.ClearAllTiles();
+        }
+
+        [HorizontalGroup(GroupID = "Map Clear")]
+        [Button]
+        public void ClearEntities()
+        {
             entityTilemap.ClearAllTiles();
         }
 
@@ -71,7 +79,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             string output = _levelExporter.Clear()
                                           .BuildTarget(targetCount)
                                           .BuildMoveSequence(moveCount)
-                                          .BuildScores(maxScore, tierOneScore, tierTwoScore, tierThreeScore)
+                                          .BuildScores(maxScore, tier1Score, tier2Score, tier3Score)
                                           .BuildBoardMap(boardTilemap)
                                           .BuildCeilMap(ceilTilemap)
                                           .BuildBallMap(entityTilemap)
@@ -105,7 +113,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             _levelImporter = new(tileDatabase);
             _levelImporter.BuildTarget(levelModel.TargetCount, out targetCount)
                           .BuildScore(levelModel.MaxScore, levelModel.TierOneScore, levelModel.TierTwoScore, levelModel.TierThreeScore,
-                                      out maxScore, out tierOneScore, out tierTwoScore, out tierThreeScore)
+                                      out maxScore, out tier1Score, out tier2Score, out tier3Score)
                           .BuildBoardMap(boardTilemap, levelModel.BoardMapPositions)
                           .BuildCeilMap(ceilTilemap, levelModel.CeilMapPositions)
                           .BuildBallMap(entityTilemap, levelModel.StartingEntityMap)

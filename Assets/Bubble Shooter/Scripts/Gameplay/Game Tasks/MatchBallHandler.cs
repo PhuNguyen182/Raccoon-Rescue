@@ -86,18 +86,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 _checkBallClusterTask.CheckNeighborCluster(position).Forget();
                 Ripple(position).Forget();
 
-                (bool isMatched, bool containTarget) = await ExecuteCluster(matchCluster);
+                bool isMatched = await ExecuteCluster(matchCluster);
                 _isMatchWithColorful = false;
                 
                 if (isMatched)
                 {
                     _checkBallClusterTask.CheckFreeCluster();
-                    
-                    if (!containTarget)
-                    {
-                        await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
-                        _checkTargetTask.CheckTarget();
-                    }
                 }
 
                 else
@@ -182,14 +176,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _ballRippleTask.ResetRippleIgnore();
         }
 
-        private async UniTask<(bool, bool)> ExecuteCluster(List<IGridCell> cluster)
+        private async UniTask<bool> ExecuteCluster(List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
-                return (false, false);
+                return false;
 
             int totalScore = 0;
-            bool containTarget = false;
-
             _powerupPublisher.Publish(new PowerupMessage
             {
                 Amount = cluster.Count,
@@ -199,9 +191,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < cluster.Count; i++)
             {
-                if (cluster[i].BallEntity is ITargetBall)
-                    containTarget = true;
-
                 if (_isMatchWithColorful && cluster[i].BallEntity is IBallEffect effect)
                     effect.PlayColorfulEffect();
 
@@ -216,7 +205,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
             _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
-            return (true, containTarget);
+            return true;
         }
 
         private EntityType GetBoosterColor(EntityType entityType)
