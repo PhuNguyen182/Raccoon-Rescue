@@ -22,7 +22,9 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         private void Update()
         {
             heartManager.UpdateHeartTime();
+#if UNITY_EDITOR
             Delete();
+#endif
         }
 
         private void OnDestroy()
@@ -40,7 +42,6 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         }
 #endif
 
-#if UNITY_EDITOR
         // This function is used for testing only
         private void Delete()
         {
@@ -50,7 +51,6 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                 DataManager.DeleteData();
             }
         }
-#endif
 
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
         private void OnApplicationFocus(bool focus)

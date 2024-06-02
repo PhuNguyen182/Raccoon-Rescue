@@ -43,7 +43,27 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         [HorizontalGroup(GroupID = "Map Clear")]
         [Button]
-        public void ClearAll()
+        private void ClearEntities()
+        {
+            entityTilemap.ClearAllTiles();
+        }
+
+        [HorizontalGroup(GroupID = "Map Clear")]
+        [Button]
+        private void ClearCeil()
+        {
+            ceilTilemap.ClearAllTiles();
+        }
+
+        [HorizontalGroup(GroupID = "Map Clear")]
+        [Button]
+        private void ClearBoard()
+        {
+            boardTilemap.ClearAllTiles();
+        }
+
+        [Button]
+        private void ClearAll()
         {
             targetCount = 0;
             tier1Score = 0;
@@ -56,15 +76,8 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             entityTilemap.ClearAllTiles();
         }
 
-        [HorizontalGroup(GroupID = "Map Clear")]
         [Button]
-        public void ClearEntities()
-        {
-            entityTilemap.ClearAllTiles();
-        }
-
-        [Button]
-        public void CompressTilemaps()
+        private void ScanTilemaps()
         {
             boardTilemap.CompressBounds();
             entityTilemap.CompressBounds();
@@ -74,7 +87,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         [Button(Style = ButtonStyle.Box)]
         public void Export(int level, bool useResource = true)
         {
-            CompressTilemaps();
+            ScanTilemaps();
 
             string output = _levelExporter.Clear()
                                           .BuildTarget(targetCount)
@@ -97,7 +110,7 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
         [HorizontalGroup(GroupID = "Level Builder")]
         [Button(Style = ButtonStyle.Box)]
-        public void Import(int level, bool useResource = true)
+        private void Import(int level, bool useResource = true)
         {
             string levelData = useResource ? Resources.Load<TextAsset>($"Level Datas/level_{level}").text 
                                            : inputLevel;
