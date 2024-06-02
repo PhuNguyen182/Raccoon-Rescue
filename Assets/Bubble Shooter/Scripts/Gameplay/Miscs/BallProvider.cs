@@ -99,11 +99,14 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             };
 
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+            DummyBall.transform.localScale = Vector3.zero;
             await UniTask.NextFrame(_token);
             DummyBall.transform.localPosition = Vector3.zero; // Implement this line in order to prevent stucking at spawn point
 
             if (ballState == DummyBallState.Create)
-                DummyBall.transform.DOScale(0, 0.2f).SetEase(Ease.OutQuad).From().ToUniTask().Forget();
+                DummyBall.transform.DOScale(1, 0.2f).SetEase(Ease.OutQuad).ToUniTask().Forget();
+            else
+                DummyBall.transform.localScale = Vector3.one;
         }
 
         private void CreateBallOnStartGame()
