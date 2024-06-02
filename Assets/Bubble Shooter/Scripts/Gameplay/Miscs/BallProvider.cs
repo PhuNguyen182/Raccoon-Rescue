@@ -76,10 +76,10 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
             ballShooter.SetColorModel(_firstModel, true);
             MusicManager.Instance.PlaySoundEffect(cannonClip, 0.6f);
-            SetBallColor(true, _secondModel.BallColor, DummyBallState.Create);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Create).Forget();
         }
 
-        public void SetBallColor(bool isActive, EntityType color, DummyBallState ballState)
+        public async UniTask SetBallColor(bool isActive, EntityType color, DummyBallState ballState)
         {
             if (DummyBall != null)
                 SimplePool.Despawn(DummyBall.gameObject);
@@ -99,9 +99,11 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             };
 
             DummyBall = SimplePool.Spawn(ballPrefab, spawnPoint, spawnPoint.position, Quaternion.identity);
+            await UniTask.NextFrame(_token);
+            DummyBall.transform.localPosition = Vector3.zero; // Implement this line in order to prevent stucking at spawn point
 
             if (ballState == DummyBallState.Create)
-                DummyBall.transform.DOScale(0, 0.2f).SetEase(Ease.OutQuad).From();
+                DummyBall.transform.DOScale(0, 0.2f).SetEase(Ease.OutQuad).From().ToUniTask().Forget();
         }
 
         private void CreateBallOnStartGame()
@@ -109,7 +111,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             _firstModel = GetRandomColorBallInPot();
             ballShooter.SetColorModel(_firstModel, true);
             _secondModel = GetRandomColorBallInPot();
-            SetBallColor(true, _secondModel.BallColor, DummyBallState.New);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.New).Forget();
         }
 
         public BallShootModel GetRandomHelperBall()
@@ -191,7 +193,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             await UniTask.WhenAll(swapBall1, swapBall2);
 
             (_firstModel, _secondModel) = (_secondModel, _firstModel);
-            SetBallColor(true, _secondModel.BallColor, DummyBallState.Swap);
+            SetBallColor(true, _secondModel.BallColor, DummyBallState.Swap).Forget();
             ballShooter.SetColorModel(_firstModel, true);
 
             GameController.Instance.SetInputActive(true);

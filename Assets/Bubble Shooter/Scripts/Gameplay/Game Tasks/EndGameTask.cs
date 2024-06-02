@@ -135,7 +135,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private async UniTask ShootRemainBalls()
         {
             int count = _checkTargetTask.MoveCount;
-            _ballProvider.SetBallColor(false, EntityType.None, DummyBallState.None);
+            _ballProvider.SetBallColor(false, EntityType.None, DummyBallState.None).Forget();
             
             while(count > 0)
             {

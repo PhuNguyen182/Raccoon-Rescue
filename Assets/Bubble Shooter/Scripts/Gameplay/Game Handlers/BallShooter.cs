@@ -101,6 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private CancellationToken _token;
         private EntityFactory _entityFactory;
         private InGamePowerupControlTask _inGamePowerups;
+        private CheckTargetTask _checkTargetTask;
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
@@ -166,6 +167,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
+        }
+
+        public void SetCheckTargetTask(CheckTargetTask checkTargetTask)
+        {
+            _checkTargetTask = checkTargetTask;
         }
 
         public void SetIngamePowerup(InGamePowerupControlTask inGamePowerup)
@@ -336,11 +342,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             SetBallColor(false, EntityType.None);
             await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
-            ballProvider.PopSequence().Forget();
             _decreaseMovePublisher.Publish(new DecreaseMoveMessage
             {
                 CanDecreaseMove = !shootModel.IsPowerup
             });
+
+            if(_checkTargetTask.MoveCount > 0)
+                ballProvider.PopSequence().Forget();
 
             _inGamePowerups.IsPowerupInUse = false;
             _canFire = true;
