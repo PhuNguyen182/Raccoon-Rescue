@@ -220,8 +220,8 @@ MonoBehaviour:
   inputLevel: 
   outputLevel: 
   externalBuildPath: 
-  targetCount: 2
-  moveCount: 3
+  targetCount: 3
+  moveCount: 300
   maxScore: 4200
   tier1Score: 1200
   tier2Score: 2300

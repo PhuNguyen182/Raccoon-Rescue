@@ -156,6 +156,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 DrawLineColors(false, new Color(0, 0, 0, 0));
         }
 
+        public void PreloadBalls(Transform parent)
+        {
+            SimplePool.PoolPreLoad(prefab.gameObject, 3, parent);
+        }
+
         public void SetPremierState(bool isPremier)
         {
             for (int i = 0; i < aimingLines.Length; i++)

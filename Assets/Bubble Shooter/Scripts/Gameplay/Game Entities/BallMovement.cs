@@ -137,7 +137,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
         private async UniTask SnapToReportedCellAsync()
         {
-            if(Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= 0.3f)
+            if(Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= BallConstants.GridSnapDistance * BallConstants.GridSnapDistance)
             {
                 Vector3Int position = _gridCellHolder.GridPosition;
                 IGridCell checkCell = TakeGridCellFunction.Invoke(position);

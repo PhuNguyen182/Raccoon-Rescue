@@ -77,6 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void Start()
         {
             CreateLevel();
+            ballShooter.PreloadBalls(entityContainer);
         }
 
         private void Setup()
