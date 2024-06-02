@@ -5,8 +5,8 @@ namespace BubbleShooter.Scripts.Common.Constants
         public const float BallMoveSpeed = 24f;
         public const float CheckGridOffset = 0.35f;
         public const float SpreadShootAngle = 30f;
-        public const float MinForce = 4f;
-        public const float MaxForce = 6f;
+        public const float MinForce = 8f;
+        public const float MaxForce = 12f;
         public const float WinForce = 18f;
 
         public const string NormalLayer = "Objects";

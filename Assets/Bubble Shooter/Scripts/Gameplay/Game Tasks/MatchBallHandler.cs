@@ -94,7 +94,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     _checkBallClusterTask.CheckFreeCluster();
                 }
 
-                else
+                //else
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                     _checkTargetTask.CheckTarget();
