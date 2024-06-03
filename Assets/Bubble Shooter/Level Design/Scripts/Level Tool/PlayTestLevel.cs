@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,13 +32,20 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
         {
             levelBuilder.Export(0, false);
             string levelJson = levelBuilder.ExportLevelData;
-            LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelJson);
-            
-            PlayConfig.Current = new PlayConfig
+            using (StringReader streamReader = new(levelJson))
             {
-                IsTest = true,
-                LevelModel = levelModel
-            };
+                using (JsonReader jsonReader = new JsonTextReader(streamReader))
+                {
+                    JsonSerializer jsonSerializer = new();
+                    LevelModel levelModel = jsonSerializer.Deserialize<LevelModel>(jsonReader);
+
+                    PlayConfig.Current = new PlayConfig
+                    {
+                        IsTest = true,
+                        LevelModel = levelModel
+                    };
+                }
+        }
 
             await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Gameplay);
