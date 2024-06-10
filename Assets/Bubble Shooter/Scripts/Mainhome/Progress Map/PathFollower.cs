@@ -22,9 +22,9 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
 
         public async UniTask Move(int startIndex, int endIndex, float duration)
         {
-            float elapsedTime = 0;
             float curveEvaluate;
             float progressPercent;
+            float elapsedTime = 0;
             float startPercent = (float)splineComputer.GetPointPercent(startIndex);
             float endPercent = (float)splineComputer.GetPointPercent(endIndex);
             Vector2 progressPosition;
