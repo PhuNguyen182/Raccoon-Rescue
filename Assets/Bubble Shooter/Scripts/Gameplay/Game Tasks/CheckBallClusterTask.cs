@@ -106,7 +106,22 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private void ExecuteCluster(BallClusterModel clusterModel)
         {
             if (clusterModel.IsCeilAttached)
-                return;
+            {
+                if(clusterModel.Cluster.Count == 1)
+                {
+                    if (clusterModel.Cluster[0].BallEntity is ITargetBall target)
+                    {
+                        target.FreeTarget();
+                        _gridCellManager.DestroyAt(clusterModel.Cluster[0].GridPosition);
+                        return;
+                    }
+
+                    else return;
+                }
+
+                else if (clusterModel.Cluster.Count > 1)
+                    return;
+            }
 
             for (int i = 0; i < clusterModel.Cluster.Count; i++)
             {
