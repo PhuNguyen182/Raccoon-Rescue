@@ -105,6 +105,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void ExecuteCluster(BallClusterModel clusterModel)
         {
+            if (clusterModel.Cluster.Count <= 0)
+                return;
+
             if (clusterModel.IsCeilAttached)
             {
                 if(clusterModel.Cluster.Count == 1)
