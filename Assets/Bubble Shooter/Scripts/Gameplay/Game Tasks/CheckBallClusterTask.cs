@@ -35,10 +35,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 if (IsValidCell(position))
                 {
-                    BallClusterModel clusterModel = new();
-                    FindCluster(position, clusterModel);
-                    ExecuteCluster(clusterModel);
-                    clusterModel.Dispose();
+                    using (BallClusterModel clusterModel = new())
+                    {
+                        FindCluster(position, clusterModel);
+                        ExecuteCluster(clusterModel);
+                    }
                 }
             }
 

@@ -12,11 +12,18 @@ public static class SimpleSaveSystem<T>
 
         if (File.Exists(dataPath))
         {
-            using(StreamReader reader = new StreamReader(dataPath))
+            using(StreamReader reader = new(dataPath))
             {
                 string json = reader.ReadLine();
-                T data = JsonConvert.DeserializeObject<T>(json);
-                return data;
+                using(StringReader stringReader = new(json))
+                {
+                    using (JsonReader jsonReader = new JsonTextReader(stringReader))
+                    {
+                        JsonSerializer jsonSerializer = new();
+                        T data = jsonSerializer.Deserialize<T>(jsonReader);
+                        return data;
+                    }
+                }
             }
         }
 
@@ -27,9 +34,14 @@ public static class SimpleSaveSystem<T>
     {
         string dataPath = $"{Application.persistentDataPath}/{name}.dat";
 
-        using (StreamWriter writer = new StreamWriter(dataPath))
+        using (StreamWriter writer = new(dataPath))
         {
-            string json = JsonConvert.SerializeObject(data);
+            JsonSerializerSettings settings = new()
+            {
+                Formatting = Formatting.Indented,
+            };
+
+            string json = JsonConvert.SerializeObject(data, settings);
             writer.WriteLine(json);
         }
     }

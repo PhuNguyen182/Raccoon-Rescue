@@ -21,7 +21,7 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
 
         private void Update()
         {
-            heartManager.UpdateHeartTime();
+            heartManager?.UpdateHeartTime();
 #if UNITY_EDITOR
             Delete();
 #endif
