@@ -14,7 +14,7 @@ public static class SimpleSaveSystem<T>
         {
             using(StreamReader reader = new(dataPath))
             {
-                string json = reader.ReadLine();
+                string json = reader.ReadToEnd();
                 using(StringReader stringReader = new(json))
                 {
                     using (JsonReader jsonReader = new JsonTextReader(stringReader))
@@ -42,7 +42,7 @@ public static class SimpleSaveSystem<T>
             };
 
             string json = JsonConvert.SerializeObject(data, settings);
-            writer.WriteLine(json);
+            writer.Write(json);
         }
     }
 
