@@ -21,6 +21,8 @@ public static class SimpleSaveSystem<T>
                     {
                         JsonSerializer jsonSerializer = new();
                         T data = jsonSerializer.Deserialize<T>(jsonReader);
+                        stringReader.Close();
+                        reader.Close();
                         return data;
                     }
                 }
@@ -43,6 +45,7 @@ public static class SimpleSaveSystem<T>
 
             string json = JsonConvert.SerializeObject(data, settings);
             writer.Write(json);
+            writer.Close();
         }
     }
 

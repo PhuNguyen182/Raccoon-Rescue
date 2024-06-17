@@ -179,9 +179,11 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 
             if (useResource)
             {
-                using StreamWriter writer = new StreamWriter(levelPath);
-                writer.Write(json);
-                writer.Close();
+                using (StreamWriter writer = new(levelPath))
+                {
+                    writer.Write(json);
+                    writer.Close();
+                }
 
 #if UNITY_EDITOR
                 AssetDatabase.ImportAsset(levelPath);
