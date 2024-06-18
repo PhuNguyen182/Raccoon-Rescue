@@ -8,7 +8,7 @@ public static class SimpleSaveSystem<T>
 {
     public static T LoadData(string name)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
 
         if (File.Exists(dataPath))
         {
@@ -21,6 +21,7 @@ public static class SimpleSaveSystem<T>
                     {
                         JsonSerializer jsonSerializer = new();
                         T data = jsonSerializer.Deserialize<T>(jsonReader);
+
                         stringReader.Close();
                         reader.Close();
                         return data;
@@ -34,7 +35,7 @@ public static class SimpleSaveSystem<T>
 
     public static void SaveData(string name, T data)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
 
         using (StreamWriter writer = new(dataPath))
         {
@@ -51,8 +52,8 @@ public static class SimpleSaveSystem<T>
 
     public static void DeleteData(string name)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
-        
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
+
         if (File.Exists(dataPath))
         {
             File.Delete(dataPath);
