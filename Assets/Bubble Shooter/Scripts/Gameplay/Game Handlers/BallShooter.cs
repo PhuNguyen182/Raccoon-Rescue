@@ -105,7 +105,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
-        private static readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulValue");
+        private readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulValue");
 
         public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
