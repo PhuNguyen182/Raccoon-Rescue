@@ -77,6 +77,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
         private void Start()
         {
             CreateLevel();
+            ballShooter.PreloadBalls(entityContainer);
         }
 
         private void Setup()
@@ -100,6 +101,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             
             _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
+            ballShooter.SetCheckTargetTask(_checkTargetTask);
 
             _checkScoreTask = new(mainScreen.InGamePanel);
             _checkScoreTask.AddTo(ref builder);

@@ -24,7 +24,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private AudioClip[] groundedClips;
         [SerializeField] private AudioSource babySound;
 
-        private static readonly int _groundedHash = Animator.StringToHash("Grounded");
+        private readonly int _groundedHash = Animator.StringToHash("Grounded");
 
         private Vector3 _toPosition;
         private Transform _groundPoint;

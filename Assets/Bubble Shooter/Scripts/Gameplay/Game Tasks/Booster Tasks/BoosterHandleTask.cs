@@ -17,6 +17,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly CheckBallClusterTask _checkBallClusterTask;
         private readonly InputProcessor _inputProcessor;
         private readonly BallRippleTask _ballRippleTask;
+        private readonly MoveGameViewTask _moveGameViewTask;
 
         private readonly FireBallBoosterTask _fireBallBoosterTask;
         private readonly LeafBallBoosterTask _leafBallBoosterTask;
@@ -28,13 +29,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public BoosterHandleTask(BreakGridTask breakGridTask, GridCellManager gridCellManager
             , CheckBallClusterTask checkBallClusterTask, InputProcessor inputProcessor
-            , BallRippleTask ballRippleTask)
+            , BallRippleTask ballRippleTask, MoveGameViewTask moveGameViewTask)
         {
             _breakGridTask = breakGridTask;
             _checkBallClusterTask = checkBallClusterTask;
             _gridCellManager = gridCellManager;
             _inputProcessor = inputProcessor;
             _ballRippleTask = ballRippleTask;
+            _moveGameViewTask = moveGameViewTask;
 
             _fireBallBoosterTask = new(_gridCellManager, _breakGridTask);
             _leafBallBoosterTask = new(_gridCellManager, _breakGridTask);
@@ -44,12 +46,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
 
             _boosterSubscriber = GlobalMessagePipe.GetSubscriber<ActiveBoosterMessage>();
-            _boosterSubscriber.Subscribe(message => ActiveBooster(message.Position).Forget()).AddTo(builder);
+            _boosterSubscriber.Subscribe(message => ActivateBooster(message.Position, message.IsFlyBooster).Forget()).AddTo(builder);
 
             _disposable = builder.Build();
         }
 
-        public async UniTask ActiveBooster(Vector3Int position)
+        public async UniTask ActivateBooster(Vector3Int position, bool isFlyBooster)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
             
@@ -63,25 +65,34 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
             switch (gridCell.BallEntity.EntityType)
             {
                 case EntityType.FireBall:
-                    _ballRippleTask.RippleAt(position, 5).Forget();
+                    if(isFlyBooster)
+                        _ballRippleTask.RippleAt(position, 5).Forget();
+                    
                     await _fireBallBoosterTask.Execute(position);
                     break;
                 case EntityType.LeafBall:
-                    _ballRippleTask.RippleAt(position, 3).Forget();
+                    if (isFlyBooster)
+                        _ballRippleTask.RippleAt(position, 3).Forget();
+
                     await _leafBallBoosterTask.Execute(position);
                     break;
                 case EntityType.WaterBall:
-                    _ballRippleTask.RippleAt(position, 4).Forget();
+                    if (isFlyBooster)
+                        _ballRippleTask.RippleAt(position, 4).Forget();
+
                     await _waterBallBoosterTask.Execute(position);
                     break;
                 case EntityType.SunBall:
-                    _ballRippleTask.RippleAt(position, 3).Forget();
+                    if (isFlyBooster)
+                        _ballRippleTask.RippleAt(position, 3).Forget();
+
                     await _sunBallBoosterTask.Execute(position);
                     break;
             }
 
             _ballRippleTask.ResetRippleIgnore();
             _checkBallClusterTask.CheckFreeCluster();
+            await _moveGameViewTask.Check();
             _inputProcessor.IsActive = true;
         }
 

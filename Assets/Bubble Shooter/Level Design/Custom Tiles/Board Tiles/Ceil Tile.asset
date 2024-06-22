@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ceil Tile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: -2135585597343286014, guid: 6a7b121cb1e04f547a1fdc70633c48e8, type: 3}
-  m_Color: {r: 0, g: 0.9758296, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.9758296, b: 1, a: 0.8}
   m_Transform:
     e00: 1
     e01: 0

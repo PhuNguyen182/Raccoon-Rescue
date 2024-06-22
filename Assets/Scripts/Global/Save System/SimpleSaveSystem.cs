@@ -8,16 +8,27 @@ public static class SimpleSaveSystem<T>
 {
     public static T LoadData(string name)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
 
         if (File.Exists(dataPath))
         {
-            using(StreamReader reader = new StreamReader(dataPath))
+            T data;
+            using(StreamReader streamReader = new(dataPath))
             {
-                string json = reader.ReadLine();
-                T data = JsonConvert.DeserializeObject<T>(json);
-                return data;
+                string json = streamReader.ReadToEnd();
+                using(StringReader stringReader = new(json))
+                {
+                    using (JsonReader jsonReader = new JsonTextReader(stringReader))
+                    {
+                        JsonSerializer jsonSerializer = new();
+                        data = jsonSerializer.Deserialize<T>(jsonReader);
+                    }
+                    stringReader.Close();
+                }
+                streamReader.Close();
             }
+
+            return data;
         }
 
         return default;
@@ -25,19 +36,25 @@ public static class SimpleSaveSystem<T>
 
     public static void SaveData(string name, T data)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
 
-        using (StreamWriter writer = new StreamWriter(dataPath))
+        using (StreamWriter writer = new(dataPath))
         {
-            string json = JsonConvert.SerializeObject(data);
-            writer.WriteLine(json);
+            JsonSerializerSettings settings = new()
+            {
+                Formatting = Formatting.Indented,
+            };
+
+            string json = JsonConvert.SerializeObject(data, settings);
+            writer.Write(json);
+            writer.Close();
         }
     }
 
     public static void DeleteData(string name)
     {
-        string dataPath = $"{Application.persistentDataPath}/{name}.dat";
-        
+        string dataPath = Path.Combine(Application.persistentDataPath, $"{name}.dat");
+
         if (File.Exists(dataPath))
         {
             File.Delete(dataPath);

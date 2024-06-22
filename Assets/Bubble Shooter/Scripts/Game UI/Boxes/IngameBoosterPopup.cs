@@ -37,8 +37,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         private IPublisher<AddIngameBoosterMessage> _boosterPublisher;
         private ReactiveProperty<int> _coinReactive = new(0);
 
-        private static readonly int _appearHash = Animator.StringToHash("Appear");
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _appearHash = Animator.StringToHash("Appear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         protected override void OnAwake()
         {

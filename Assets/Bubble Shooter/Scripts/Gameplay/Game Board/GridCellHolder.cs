@@ -26,7 +26,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
             string pos = $"({GridPosition.x}, {GridPosition.y})";
             DrawString(pos, transform.position + Vector3.up * 0.5f, Color.black);
         }
-#endif
 
         static void DrawString(string text, Vector3 worldPos, Color? colour = null)
         {
@@ -44,5 +43,6 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
                                , size.x, size.y), text);
             Handles.EndGUI();
         }
+#endif
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Interfaces;
 using BubbleShooter.Scripts.Common.Constants;
+using BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks;
 using Cysharp.Threading.Tasks;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks
@@ -13,10 +14,17 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         
+        private BoosterHandleTask _boosterHandleTask;
+        
         public CheckBallClusterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+        }
+
+        public void SetBoosterHandleTask(BoosterHandleTask boosterHandleTask)
+        {
+            _boosterHandleTask = boosterHandleTask;
         }
 
         public void CheckFreeCluster()
@@ -27,10 +35,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 if (IsValidCell(position))
                 {
-                    BallClusterModel clusterModel = new();
-                    FindCluster(position, clusterModel);
-                    ExecuteCluster(clusterModel);
-                    clusterModel.Dispose();
+                    using (BallClusterModel clusterModel = new())
+                    {
+                        FindCluster(position, clusterModel);
+                        ExecuteCluster(clusterModel);
+                    }
                 }
             }
 
@@ -50,6 +59,9 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                     continue;
 
                 IBallEntity ball = neighbors[i].BallEntity;
+
+                if (ball is IBallBooster)
+                    await _boosterHandleTask.ActivateBooster(ball.GridPosition, false);
 
                 if (ball is IBreakable breakable)
                 {
@@ -94,8 +106,26 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void ExecuteCluster(BallClusterModel clusterModel)
         {
-            if (clusterModel.IsCeilAttached)
+            if (clusterModel.Cluster.Count <= 0)
                 return;
+
+            if (clusterModel.IsCeilAttached)
+            {
+                if(clusterModel.Cluster.Count == 1)
+                {
+                    if (clusterModel.Cluster[0].BallEntity is ITargetBall target)
+                    {
+                        target.FreeTarget();
+                        _gridCellManager.DestroyAt(clusterModel.Cluster[0].GridPosition);
+                        return;
+                    }
+
+                    else return;
+                }
+
+                else if (clusterModel.Cluster.Count > 1)
+                    return;
+            }
 
             for (int i = 0; i < clusterModel.Cluster.Count; i++)
             {

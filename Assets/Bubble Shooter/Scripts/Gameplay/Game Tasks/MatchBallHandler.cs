@@ -83,28 +83,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 CheckMatch(position, matchCluster);
 
                 _gridCellManager.ClearVisitedPositions();
-                await _checkBallClusterTask.CheckNeighborCluster(position);
-                await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
-                _ballRippleTask.ResetRippleIgnore();
+                _checkBallClusterTask.CheckNeighborCluster(position).Forget();
+                Ripple(position).Forget();
 
-                (bool, bool) clusterResult = await ExecuteCluster(matchCluster);
-                
+                bool isMatched = await ExecuteCluster(matchCluster);
                 _isMatchWithColorful = false;
-                bool isMatched = clusterResult.Item1;
-                bool containTarget = clusterResult.Item2;
-
+                
                 if (isMatched)
                 {
                     _checkBallClusterTask.CheckFreeCluster();
-                    
-                    if (!containTarget)
-                    {
-                        await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
-                        _checkTargetTask.CheckTarget();
-                    }
                 }
 
-                else
+                if(!_checkTargetTask.IsTargetAdded)
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                     _checkTargetTask.CheckTarget();
@@ -180,39 +170,42 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private async UniTask<(bool, bool)> ExecuteCluster(List<IGridCell> cluster)
+        private async UniTask Ripple(Vector3Int position)
+        {
+            await _ballRippleTask.RippleAt(position, RippleSpreadLevel);
+            _ballRippleTask.ResetRippleIgnore();
+        }
+
+        private async UniTask<bool> ExecuteCluster(List<IGridCell> cluster)
         {
             if (cluster.Count < 3)
-                return (false, false);
+                return false;
 
             int totalScore = 0;
-            bool containTarget = false;
-
             _powerupPublisher.Publish(new PowerupMessage
             {
                 Amount = cluster.Count,
-                PowerupColor = GetBoosterColor(cluster[2].EntityType),
+                PowerupColor = GetBoosterColor(cluster[0].EntityType),
                 Command = ReactiveValueCommand.Changing
             });
 
             for (int i = 0; i < cluster.Count; i++)
             {
-                if (cluster[i].BallEntity is ITargetBall)
-                    containTarget = true;
-
                 if (_isMatchWithColorful && cluster[i].BallEntity is IBallEffect effect)
                     effect.PlayColorfulEffect();
 
                 if (cluster[i].BallEntity is IBallPlayAudio ballAudio)
                     ballAudio.PlayPopSound(i);
 
-                totalScore += cluster[i].BallEntity.Score;
+                if(cluster[i].ContainsBall)
+                    totalScore += cluster[i].BallEntity.Score;
+                
                 await _breakGridTask.Break(cluster[i]);
             }
 
             _addScorePublisher.Publish(new PublishScoreMessage { Score = totalScore });
 
-            return (true, containTarget);
+            return true;
         }
 
         private EntityType GetBoosterColor(EntityType entityType)

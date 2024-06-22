@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Scripts.Common.UpdateHandlerPattern;
 using BubbleShooter.Scripts.Mainhome.GameManagers;
-using Scripts.Configs;
+using Scripts.Common.UpdateHandlerPattern;
 
 namespace Scripts.App
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.GameUI.IngameElements;
+using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes;
 using DG.Tweening;
 using TMPro;
-using BubbleShooter.Scripts.Mainhome.UI.PopupBoxes;
 
 namespace BubbleShooter.Scripts.GameUI.Screens
 {

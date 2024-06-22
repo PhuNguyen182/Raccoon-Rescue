@@ -769,7 +769,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 100, y: 2}
+  m_Size: {x: 500, y: 2}
   m_Direction: 1
 --- !u!1 &216749279
 GameObject:
@@ -2219,7 +2219,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 100, y: 1}
+  m_Size: {x: 500, y: 2}
   m_Direction: 1
 --- !u!1 &698839921
 GameObject:
@@ -2948,6 +2948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1108513993}
   - component: {fileID: 1108513992}
+  - component: {fileID: 1108513994}
   m_Layer: 0
   m_Name: Ball Shooter
   m_TagString: Untagged
@@ -3022,6 +3023,18 @@ Transform:
   - {fileID: 1208440808}
   m_Father: {fileID: 1885966888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &1108513994
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108513990}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!224 &1146628854 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8519957927326659360, guid: cd416d7b93e8c874a99993fcc9b87c20, type: 3}
@@ -3677,7 +3690,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 7.75, y: 0.16}
+  m_Size: {x: 7.75, y: 0.32}
   m_Direction: 1
 --- !u!1 &1468333720
 GameObject:
@@ -4654,7 +4667,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 100, y: 2}
+  m_Size: {x: 500, y: 2}
   m_Direction: 1
 --- !u!1 &1773433294
 GameObject:
@@ -4758,7 +4771,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 1592121711
-  m_SortingOrder: 3
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &1799337946
 GameObject:

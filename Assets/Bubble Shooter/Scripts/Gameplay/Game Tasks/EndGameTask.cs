@@ -35,12 +35,14 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private int _fallBallCount = 0;
         private Material _ballMaterial;
-        private static readonly int _greyScaleProperty = Shader.PropertyToID("_Modifier");
+        private readonly int _greyScaleProperty;
 
         public EndGameTask(MetaBallManager metaBallManager, BallShooter ballShooter
             , BallProvider ballProvider, CheckTargetTask checkTargetTask
             , NotificationPanel notificationPanel)
         {
+            _greyScaleProperty = Shader.PropertyToID("_Modifier");
+
             _ballShooter = ballShooter;
             _ballProvider = ballProvider;
             _metaBallManager = metaBallManager;
@@ -135,7 +137,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private async UniTask ShootRemainBalls()
         {
             int count = _checkTargetTask.MoveCount;
-            _ballProvider.SetBallColor(false, EntityType.None, DummyBallState.None);
+            _ballProvider.SetBallColor(false, EntityType.None, DummyBallState.None).Forget();
             
             while(count > 0)
             {

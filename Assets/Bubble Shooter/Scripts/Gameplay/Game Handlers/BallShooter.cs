@@ -101,10 +101,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         private CancellationToken _token;
         private EntityFactory _entityFactory;
         private InGamePowerupControlTask _inGamePowerups;
+        private CheckTargetTask _checkTargetTask;
         private Color _lineColor;
 
         private IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
-        private static readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulToggle");
+        private readonly int _colorfulToggleHash = Shader.PropertyToID("_ColorfulValue");
 
         public DummyBall DummyBall { get; set; }
         public BallShootModel BallModel => _ballModel;
@@ -155,6 +156,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 DrawLineColors(false, new Color(0, 0, 0, 0));
         }
 
+        public void PreloadBalls(Transform parent)
+        {
+            SimplePool.PoolPreLoad(prefab.gameObject, 3, parent);
+        }
+
         public void SetPremierState(bool isPremier)
         {
             for (int i = 0; i < aimingLines.Length; i++)
@@ -166,6 +172,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
         public void SetBallFactory(EntityFactory factory)
         {
             _entityFactory = factory;
+        }
+
+        public void SetCheckTargetTask(CheckTargetTask checkTargetTask)
+        {
+            _checkTargetTask = checkTargetTask;
         }
 
         public void SetIngamePowerup(InGamePowerupControlTask inGamePowerup)
@@ -289,7 +300,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 _ => default
             };
 
-            lineMaterial.SetInteger(_colorfulToggleHash, ballColor == EntityType.ColorfulBall ? 1 : 0);
+            lineMaterial.SetFloat(_colorfulToggleHash, ballColor == EntityType.ColorfulBall ? 1 : 0);
             return color;
         }
 
@@ -336,11 +347,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             SetBallColor(false, EntityType.None);
             await UniTask.Delay(TimeSpan.FromSeconds(0.333f), cancellationToken: _token);
 
-            ballProvider.PopSequence().Forget();
             _decreaseMovePublisher.Publish(new DecreaseMoveMessage
             {
                 CanDecreaseMove = !shootModel.IsPowerup
             });
+
+            if(_checkTargetTask.MoveCount > 0)
+                ballProvider.PopSequence().Forget();
 
             _inGamePowerups.IsPowerupInUse = false;
             _canFire = true;
@@ -383,7 +396,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
         private void OnDestroy()
         {
-            lineMaterial.SetInteger(_colorfulToggleHash, 0);
+            lineMaterial.SetFloat(_colorfulToggleHash, 0);
         }
     }
 }
