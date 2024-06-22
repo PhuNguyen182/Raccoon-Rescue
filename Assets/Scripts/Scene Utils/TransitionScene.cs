@@ -16,7 +16,7 @@ namespace Scripts.SceneUtils
         [SerializeField] private AudioClip gameplayMusic;
         [SerializeField] private Animator transition;
 
-        private static readonly int _fadeHash = Animator.StringToHash("Fade");
+        private readonly int _fadeHash = Animator.StringToHash("Fade");
 
         private CancellationToken _token;
 

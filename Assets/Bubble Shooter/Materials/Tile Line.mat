@@ -75,6 +75,7 @@ Material:
     - _Blend: 0
     - _CastShadows: 0
     - _ColorfulToggle: 0
+    - _ColorfulValue: 0
     - _Cull: 2
     - _DstBlend: 10
     - _EnableExternalAlpha: 0

@@ -18,6 +18,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly ISubscriber<MoveToTargetMessage> _moveTargetSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
+        private bool _isTargetAdded;
+
         private int _moveCount;
         private int _targetCount;
         private int _maxTarget;
@@ -25,6 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public Action<bool> OnEndGame;
         public int MoveCount => _moveCount;
         public int TargetCount => _maxTarget;
+        public bool IsTargetAdded => _isTargetAdded;
 
         public CheckTargetTask(InGamePanel inGamePanel)
         {
@@ -44,10 +47,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public void SetTargetCount(LevelModel levelModel)
         {
+            _targetCount = 0;
+            _isTargetAdded = false;
+
             _moveCount = levelModel.MoveCount;
             _maxTarget = levelModel.TargetCount;
-            _targetCount = 0;
-            
+
             UpdateMove();
             UpdateTarget();
         }
@@ -62,6 +67,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         private void SetTargetInfo(MoveToTargetMessage message)
         {
+            _isTargetAdded = true;
             Vector3 position = _inGamePanel.TargetPoint.position;
             position.z = 0;
 
@@ -94,6 +100,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         {
             _targetCount = _targetCount + 1;
             _inGamePanel.TargetHolder.PlayTargetAnimation();
+            _isTargetAdded = false;
 
             UpdateTarget();
             CheckTarget();

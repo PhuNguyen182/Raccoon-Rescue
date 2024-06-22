@@ -55,7 +55,7 @@ public static class SimplePool
             for (int i = 0; i < initialQty; i++)
             {
                 // instantiate a whole new object.
-                var obj = GameObject.Instantiate(_prefab, parent);
+                GameObject obj = GameObject.Instantiate(_prefab, parent);
                 obj.name = string.Format("{0} ({1})", _prefab.name, _nextId++);
 
                 // AddUpdateBehaviour the unique GameObject ID to our MemberHashset so we know this GO belongs to us.
@@ -147,7 +147,7 @@ public static class SimplePool
         {
             //changed from (prefab, Pool) to (int, Pool) which should be faster if we have 
             //many different prefabs.
-            var prefabID = prefab.GetInstanceID();
+            int prefabID = prefab.GetInstanceID();
             if (!_pools.ContainsKey(prefabID))
                 _pools[prefabID] = new Pool(prefab, qty);
         }
@@ -171,7 +171,7 @@ public static class SimplePool
     {
         Init(prefab, qty);
         // Make an array to grab the objects we're about to pre-spawn.
-        var obs = new GameObject[qty];
+        GameObject[] obs = new GameObject[qty];
         for (int i = 0; i < qty; i++)
         {
             obs[i] = Spawn(prefab, Vector3.zero, Quaternion.identity);
@@ -196,16 +196,16 @@ public static class SimplePool
     public static GameObject Spawn(GameObject prefab, string tag, Vector3 pos, Quaternion rot)
     {
         Init(prefab);
-        var bullet = _pools[prefab.GetInstanceID()].Spawn(pos, rot);
+        GameObject bullet = _pools[prefab.GetInstanceID()].Spawn(pos, rot);
         bullet.tag = tag;
         return bullet;
     }
 
-    public static GameObject Spawn(GameObject prefab, Transform parent, Vector3 pos, Quaternion rot)
+    public static GameObject Spawn(GameObject prefab, Transform parent, Vector3 pos, Quaternion rot, bool worldPositionStay = true)
     {
         Init(prefab);
-        var bullet = _pools[prefab.GetInstanceID()].Spawn(pos, rot);
-        bullet.transform.parent = parent;
+        GameObject bullet = _pools[prefab.GetInstanceID()].Spawn(pos, rot);
+        bullet.transform.SetParent(parent, worldPositionStay);
         return bullet;
     }
 
@@ -235,16 +235,16 @@ public static class SimplePool
     public static T Spawn<T>(T prefab, string tag, Vector3 pos, Quaternion rot) where T : Component
     {
         Init(prefab.gameObject);
-        var bullet = _pools[prefab.gameObject.GetInstanceID()].Spawn<T>(pos, rot);
+        T bullet = _pools[prefab.gameObject.GetInstanceID()].Spawn<T>(pos, rot);
         bullet.tag = tag;
         return bullet;
     }
 
-    public static T Spawn<T>(T prefab, Transform parent, Vector3 pos, Quaternion rot) where T : Component
+    public static T Spawn<T>(T prefab, Transform parent, Vector3 pos, Quaternion rot, bool worldPositionStay = true) where T : Component
     {
         Init(prefab.gameObject);
-        var bullet = _pools[prefab.gameObject.GetInstanceID()].Spawn<T>(pos, rot);
-        bullet.transform.parent = parent;
+        T bullet = _pools[prefab.gameObject.GetInstanceID()].Spawn<T>(pos, rot);
+        bullet.transform.SetParent(parent, worldPositionStay);
         return bullet;
     }
 
@@ -253,7 +253,7 @@ public static class SimplePool
     /// </summary>
     /// 
 
-    public static void Despawn(GameObject obj, Transform parent)
+    public static void Despawn(GameObject obj, Transform parent, bool worldPositionStay = true)
     {
         _pools ??= new Dictionary<int, Pool>();
         Pool p = null;
@@ -273,7 +273,7 @@ public static class SimplePool
         }
         else
         {
-            obj.transform.parent = parent;
+            obj.transform.SetParent(parent, worldPositionStay);
             p.Despawn(obj);
         }
     }

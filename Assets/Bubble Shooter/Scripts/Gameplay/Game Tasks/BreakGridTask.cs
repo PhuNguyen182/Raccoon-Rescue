@@ -33,7 +33,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 return;
 
             if (ballEntity is IBallBooster)
-                _boosterHandleTask.ActiveBooster(gridCell.GridPosition).Forget();
+                _boosterHandleTask.ActivateBooster(gridCell.GridPosition, false).Forget();
 
             if (ballEntity is IBreakable breakable)
             {

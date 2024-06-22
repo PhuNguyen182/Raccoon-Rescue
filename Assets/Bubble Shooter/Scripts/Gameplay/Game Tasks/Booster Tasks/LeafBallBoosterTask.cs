@@ -63,7 +63,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks.BoosterTasks
                             await boosterEffect.PlayBoosterEffect(EntityType.LeafBall);
                         }
 
-                        breakTasks.Add(_breakGridTask.Break(column[i]));
+                        UniTask breakTask = _breakGridTask.Break(column[i]);
+                        breakTasks.Add(breakTask);
                     }
 
                     await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _cancellationToken);

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hexagon Pointed-Top Side
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: -2135585597343286014, guid: 2d4cd955d76673f45a428024b7337875, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.69803923, g: 0.69803923, b: 0, a: 0.8}
   m_Transform:
     e00: 1
     e01: 0

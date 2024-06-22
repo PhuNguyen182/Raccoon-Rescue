@@ -1,10 +1,10 @@
 {
   "dependencies": {
     "com.cysharp.messagepipe": "1.8.1",
-    "com.cysharp.r3": "1.1.11",
+    "com.cysharp.r3": "1.1.12",
     "com.cysharp.unitask": "2.5.4",
-    "com.github-glitchenzo.nugetforunity": "4.1.0",
-    "com.unity.addressables": "1.21.20",
+    "com.github-glitchenzo.nugetforunity": "4.1.1",
+    "com.unity.addressables": "1.21.21",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.device-simulator.devices": "1.0.0",
     "com.unity.feature.2d": "2.0.0",
@@ -15,7 +15,7 @@
     "com.unity.purchasing": "4.11.0",
     "com.unity.render-pipelines.universal": "14.0.9",
     "com.unity.test-framework": "1.1.33",
-    "com.unity.textmeshpro": "3.0.8",
+    "com.unity.textmeshpro": "3.0.9",
     "com.unity.ugui": "1.0.0",
     "games.corundum.stateless-for-unity": "5.11.3",
     "com.unity.modules.ai": "1.0.0",

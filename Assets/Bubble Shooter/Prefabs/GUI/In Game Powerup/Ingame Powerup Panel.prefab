@@ -279,7 +279,7 @@ MonoBehaviour:
   isRelative: 0
   isFrom: 0
   isIndependentUpdate: 0
-  autoKill: 1
+  autoKill: 0
   autoGenerate: 1
   isActive: 1
   isValid: 1
@@ -470,6 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 6520867899222973867}
+  volumeScale: 0.6
   clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &1016516449569117467
 MonoBehaviour:
@@ -799,6 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 7895450835170922476}
+  volumeScale: 0.6
   clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &3423700639496403924
 MonoBehaviour:
@@ -1186,7 +1188,7 @@ MonoBehaviour:
   isRelative: 0
   isFrom: 0
   isIndependentUpdate: 0
-  autoKill: 1
+  autoKill: 0
   autoGenerate: 1
   isActive: 1
   isValid: 1
@@ -1489,6 +1491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 4959124488538776326}
+  volumeScale: 0.6
   clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &1268724601314251759
 MonoBehaviour:
@@ -1758,6 +1761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 5408984287034170506}
+  volumeScale: 0.6
   clip: {fileID: 8300000, guid: 1f4c0b3b8a793488a8a6d3c20b32fb17, type: 3}
 --- !u!114 &2308006282794392748
 MonoBehaviour:
@@ -2220,7 +2224,7 @@ MonoBehaviour:
   isRelative: 0
   isFrom: 0
   isIndependentUpdate: 0
-  autoKill: 1
+  autoKill: 0
   autoGenerate: 1
   isActive: 1
   isValid: 1
@@ -2716,7 +2720,7 @@ MonoBehaviour:
   isRelative: 0
   isFrom: 0
   isIndependentUpdate: 0
-  autoKill: 1
+  autoKill: 0
   autoGenerate: 1
   isActive: 1
   isValid: 1

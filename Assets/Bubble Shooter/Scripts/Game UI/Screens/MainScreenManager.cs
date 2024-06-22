@@ -19,8 +19,8 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         [SerializeField] private IngameBoosterPanel boosterPanel;
         [SerializeField] private EndGameScreen endGameScreen;
 
-        private static readonly int _appearHash = Animator.StringToHash("Appear");
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _appearHash = Animator.StringToHash("Appear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         public InGamePanel InGamePanel => inGamePanel;
         public IngamePowerupPanel IngamePowerupPanel => powerupPanel;

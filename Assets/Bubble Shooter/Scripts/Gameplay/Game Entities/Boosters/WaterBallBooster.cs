@@ -142,6 +142,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.Boosters
 
             _boosterPublisher.Publish(new ActiveBoosterMessage
             {
+                IsFlyBooster = true,
                 Position = GridPosition
             });
         }

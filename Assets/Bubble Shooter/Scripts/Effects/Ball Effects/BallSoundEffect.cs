@@ -13,7 +13,10 @@ namespace BubbleShooter.Scripts.Effects.BallEffects
 
         public void PlaySound(AudioClip clip)
         {
-            autoDespawn.SetDuration(clip.length);
+            float duration = clip.length * 1.5f > 0.1f 
+                             ? clip.length * 1.5f : 0.1f;
+            
+            autoDespawn.SetDuration(duration);
             soundPlayer.PlayOneShot(clip);
         }
 

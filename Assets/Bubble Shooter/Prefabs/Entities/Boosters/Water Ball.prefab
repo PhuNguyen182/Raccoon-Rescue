@@ -231,8 +231,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 05210afa8a31af248a52f445aaf7cf4f, type: 3}
   - {fileID: 8300000, guid: 2978d97f7485db24db5bb0f8defefd8b, type: 3}
   - {fileID: 8300000, guid: e7a52ea5c73626e4fb7afcf9caf17eef, type: 3}
-  leafEffect: {fileID: 0}
-  waterEffect: {fileID: 0}
+  leafEffect: {fileID: 7474055565188371299, guid: a39ed9b8a647b7e4aa579584ae12e069, type: 3}
+  waterEffect: {fileID: 4658626098209746007, guid: f9c4f488935b40941bab19ae63bf3ac6, type: 3}
   textColor: {r: 0.32941177, g: 0.8235295, b: 0.8745099, a: 1}
 --- !u!114 &3087672890164078302
 MonoBehaviour:
