@@ -33,7 +33,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
         [SerializeField] private Sprite musicOff;
         [SerializeField] private Sprite soundOff;
 
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private bool _musicToggle;
         private bool _soundToggle;

@@ -13,9 +13,9 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private AudioClip shootClip;
         [SerializeField] private AudioClip[] characterClips;
 
-        private static readonly int _shootHash = Animator.StringToHash("Shot");
-        private static readonly int _loseHash = Animator.StringToHash("Lose");
-        private static readonly int _continueHash = Animator.StringToHash("Continue");
+        private readonly int _shootHash = Animator.StringToHash("Shot");
+        private readonly int _loseHash = Animator.StringToHash("Lose");
+        private readonly int _continueHash = Animator.StringToHash("Continue");
 
         public void Shoot()
         {

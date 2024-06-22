@@ -35,8 +35,8 @@ namespace BubbleShooter.Scripts.GameUI.Screens
         private CancellationToken _token;
         private ReactiveProperty<int> _reactiveScore = new(0);
 
-        private static readonly int _tierHash = Animator.StringToHash("Tier");
-        private static readonly int _closeHash = Animator.StringToHash("Close");
+        private readonly int _tierHash = Animator.StringToHash("Tier");
+        private readonly int _closeHash = Animator.StringToHash("Close");
 
         private int _level = 0;
         private int _tier = 0;

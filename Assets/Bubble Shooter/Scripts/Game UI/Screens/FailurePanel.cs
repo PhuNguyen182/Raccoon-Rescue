@@ -23,7 +23,7 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
         private CancellationToken _token;
         private UniTaskCompletionSource<bool> _completionSource;
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private void Awake()
         {

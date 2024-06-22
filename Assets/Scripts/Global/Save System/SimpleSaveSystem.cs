@@ -12,22 +12,23 @@ public static class SimpleSaveSystem<T>
 
         if (File.Exists(dataPath))
         {
-            using(StreamReader reader = new(dataPath))
+            T data;
+            using(StreamReader streamReader = new(dataPath))
             {
-                string json = reader.ReadToEnd();
+                string json = streamReader.ReadToEnd();
                 using(StringReader stringReader = new(json))
                 {
                     using (JsonReader jsonReader = new JsonTextReader(stringReader))
                     {
                         JsonSerializer jsonSerializer = new();
-                        T data = jsonSerializer.Deserialize<T>(jsonReader);
-
-                        stringReader.Close();
-                        reader.Close();
-                        return data;
+                        data = jsonSerializer.Deserialize<T>(jsonReader);
                     }
+                    stringReader.Close();
                 }
+                streamReader.Close();
             }
+
+            return data;
         }
 
         return default;

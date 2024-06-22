@@ -13,7 +13,7 @@ namespace BubbleShooter.Scripts.GameUI.IngameElements
         [SerializeField] private TMP_Text targetAmount;
         [SerializeField] private Animator animator;
 
-        private static readonly int _bouncingHash = Animator.StringToHash("Bounce");
+        private readonly int _bouncingHash = Animator.StringToHash("Bounce");
 
         public Transform TargetPoint => targetImage.transform;
 

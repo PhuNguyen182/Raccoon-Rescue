@@ -22,7 +22,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
         [SerializeField] private TMP_Text coinText;
         [SerializeField] private Animator boxAnimator;
 
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private int _price = 0;
         private CancellationToken _token;

@@ -37,7 +37,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
         [Header("Texts")]
         [SerializeField] private TMP_Text levelText;
 
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private int _level;
         private int _star;

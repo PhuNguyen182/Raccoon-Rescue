@@ -42,7 +42,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
         [FoldoutGroup("Ball Colors")]
         [SerializeField] private Sprite yellow;
 
-        private static readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
+        private readonly int _sadEmotionHash = Animator.StringToHash("SadEmotion");
 
         private IPublisher<MoveToTargetMessage> _moveTargetPublisher;
         private IPublisher<AddTargetMessage> _checkTargetPublisher;

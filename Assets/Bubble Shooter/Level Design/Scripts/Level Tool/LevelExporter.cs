@@ -9,9 +9,10 @@ using BubbleShooter.LevelDesign.Scripts.CustomTiles;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameDatas;
 using BubbleShooter.Scripts.Utils.BoundsUtils;
-using BubbleShooter.Scripts.Common.Enums;
 using Newtonsoft.Json;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace BubbleShooter.LevelDesign.Scripts.LevelTool
 {
