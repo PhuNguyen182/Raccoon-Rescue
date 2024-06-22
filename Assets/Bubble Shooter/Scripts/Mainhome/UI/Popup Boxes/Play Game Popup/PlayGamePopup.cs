@@ -14,6 +14,7 @@ using Cysharp.Threading.Tasks;
 using Scripts.SceneUtils;
 using Newtonsoft.Json;
 using TMPro;
+using System.IO;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
 {
@@ -36,7 +37,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
         [Header("Texts")]
         [SerializeField] private TMP_Text levelText;
 
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private int _level;
         private int _star;
@@ -93,10 +94,18 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
         private async UniTask PlayGame()
         {
             _isPlayPressed = true;
+            LevelModel levelModel;
             string levelData = await MainhomeController.Instance.LevelPlayInfo.GetLevelData(_level);
-            LevelModel levelModel = JsonConvert.DeserializeObject<LevelModel>(levelData);
-            GameData.Instance.UseHeart(1);
+            using (StringReader streamReader = new(levelData))
+            {
+                using (JsonReader jsonReader = new JsonTextReader(streamReader))
+                {
+                    JsonSerializer jsonSerializer = new();
+                    levelModel = jsonSerializer.Deserialize<LevelModel>(jsonReader);
+                }
+            }
 
+            GameData.Instance.UseHeart(1);
             PlayConfig.Current = new PlayConfig
             {
                 IsTest = false,

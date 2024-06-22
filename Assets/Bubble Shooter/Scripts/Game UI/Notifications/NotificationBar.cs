@@ -18,7 +18,7 @@ namespace BubbleShooter.Scripts.GameUI.Notifications
         [SerializeField] private AnimationClip moveIn;
         [SerializeField] private AnimationClip moveOut;
 
-        private static readonly int _moveHash = Animator.StringToHash("Move");
+        private readonly int _moveHash = Animator.StringToHash("Move");
 
         private CancellationToken _token;
 

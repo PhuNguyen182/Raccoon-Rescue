@@ -13,7 +13,7 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
         [SerializeField] private Button closeButton;
         [SerializeField] private Animator shopAnimator;
 
-        private static readonly int _disappearHash = Animator.StringToHash("Disappear");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         private CancellationToken _token;
 

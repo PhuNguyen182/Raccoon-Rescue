@@ -11,7 +11,7 @@ namespace BubbleShooter.Scripts.Common.Tutorials
     {
         [SerializeField] private Button playButton;
 
-        private static readonly int _disappearHash = Animator.StringToHash("");
+        private readonly int _disappearHash = Animator.StringToHash("");
 
         protected override void OnAwake()
         {

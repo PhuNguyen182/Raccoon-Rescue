@@ -8,7 +8,7 @@ public class LineDrawer : MonoBehaviour
     [SerializeField] private LineRenderer secondaryLine;
     [SerializeField] private Material lineMaterial;
 
-    private static readonly int _lineColorProperty = Shader.PropertyToID("_LineColor");
+    private readonly int _lineColorProperty = Shader.PropertyToID("_LineColor");
 
     public void SetColor(Color color)
     {

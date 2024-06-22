@@ -6,6 +6,7 @@ namespace BubbleShooter.Scripts.Common.Messages
 {
     public struct ActiveBoosterMessage
     {
+        public bool IsFlyBooster;
         public Vector3Int Position;
     }
 }

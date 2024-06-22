@@ -21,8 +21,8 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
         [SerializeField] private Button nodeButton;
         [SerializeField] private TMP_Text levelText;
 
-        private static readonly int _starIdleHash = Animator.StringToHash("StarIdle");
-        private static readonly int _starCompleteHash = Animator.StringToHash("StarComplete");
+        private readonly int _starIdleHash = Animator.StringToHash("StarIdle");
+        private readonly int _starCompleteHash = Animator.StringToHash("StarComplete");
 
         private int _star = 0;
         private bool _isAvailable;
