@@ -11,6 +11,7 @@ using BubbleShooter.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 using TMPro;
+using BubbleShooter.Scripts.Common.Features.Shop;
 
 namespace BubbleShooter.Scripts.GameUI.Boxes
 {
@@ -30,6 +31,8 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         [Header("Stage Objects")]
         [SerializeField] private GameObject[] stage1Objects;
         [SerializeField] private GameObject[] stage2Objects;
+
+        private const string ShopPanelPath = "Popups/Shop";
 
         private int _stage = 0;
         private int _price = 0;
@@ -61,14 +64,29 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
         {
             if(_stage == 0)
             {
-                DoNextStage().Forget();
-                BuyBooster();
+                int coin = GameData.Instance.GetCoins();
+                _price = GameData.Instance.GameInventory.GetIngameBoosterPrice(boosterType);
+
+                if (coin >= _price)
+                {
+                    DoNextStage().Forget();
+                    BuyBooster();
+                }
+
+                else ShowShop().Forget();
             }
 
             else if(_stage == 1)
             {
                 Close();
             }
+        }
+
+        private async UniTask ShowShop()
+        {
+            Close();
+            await UniTask.Delay(TimeSpan.FromSeconds(0.85f), cancellationToken: _token);
+            ShopPanel.Create(ShopPanelPath).ShowCoinBar(true);
         }
 
         private async UniTask DoNextStage()
@@ -90,8 +108,6 @@ namespace BubbleShooter.Scripts.GameUI.Boxes
             coinAmount.text = $"{coin}";
             boosterPrice.text = $"{_price}";
             _coinReactive.Value = coin;
-
-            purchaseButton.interactable = coin >= _price;
         }
 
         private void BuyBooster()
