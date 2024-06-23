@@ -12,8 +12,8 @@ namespace Scripts.Service
 
         public void Initialize()
         {
-            InitMessageBroker();
             LoadGameData();
+            InitMessageBroker();
             InitDOTween();
         }
 

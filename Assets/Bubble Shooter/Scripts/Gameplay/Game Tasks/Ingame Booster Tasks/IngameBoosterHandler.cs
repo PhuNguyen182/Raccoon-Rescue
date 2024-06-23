@@ -11,9 +11,9 @@ using BubbleShooter.Scripts.Common.Messages;
 using BubbleShooter.Scripts.Gameplay.Models;
 using BubbleShooter.Scripts.Common.Enums;
 using BubbleShooter.Scripts.GameUI.Boxes;
+using BubbleShooter.Scripts.Common.Configs;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using BubbleShooter.Scripts.Common.Configs;
 
 namespace BubbleShooter.Scripts.Gameplay.GameTasks.IngameBoosterTasks
 {

@@ -140,11 +140,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             float squaredSnapDistance = BallConstants.GridSnapDistance * BallConstants.GridSnapDistance;
             if (Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= squaredSnapDistance)
             {
-                Vector3Int position = _gridCellHolder.GridPosition;
-                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
-
                 CanMove = false;
                 ChangeLayerMask(true);
+
+                Vector3Int position = _gridCellHolder.GridPosition;
+                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
                 SnapToCell(checkCell).Forget();
