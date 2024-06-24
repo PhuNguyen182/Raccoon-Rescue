@@ -133,7 +133,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
             {
                 BallColor = nextColor,
                 BallCount = ballShooter.BallModel.BallCount,
-                IsPowerup = ballShooter.BallModel.IsPowerup
+                IsPowerup = true
             };
 
             return ballModel;
@@ -182,6 +182,9 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         private async UniTask SwitchBallAsync()
         {
             if (!_canClick)
+                return;
+
+            if (ballShooter.BallModel.IsPowerup)
                 return;
 
             _canClick = false;

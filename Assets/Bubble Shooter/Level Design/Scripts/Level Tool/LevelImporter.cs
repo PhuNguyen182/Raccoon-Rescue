@@ -46,6 +46,20 @@ namespace BubbleShooter.LevelDesign.Scripts.LevelTool
             return this;
         }
 
+        public LevelImporter BuildBoardBottomMap(Tilemap tilemap, List<BoardBottomMapPosition> mapPositions)
+        {
+            tilemap.ClearAllTiles();
+
+            for (int i = 0; i < mapPositions.Count; i++)
+            {
+                var mapPosition = mapPositions[i];
+                var tile = _tileDatabase.GetBoardBottomTile();
+                tilemap.SetTile(mapPosition.Position, tile);
+            }
+
+            return this;
+        }
+
         public LevelImporter BuildCeilMap(Tilemap tilemap, List<CeilMapPosition> mapPositions)
         {
             tilemap.ClearAllTiles();

@@ -8,6 +8,7 @@ namespace BubbleShooter.Scripts.Common.Interfaces
     public interface IGridCell
     {
         public bool IsCeil { get; set; }
+        public bool IsBottom { get; set; }
         public bool ContainsBall { get; }
         public EntityType EntityType { get; }
         public IBallEntity BallEntity { get; }

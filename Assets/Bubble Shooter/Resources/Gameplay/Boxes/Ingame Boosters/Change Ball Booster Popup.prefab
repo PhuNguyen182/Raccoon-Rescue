@@ -1875,9 +1875,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5213674de11abe47bf7cf7b978a1b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ContentPanel: {fileID: 0}
-  popupCanvas: {fileID: 0}
-  mainPanel: {fileID: 0}
+  ContentPanel: {fileID: 7577141713656819075}
+  popupCanvas: {fileID: 6345201893048715758}
+  mainPanel: {fileID: 7577141713656819075}
   IsPopup: 1
   IsNotStack: 0
   isAnim: 1

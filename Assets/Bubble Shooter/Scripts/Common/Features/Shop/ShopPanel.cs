@@ -12,6 +12,7 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
     {
         [SerializeField] private Button closeButton;
         [SerializeField] private Animator shopAnimator;
+        [SerializeField] private GameObject topBar;
 
         private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
@@ -35,6 +36,12 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
 
             shopAnimator.ResetTrigger(_disappearHash);
             base.DoClose();
+        }
+
+        public ShopPanel ShowCoinBar(bool isActive)
+        {
+            topBar.SetActive(isActive);
+            return this;
         }
     }
 }

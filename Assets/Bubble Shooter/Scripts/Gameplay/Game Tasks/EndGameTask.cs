@@ -27,6 +27,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly MetaBallManager _metaBallManager;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly NotificationPanel _notificationPanel;
+        private readonly InGamePowerupControlTask _inGamePowerupControlTask;
         private readonly ISubscriber<BallDestroyMessage> _ballDestroySubscriber;
 
         private readonly CancellationToken _cancellationToken;
@@ -37,9 +38,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private Material _ballMaterial;
         private readonly int _greyScaleProperty;
 
-        public EndGameTask(MetaBallManager metaBallManager, BallShooter ballShooter
-            , BallProvider ballProvider, CheckTargetTask checkTargetTask
-            , NotificationPanel notificationPanel)
+        public EndGameTask(MetaBallManager metaBallManager, BallShooter ballShooter, BallProvider ballProvider
+            , CheckTargetTask checkTargetTask, NotificationPanel notificationPanel, InGamePowerupControlTask inGamePowerupControlTask)
         {
             _greyScaleProperty = Shader.PropertyToID("_Modifier");
 
@@ -48,6 +48,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _metaBallManager = metaBallManager;
             _checkTargetTask = checkTargetTask;
             _notificationPanel = notificationPanel;
+            _inGamePowerupControlTask = inGamePowerupControlTask;
 
             _tokenSource = new();
             _cancellationToken = _tokenSource.Token;
@@ -62,6 +63,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
         public async UniTask OnWinGame()
         {
+            _inGamePowerupControlTask.ResetBoosterButtons();
             await UniTask.NextFrame(_cancellationToken);
 
             MusicManager.Instance.PlaySoundEffect(SoundEffectEnum.Complete);

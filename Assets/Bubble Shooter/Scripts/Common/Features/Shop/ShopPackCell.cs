@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using BubbleShooter.Scripts.Mainhome;
 using Cysharp.Threading.Tasks;
+using BubbleShooter.Scripts.Feedbacks;
 
 namespace BubbleShooter.Scripts.Common.Features.Shop
 {
@@ -31,11 +32,20 @@ namespace BubbleShooter.Scripts.Common.Features.Shop
 
         private async UniTask DoShopEffect()
         {
-            MainhomeController.Instance.SetInteractive(false);
-            MainhomeController.Instance.CloseShopPanel();
-            await UniTask.Delay(TimeSpan.FromSeconds(0.667f), cancellationToken: _token);
-            await MainhomeController.Instance.UIEffectManager.SpawnFlyCoin();
-            MainhomeController.Instance.SetInteractive(true);
+            if (MainhomeController.Instance != null)
+            {
+                MainhomeController.Instance.SetInteractive(false);
+                MainhomeController.Instance.CloseShopPanel();
+                await UniTask.Delay(TimeSpan.FromSeconds(0.667f), cancellationToken: _token);
+                await MainhomeController.Instance.UIEffectManager.SpawnFlyCoin();
+                MainhomeController.Instance.SetInteractive(true);
+            }
+
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.167f), cancellationToken: _token);
+                await Emittable.Default.Emit("CoinHolder");
+            }
         }
     }
 }
