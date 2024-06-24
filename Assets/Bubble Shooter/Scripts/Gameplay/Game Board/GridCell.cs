@@ -11,6 +11,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameBoard
         private IBallEntity _ballEntity;
 
         public bool IsCeil { get; set; }
+        public bool IsBottom { get; set; }
         public bool ContainsBall => _ballEntity != null;
         public IBallEntity BallEntity => _ballEntity;
 

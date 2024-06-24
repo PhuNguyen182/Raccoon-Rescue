@@ -28,6 +28,14 @@ namespace BubbleShooter.Scripts.GameUI.IngamePowerup
         private const string UIObjectsLayer = "UIObjects";
         private const string ObjectsLayer = "Objects";
 
+        public void TurnOffAllBoosterButtons()
+        {
+            fireballButton.SetFillAmount(0);
+            leafballButton.SetFillAmount(0);
+            waterballButton.SetFillAmount(0);
+            sunballButton.SetFillAmount(0);
+        }
+
         public void ControlPowerupButtons(float fillAmount, EntityType powerupType)
         {
             switch (powerupType)

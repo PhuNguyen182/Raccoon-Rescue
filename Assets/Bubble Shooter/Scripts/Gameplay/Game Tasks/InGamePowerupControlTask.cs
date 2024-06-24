@@ -45,6 +45,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             CheckPowerup();
         }
 
+        public void ResetBoosterButtons()
+        {
+            _ingamePowerupPanel.TurnOffAllBoosterButtons();
+            _redBallCount = _greenBallCount = _blueBallCount = _yellowBallCount = 0;
+        }
+
         private void CheckPowerup()
         {
             CheckFireball();

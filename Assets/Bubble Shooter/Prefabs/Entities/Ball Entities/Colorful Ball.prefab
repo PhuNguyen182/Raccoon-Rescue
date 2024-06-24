@@ -250,8 +250,8 @@ MonoBehaviour:
   moveState: 0
   bounceDuration: 0.15
   bounceEase: 7
-  snapDuration: 0.25
-  snapEase: 7
+  snapDuration: 0.01125
+  snapEase: 4
   delayFrame: 3
   ballRadius: 0.3
   ballDistance: 1

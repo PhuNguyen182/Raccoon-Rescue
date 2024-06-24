@@ -139,7 +139,7 @@ namespace BubbleShooter.Scripts.Mainhome
 
         public void ShowShopPanel()
         {
-            _shopPanel = ShopPanel.Create(ShopPanelPath);
+            _shopPanel = ShopPanel.Create(ShopPanelPath).ShowCoinBar(false);
         }
 
         public void CloseShopPanel()

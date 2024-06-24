@@ -13,16 +13,16 @@ namespace BubbleShooter.LevelDesign.Scripts.Databases
     {
         [SerializeField] private BoardTile boardTile;
         [SerializeField] private CeilTile ceilTile;
-        [SerializeField] private BoardThresholdTile thresholdTile;
+        [SerializeField] private BoardBottomTile boardBottomTile;
         [SerializeField] private List<BallTile> ballTiles;
         [SerializeField] private List<EntityTile> entityTiles;
         [SerializeField] private List<TargetTile> targetTiles;
 
+        public BoardBottomTile GetBoardBottomTile() => boardBottomTile;
+
         public BoardTile GetBoardTile() => boardTile;
 
         public CeilTile GetCeilTile() => ceilTile;
-
-        public BoardThresholdTile GetBoardThresholdTile() => thresholdTile;
 
         public BallTile FindBallTile(int id, EntityType entityType)
         {
