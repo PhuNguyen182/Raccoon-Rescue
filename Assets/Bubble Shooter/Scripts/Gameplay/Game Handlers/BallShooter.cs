@@ -133,27 +133,23 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                     if (!inputHandler.IsPointerOverlapUI())
                     {
                         SetLineAngles();
-                        _lineColor = GetLineColor(_ballModel.BallColor);
                         DrawLineColors(true, _lineColor);
+                        _lineColor = GetLineColor(_ballModel.BallColor);
                     }
                 }
-
-                else 
-                    DrawLineColors(false, new Color(0, 0, 0, 0));
 
                 if (inputHandler.IsRelease)
                 {
                     if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
                     {
-                        inputHandler.IsActive = false;
                         ShootBall(_ballModel);
+                        inputHandler.IsActive = false;
                         SetPremierState(false);
                     }
                 }
             }
 
-            else
-                DrawLineColors(false, new Color(0, 0, 0, 0));
+            else DrawLineColors(false, default);
         }
 
         public void PreloadBalls(Transform parent)
@@ -316,6 +312,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
 
             _canFire = false;
             mainCharacter.Shoot();
+            Vector3 ballDirection = _direction;
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.167f), cancellationToken: _token);
             if (_token.IsCancellationRequested)
@@ -330,7 +327,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
             if (shootModel.BallCount == 1)
             {
                 BaseEntity newBall = _entityFactory.Create(ballData);
-                ShootABall(newBall, _direction);
+                ShootABall(newBall, ballDirection);
             }
 
             else
@@ -339,7 +336,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                 for (int i = -_haftBallCount; i <= _haftBallCount; i++)
                 {
                     BaseEntity newBall = _entityFactory.Create(ballData);
-                    Vector3 direction = Quaternion.AngleAxis(i * BallConstants.SpreadShootAngle, Vector3.forward) * _direction;
+                    Vector3 direction = Quaternion.AngleAxis(i * BallConstants.SpreadShootAngle, Vector3.forward) * ballDirection;
                     ShootABall(newBall, direction, i + _haftBallCount);
                 }
             }

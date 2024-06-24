@@ -140,11 +140,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             float squaredSnapDistance = BallConstants.GridSnapDistance * BallConstants.GridSnapDistance;
             if (Vector3.SqrMagnitude(_gridCellHolder.transform.position - transform.position) <= squaredSnapDistance)
             {
-                Vector3Int position = _gridCellHolder.GridPosition;
-                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
-
                 CanMove = false;
                 ChangeLayerMask(true);
+
+                Vector3Int position = _gridCellHolder.GridPosition;
+                IGridCell checkCell = TakeGridCellFunction.Invoke(position);
 
                 await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
                 SnapToCell(checkCell).Forget();
@@ -212,22 +212,36 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
             {
                 CanMove = false;
                 ChangeLayerMask(true);
-                CheckNearestGrid().Forget();
+                CheckNearestGrid();
             }
         }
 
-        private async UniTaskVoid SnapToCell(IGridCell cell)
+        private async UniTask SnapToCell(IGridCell cell)
         {
             MovementState = BallMovementState.Fixed;
 
-            SetItemToGrid(cell);
-            SnapTo(cell.WorldPosition).Forget();
+            bool isBottomCell = cell.IsBottom;
+            await SnapTo(cell.WorldPosition);
+            
+            if (isBottomCell)
+            {
+                if (_currentBall is IBallPhysics ballPhysics)
+                {
+                    _currentBall.IsFallen = true;
+                    ballPhysics.SetBodyActive(true);
+                }
+            }
 
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            else
+            {
+                SetItemToGrid(cell);
+                await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            }
+
             _currentBall.OnSnapped();
         }
 
-        private async UniTask CheckNearestGrid()
+        private void CheckNearestGrid()
         {
             float nearestGridDistance = Mathf.Infinity;
             _nearestGridHitInfos = Physics2D.CircleCastAll(transform.position, ballRadius
@@ -256,13 +270,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
 
             GridCellHolder gridHolder = targetCellInfo.collider.GetComponent<GridCellHolder>();
             targetGridCell = TakeGridCellFunction.Invoke(gridHolder.GridPosition);
-            MovementState = BallMovementState.Fixed;
-            
-            SetItemToGrid(targetGridCell);
-            SnapTo(targetCellInfo.transform.position).Forget();
-
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
-            _currentBall.OnSnapped();
+            SnapToCell(targetGridCell).Forget();
         }
 
         private void SetItemToGrid(IGridCell gridCell)
