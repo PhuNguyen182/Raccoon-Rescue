@@ -228,6 +228,12 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
                 gridCell.IsCeil = true;
             }
 
+            for (int i = 0; i < levelModel.BoardBottomMapPositions.Count; i++)
+            {
+                var gridCell = _gridCellManager.Get(levelModel.BoardBottomMapPositions[i].Position);
+                gridCell.IsBottom = true;
+            }
+
             _metaBallManager.SetColorStrategy(levelModel.ColorMapDatas);
             for (int i = 0; i < levelModel.StartingEntityMap.Count; i++)
             {

@@ -220,10 +220,24 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities
         {
             MovementState = BallMovementState.Fixed;
 
+            bool isBottomCell = cell.IsBottom;
             await SnapTo(cell.WorldPosition);
-            SetItemToGrid(cell);
+            
+            if (isBottomCell)
+            {
+                if (_currentBall is IBallPhysics ballPhysics)
+                {
+                    _currentBall.IsFallen = true;
+                    ballPhysics.SetBodyActive(true);
+                }
+            }
 
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            else
+            {
+                SetItemToGrid(cell);
+                await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            }
+
             _currentBall.OnSnapped();
         }
 
