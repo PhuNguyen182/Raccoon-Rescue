@@ -138,6 +138,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameHandlers
                     }
                 }
 
+                else DrawLineColors(false, default);
+
                 if (inputHandler.IsRelease)
                 {
                     if (!inputHandler.IsPointerOverlapUI() && _limitAngleSine > 0.15f)
