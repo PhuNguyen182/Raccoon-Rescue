@@ -77,7 +77,7 @@ namespace BubbleShooter.Scripts.Mainhome.ProgressMaps
                     bool isLevelComplete = GameData.Instance.IsLevelComplete(node.Level);
                     
                     // Check less than node.Level to ensure all completed level are in idle state without animation
-                    if (isLevelComplete && currentLevel < node.Level) 
+                    if (isLevelComplete && currentLevel >= node.Level) 
                     {
                         var levelNode = GameData.Instance.GetLevelProgress(node.Level);
                         node.SetIdleState(levelNode.Star, false);

@@ -107,6 +107,9 @@ namespace BubbleShooter.Scripts.GameUI.Screens
                     Star = _tier
                 });
 
+                GameData.Instance.AddHeart(1);
+                GameData.Instance.SetLevel(_level + 1);
+
                 TransitionConfig.Current = new TransitionConfig
                 {
                     SceneName = SceneName.Mainhome

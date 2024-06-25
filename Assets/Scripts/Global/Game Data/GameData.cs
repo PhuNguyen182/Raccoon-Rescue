@@ -104,6 +104,11 @@ public class GameData : SingletonClass<GameData>
         };
     }
 
+    public void SetLevel(int level)
+    {
+        _levelProgressData.SetLevel(level);
+    }
+
     public void AddLevelProgress(LevelProgress level)
     {
         _levelProgressData.Append(level);
