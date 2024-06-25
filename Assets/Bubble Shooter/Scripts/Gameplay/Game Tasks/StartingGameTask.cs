@@ -33,9 +33,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             await _moveGameViewTask.MoveViewOnStart();
             
             _inputProcessor.IsActive = false;
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _token);
-
             var tutorial = _gameplayTutorial.GetTutorial(level);
+            
             if (tutorial != null)
                 SimplePool.Spawn(tutorial);
 

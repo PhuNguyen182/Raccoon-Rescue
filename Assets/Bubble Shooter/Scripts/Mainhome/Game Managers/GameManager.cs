@@ -23,9 +23,6 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
         {
             if(heartManager != null)
                 heartManager.UpdateHeartTime();
-#if UNITY_EDITOR
-            Delete();
-#endif
         }
 
         private void OnDestroy()
@@ -42,16 +39,6 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
             DataManager.SaveData();
         }
 #endif
-
-        // This function is used for testing only
-        private void Delete()
-        {
-            if(Input.GetKeyUp(KeyCode.D))
-            {
-                _isDeleted = true;
-                DataManager.DeleteData();
-            }
-        }
 
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
         private void OnApplicationFocus(bool focus)
