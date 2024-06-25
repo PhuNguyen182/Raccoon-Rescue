@@ -48,7 +48,7 @@ namespace BubbleShooter.Scripts.Common.Tutorials
 
         private void OnDisable()
         {
-            OnDisable();
+            OnDisappear();
         }
     }
 }

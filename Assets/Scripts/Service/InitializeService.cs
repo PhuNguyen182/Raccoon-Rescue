@@ -8,8 +8,6 @@ namespace Scripts.Service
 {
     public class InitializeService : SingletonClass<InitializeService>, IService
     {
-        private MessageBrokerRegister _messageBroker;
-
         public void Initialize()
         {
             LoadGameData();
@@ -19,8 +17,8 @@ namespace Scripts.Service
 
         private void InitMessageBroker()
         {
-            _messageBroker = new();
-            _messageBroker.InitializeMessages();
+            MessageBrokerRegister messageBroker = new();
+            messageBroker.InitializeMessages();
         }
 
         private void LoadGameData()

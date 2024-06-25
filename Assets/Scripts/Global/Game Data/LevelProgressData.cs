@@ -8,6 +8,11 @@ public class LevelProgressData
     public int Level = 1;
     public List<LevelProgress> LevelProgresses;
 
+    public void SetLevel(int level)
+    {
+        Level = level;
+    }
+
     public LevelProgressData(List<LevelProgress> levelProgresses)
     {
         if (levelProgresses == null || levelProgresses.Count <= 0)

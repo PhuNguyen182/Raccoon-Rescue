@@ -11,7 +11,7 @@ namespace BubbleShooter.Scripts.Common.Tutorials
     {
         [SerializeField] private Button playButton;
 
-        private readonly int _disappearHash = Animator.StringToHash("");
+        private readonly int _disappearHash = Animator.StringToHash("Disappear");
 
         protected override void OnAwake()
         {
@@ -23,7 +23,7 @@ namespace BubbleShooter.Scripts.Common.Tutorials
         public override async UniTask Hide()
         {
             tutorialAnimator.SetTrigger(_disappearHash);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: destroyToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: destroyToken);
             base.DoClose();
         }
 
