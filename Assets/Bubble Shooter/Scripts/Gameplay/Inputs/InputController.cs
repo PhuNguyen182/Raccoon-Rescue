@@ -69,20 +69,7 @@ namespace BubbleShooter.Scripts.Gameplay.Inputs
 
         public bool IsPointerOverlapUI()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
             return EventSystem.current.IsPointerOverGameObject();
-#elif UNITY_ANDROID || UNITY_IOS
-            return IsPointerOverUIObject();
-#endif
-        }
-
-        public bool IsPointerOverUIObject()
-        {
-            _results.Clear();
-            _eventDataCurrentPosition = new(EventSystem.current);
-            _eventDataCurrentPosition.position = new(Pointer.x, Pointer.y);
-            EventSystem.current.RaycastAll(_eventDataCurrentPosition, _results);
-            return _results.Count > 0;
         }
 
         private void OnDisable()

@@ -1349,7 +1349,7 @@ MonoBehaviour:
   m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
+  m_PointerBehavior: 2
   m_CursorLockBehavior: 0
 --- !u!1 &439579014
 GameObject:
@@ -2798,11 +2798,11 @@ Transform:
   m_GameObject: {fileID: 922017563}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.865, y: -4.705, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.33, y: -2.6350002, z: -20}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1986946919}
+  m_Father: {fileID: 1801469535}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &981138063 stripped
 MonoBehaviour:
@@ -4919,7 +4919,8 @@ Transform:
   m_LocalPosition: {x: -0.3, y: 1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 922017565}
   m_Father: {fileID: 1108513993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1801469536
@@ -5390,7 +5391,6 @@ Transform:
   m_Children:
   - {fileID: 836969920}
   - {fileID: 1108206747}
-  - {fileID: 922017565}
   m_Father: {fileID: 1885966888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2001672023
@@ -5612,6 +5612,7 @@ MonoBehaviour:
   toPoint: {fileID: 150979047}
   spawnPoint: {fileID: 618712353}
   ballShooter: {fileID: 1108513992}
+  inputController: {fileID: 1278411870}
   blue: {fileID: 8005500964059422865, guid: b029693730d77a34ea98c349dab2e5d1, type: 3}
   green: {fileID: 3137810103801750805, guid: ccb9eff110a69d4419feb8d4350db022, type: 3}
   orange: {fileID: 958189355520590498, guid: c5027cbc52a0ffe4f8c7358d0b4903b7, type: 3}

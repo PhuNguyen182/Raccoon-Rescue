@@ -19,15 +19,18 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
         private bool _isTargetAdded;
+        private bool _isOutOfTarget;
 
         private int _moveCount;
         private int _targetCount;
         private int _maxTarget;
+        private int _targetCountTemp;
 
         public Action<bool> OnEndGame;
         public int MoveCount => _moveCount;
         public int TargetCount => _maxTarget;
         public bool IsTargetAdded => _isTargetAdded;
+        public bool IsOutOfTarget => _isOutOfTarget;
 
         public CheckTargetTask(InGamePanel inGamePanel)
         {
@@ -39,7 +42,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
 
             _moveTargetSubscriber.Subscribe(SetTargetInfo).AddTo(builder);
-            _addTargetSubscriber.Subscribe(message => AddTarget()).AddTo(builder);
+            _addTargetSubscriber.Subscribe(message => AddTarget(message)).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(DecreaseMove).AddTo(builder);
 
             _disposable = builder.Build();
@@ -48,7 +51,10 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public void SetTargetCount(LevelModel levelModel)
         {
             _targetCount = 0;
+            _targetCountTemp = 0;
             _isTargetAdded = false;
+            _isOutOfTarget = false;
+            _isOutOfTarget = false;
 
             _moveCount = levelModel.MoveCount;
             _maxTarget = levelModel.TargetCount;
@@ -96,14 +102,25 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void AddTarget()
+        private void AddTarget(AddTargetMessage message)
         {
-            _targetCount = _targetCount + 1;
-            _inGamePanel.TargetHolder.PlayTargetAnimation();
-            _isTargetAdded = false;
+            if (!message.IsImmediately)
+            {
+                _targetCount = _targetCount + 1;
+                _inGamePanel.TargetHolder.PlayTargetAnimation();
+                _isTargetAdded = false;
 
-            UpdateTarget();
-            CheckTarget();
+                UpdateTarget();
+                CheckTarget();
+            }
+
+            else
+            {
+                _targetCountTemp += 1;
+
+                if (_targetCountTemp >= _maxTarget)
+                    _isOutOfTarget = true;
+            }
         }
 
         public void CheckTarget()
