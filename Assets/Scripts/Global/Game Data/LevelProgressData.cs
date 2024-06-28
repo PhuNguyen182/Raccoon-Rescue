@@ -35,8 +35,13 @@ public class LevelProgressData
     {
         if (LevelProgresses.Exists(p => p.Level == progress.Level))
         {
-            int index = LevelProgresses.IndexOf(progress);
-            LevelProgresses[index] = progress;
+            LevelProgress levelProgress = GetLevelProgress(progress.Level);
+            
+            if (progress.Star >= levelProgress.Star)
+            {
+                int index = LevelProgresses.FindIndex(p => p.Level == progress.Level);
+                LevelProgresses[index] = progress;
+            }
         }
         
         else
