@@ -99,7 +99,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameManagers
             _metaBallManager = new(_entityManager);
             _metaBallManager.AddTo(ref builder);
             
-            _checkTargetTask = new(mainScreen.InGamePanel, _inputProcessor);
+            _checkTargetTask = new(mainScreen.InGamePanel);
             _checkTargetTask.AddTo(ref builder);
             ballShooter.SetCheckTargetTask(_checkTargetTask);
 

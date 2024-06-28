@@ -13,13 +13,13 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
     public class CheckTargetTask : IDisposable
     {
         private readonly InGamePanel _inGamePanel;
-        private readonly InputProcessor _inputProcessor;
         private readonly IDisposable _disposable;
         private readonly ISubscriber<AddTargetMessage> _addTargetSubscriber;
         private readonly ISubscriber<MoveToTargetMessage> _moveTargetSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
         private bool _isTargetAdded;
+        private bool _isOutOfTarget;
 
         private int _moveCount;
         private int _targetCount;
@@ -30,11 +30,11 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
         public int MoveCount => _moveCount;
         public int TargetCount => _maxTarget;
         public bool IsTargetAdded => _isTargetAdded;
+        public bool IsOutOfTarget => _isOutOfTarget;
 
-        public CheckTargetTask(InGamePanel inGamePanel, InputProcessor inputProcessor)
+        public CheckTargetTask(InGamePanel inGamePanel)
         {
             _inGamePanel = inGamePanel;
-            _inputProcessor = inputProcessor;
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
 
             _moveTargetSubscriber = GlobalMessagePipe.GetSubscriber<MoveToTargetMessage>();
@@ -53,6 +53,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
             _targetCount = 0;
             _targetCountTemp = 0;
             _isTargetAdded = false;
+            _isOutOfTarget = false;
+            _isOutOfTarget = false;
 
             _moveCount = levelModel.MoveCount;
             _maxTarget = levelModel.TargetCount;
@@ -117,7 +119,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 _targetCountTemp += 1;
 
                 if (_targetCountTemp >= _maxTarget)
-                    _inputProcessor.IsActive = false;
+                    _isOutOfTarget = true;
             }
         }
 
