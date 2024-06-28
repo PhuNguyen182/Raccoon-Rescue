@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 61843474}
   - component: {fileID: 61843473}
   - component: {fileID: 61843472}
+  - component: {fileID: 61843476}
   m_Layer: 5
   m_Name: Main Canvas
   m_TagString: Untagged
@@ -225,6 +226,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &61843476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61843471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa2e1a1a76281e43a48897a567bc563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 61843474}
+  safeAreaTransform: {fileID: 126855312}
 --- !u!1 &121091536
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,6 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookCamera: {fileID: 226634807}
+  mainCanvasSafeArea: {fileID: 126855312}
   screenBounds: {fileID: 273916404}
   input: {fileID: 828621517}
   translateSpeed: 2000
@@ -1294,8 +1310,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 300}
+  m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1108581011
 MonoBehaviour:
