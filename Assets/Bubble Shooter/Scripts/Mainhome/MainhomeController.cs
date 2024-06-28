@@ -94,6 +94,8 @@ namespace BubbleShooter.Scripts.Mainhome
             int level = GameData.Instance.GetCurrentLevel();
             LevelNodePath levelNode = progressMap.GetLevelNode(level);
             cameraController.TranslateTo(levelNode.transform.position);
+            
+            progressMap.Translate(level - 1);
             levelNode.SetIdleState(0, false);
         }
 

@@ -6,18 +6,23 @@ using UnityEngine;
 using BubbleShooter.Scripts.Mainhome.Inputs;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System.Data;
 
 namespace BubbleShooter.Scripts.Mainhome.Handlers
 {
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private Camera lookCamera;
+        [SerializeField] private RectTransform mainCanvasSafeArea;
         [SerializeField] private ScreenBoundsHandler screenBounds;
         [SerializeField] private MainhomeInput input;
         
         [Space(10)]
         [SerializeField] private float translateSpeed = 3f;
         [SerializeField] private float smoothSpeed = 25f;
+
+        private float _topCanvasOffset = 0;
+        private float _bottomCanvasOffset = 0;
 
         private Vector2 _inputDelta;
         private CancellationToken _token;
@@ -33,12 +38,12 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
             CalculateCameraView();
             _token = this.GetCancellationTokenOnDestroy();
             _lookCameraBounds = screenBounds.ScreenBounds;
-            CalculateCameraBounds();
         }
 
         private void Start()
         {
             IsDraggable = true;
+            CalculateCameraBounds();
         }
 
         private void Update()
@@ -94,17 +99,29 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
 
         private void CalculateCameraBounds()
         {
+            #region Calculate original map bounds
             float height = lookCamera.orthographicSize;
             float width = height * lookCamera.aspect;
             float minX = screenBounds.ScreenBounds.min.x + width;
             float maxX = screenBounds.ScreenBounds.max.x - width;
             float minY = screenBounds.ScreenBounds.min.y + height;
             float maxY = screenBounds.ScreenBounds.max.y - height;
+            #endregion
+
+            #region Calculate safe area offset amount
+            Vector3 topPoint = lookCamera.ViewportToWorldPoint(new Vector3(1, 1));
+            Vector3 bottomPoint = lookCamera.ViewportToWorldPoint(new Vector3(1, 0));
+            Vector3 safeTopPoint = lookCamera.ViewportToWorldPoint(new Vector3(1, mainCanvasSafeArea.anchorMax.y));
+            Vector3 safeBottomPoint = lookCamera.ViewportToWorldPoint(new Vector3(1, mainCanvasSafeArea.anchorMin.y));
+
+            _topCanvasOffset = topPoint.y - safeTopPoint.y;
+            _bottomCanvasOffset = safeBottomPoint.y - bottomPoint.y;
+            #endregion
 
             _lookCameraBounds = new Bounds
             {
-                min = new(minX, minY),
-                max = new(maxX, maxY)
+                min = new(minX, minY - _bottomCanvasOffset),
+                max = new(maxX, maxY + _topCanvasOffset)
             };
         }
 
