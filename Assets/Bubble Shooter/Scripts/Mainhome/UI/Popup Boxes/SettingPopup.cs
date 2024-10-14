@@ -84,7 +84,7 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes
                 SceneName = SceneName.Mainhome
             };
 
-            await SceneLoader.LoadScene(SceneConstants.Mainhome, LoadSceneMode.Single);
+            await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
         }
 
         private void CheckAudioButtons()
