@@ -21,6 +21,7 @@ namespace BubbleShooter.Scripts.Scenes.LoadingScene
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
+            Application.targetFrameRate = 60;
         }
 
         private void Start()
