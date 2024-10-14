@@ -94,11 +94,23 @@ namespace BubbleShooter.Scripts.GameUI.Screens
 
             if (!PlayConfig.Current.IsTest)
             {
+                bool levelIncrease = false;
+                GameData.Instance.AddHeart(1);
+                int currentLevel = GameData.Instance.GetCurrentLevel();
+
+                // Save current win level immediately
+                if (_level == currentLevel)
+                {
+                    levelIncrease = true;
+                    GameData.Instance.SetLevel(_level + 1);
+                }
+
                 BackHomeConfig.Current = new BackHomeConfig
                 {
                     IsWin = true,
                     Level = _level,
-                    Star = _tier
+                    Star = _tier,
+                    LevelIncreased = levelIncrease
                 };
 
                 GameData.Instance.AddLevelProgress(new LevelProgress
@@ -106,9 +118,6 @@ namespace BubbleShooter.Scripts.GameUI.Screens
                     Level = _level,
                     Star = _tier
                 });
-
-                GameData.Instance.AddHeart(1);
-                GameData.Instance.SetLevel(_level + 1);
 
                 TransitionConfig.Current = new TransitionConfig
                 {

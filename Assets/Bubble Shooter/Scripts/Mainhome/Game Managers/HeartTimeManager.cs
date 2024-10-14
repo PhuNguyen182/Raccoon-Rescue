@@ -9,6 +9,7 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
     {
         private DateTime _savedHeartTime;
         private TimeSpan _heartTimeDiff;
+        private TimeSpan _offset;
 
         private static readonly int _maxHeart = GameDataConstants.MaxHeart;
         private static readonly int _heartCooldown = GameDataConstants.HeartCooldown;
@@ -20,8 +21,8 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
             if (GameData.Instance.GetHeart() < _maxHeart)
             {
                 _savedHeartTime = GameData.Instance.GetCurrentHeartTime();
-                TimeSpan offset = DateTime.Now.Subtract(_savedHeartTime);
-                _heartTimeDiff = TimeSpan.FromSeconds(_heartCooldown).Subtract(offset);
+                _offset = DateTime.Now.Subtract(_savedHeartTime);
+                _heartTimeDiff = TimeSpan.FromSeconds(_heartCooldown).Subtract(_offset);
 
                 if (_heartTimeDiff.TotalSeconds <= 0)
                 {
@@ -32,9 +33,11 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                         GameData.Instance.SetHeart(_maxHeart);
                         GameData.Instance.SaveHeartTime(_savedHeartTime);
                     }
+
                     else
                     {
                         _savedHeartTime = _savedHeartTime.AddSeconds(_heartCooldown);
+                        GameData.Instance.SaveHeartTime(_savedHeartTime);
                     }
                 }
             }
@@ -49,7 +52,9 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
             {
                 TimeSpan cooldown = TimeSpan.FromSeconds(_heartCooldown);
                 diff = diff.Subtract(cooldown);
-                GameData.Instance.AddHeart(1);
+
+                if (diff.TotalSeconds > 0)
+                    GameData.Instance.AddHeart(1);
 
                 if (GameData.Instance.GetHeart() >= _maxHeart)
                 {
@@ -59,7 +64,7 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                     break;
                 }
 
-                else 
+                else
                     _savedHeartTime = _savedHeartTime.Add(TimeSpan.FromSeconds(_heartCooldown));
             } while (diff.TotalSeconds > 0);
         }
