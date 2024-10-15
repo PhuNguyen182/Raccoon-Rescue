@@ -7,5 +7,6 @@ namespace BubbleShooter.Scripts.Common.Configs
         public int Star;
         public bool IsWin;
         public int Level;
+        public bool LevelIncreased;
     }
 }
