@@ -41,6 +41,8 @@ namespace BubbleShooter.Scripts.Mainhome.GameManagers
                     }
                 }
             }
+
+            else GameData.Instance.SetHeart(_maxHeart);
         }
 
         public void LoadHeartOnStart()
