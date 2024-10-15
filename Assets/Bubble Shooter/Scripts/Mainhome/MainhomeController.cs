@@ -78,11 +78,15 @@ namespace BubbleShooter.Scripts.Mainhome
         {
             if (BackHomeConfig.Current != null)
             {
-                if(BackHomeConfig.Current.IsWin)
-                    OnBackHome().Forget();
+                if (BackHomeConfig.Current.IsWin)
+                {
+                    if (BackHomeConfig.Current.LevelIncreased)
+                        OnBackHome().Forget();
+                    
+                    else ShowCurrentMainhome();
+                }
                 
-                else
-                    ShowCurrentMainhome();
+                else ShowCurrentMainhome();
             }
 
             else ShowCurrentMainhome();

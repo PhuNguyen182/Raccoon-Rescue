@@ -194,6 +194,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             if (boomEffect != null)
                 SimplePool.Spawn(boomEffect, EffectContainer.Transform, transform.position, Quaternion.identity);
 
+            _checkTargetPublisher.Publish(new AddTargetMessage { IsImmediately = true });
+
             SimplePool.Spawn(freedTarget, EffectContainer.Transform
                              , transform.position, Quaternion.identity);
 
@@ -211,7 +213,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameEntities.CustomBalls
             float duration = Vector3.Distance(targetInfo.Destination, transform.position) / speed;
             
             UniTask moveTask = flyTarget.MoveToTarget(targetInfo.Destination, duration);
-            await CheckTargetAsync(new AddTargetMessage(), moveTask);
+            await CheckTargetAsync(new AddTargetMessage { IsImmediately = false }, moveTask);
             SimplePool.Despawn(flyTarget.gameObject);
         }
 

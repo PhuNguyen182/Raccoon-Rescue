@@ -15,6 +15,7 @@ using Cysharp.Threading.Tasks;
 using Scripts.SceneUtils;
 using Newtonsoft.Json;
 using TMPro;
+using Dreamteck.Splines.Primitives;
 
 namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
 {
@@ -95,6 +96,8 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
         {
             _isPlayPressed = true;
             LevelModel levelModel;
+            int lives = GameData.Instance.GetHeart();
+
             string levelData = await MainhomeController.Instance.LevelPlayInfo.GetLevelData(_level);
             using (StringReader streamReader = new(levelData))
             {
@@ -106,6 +109,9 @@ namespace BubbleShooter.Scripts.Mainhome.UI.PopupBoxes.PlayGamePopup
             }
 
             GameData.Instance.UseHeart(1);
+            if (lives >= GameDataConstants.MaxHeart)
+                GameData.Instance.SaveHeartTime(DateTime.Now);
+
             PlayConfig.Current = new PlayConfig
             {
                 IsTest = false,

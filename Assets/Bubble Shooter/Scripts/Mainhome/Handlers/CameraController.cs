@@ -6,7 +6,7 @@ using UnityEngine;
 using BubbleShooter.Scripts.Mainhome.Inputs;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Data;
+using UnityEngine.EventSystems;
 
 namespace BubbleShooter.Scripts.Mainhome.Handlers
 {
@@ -76,10 +76,20 @@ namespace BubbleShooter.Scripts.Mainhome.Handlers
             IsDraggable = true;
         }
 
+        public float GetDragSpeed()
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
+            return translateSpeed;
+#elif UNITY_ANDROID || UNITY_IOS
+            return translateSpeed * 0.45f;
+#endif
+        }
+
         private void DragCamera()
         {
             if (IsDraggable)
             {
+                float dragSpeed = GetDragSpeed();
                 if (input.IsDragging)
                     _inputDelta = !input.IsPointerOverlapUI() ? -input.Delta
                                   : Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);

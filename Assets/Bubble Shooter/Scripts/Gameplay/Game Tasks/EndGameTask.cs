@@ -77,6 +77,8 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
 
                 if (fixedBall is IBallPhysics ballPhysics)
                 {
+                    ballPhysics.ChangeLayerMask(false);
+
                     if (fixedBall is IBallGraphics ballGraphics)
                         ballGraphics.ChangeLayer(BallConstants.HigherLayer);
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BubbleShooter.Scripts.Gameplay.Inputs;
 using BubbleShooter.Scripts.Gameplay.GameHandlers;
 using BubbleShooter.LevelDesign.Scripts.LevelDatas.CustomDatas;
 using BubbleShooter.Scripts.Gameplay.GameManagers;
@@ -20,6 +21,7 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
         [SerializeField] private Transform toPoint;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private BallShooter ballShooter;
+        [SerializeField] private InputController inputController;
 
         [Header("Dummy Balls")]
         [FoldoutGroup("Ball Colors")]
@@ -181,6 +183,9 @@ namespace BubbleShooter.Scripts.Gameplay.Miscs
 
         private async UniTask SwitchBallAsync()
         {
+            if (!inputController.IsActive)
+                return;
+
             if (!_canClick)
                 return;
 

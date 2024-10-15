@@ -103,7 +103,7 @@ namespace BubbleShooter.Scripts.Gameplay.GameTasks
                 await _moveGameViewTask.Check();
                 _ingameBoosterHandler.AfterUseBooster();
                 
-                if(!_gameStateController.IsEndGame)
+                if(!_gameStateController.IsEndGame && !_checkTargetTask.IsOutOfTarget)
                     _inputProcessor.IsActive = true;
             }
         }
